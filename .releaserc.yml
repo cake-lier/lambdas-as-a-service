@@ -29,8 +29,8 @@ plugins:
           countMatches: true
         - files:
             - package-lock.json
-          from: '\"name\": \"scala-app-template\",\n  \"version\": \".*\"'
-          to: "\"name\": \"scala-app-template\",\n  \"version\": \"${nextRelease.version}\""
+          from: '\"name\": \"lambdas-as-a-service\",\n  \"version\": \".*\"'
+          to: "\"name\": \"lambdas-as-a-service\",\n  \"version\": \"${nextRelease.version}\""
           results:
             - file: package-lock.json
               hasChanged: true
@@ -39,8 +39,8 @@ plugins:
           countMatches: true
         - files:
             - package-lock.json
-          from: '\"name\": \"scala-app-template\",\n      \"version\": \".*\"'
-          to: "\"name\": \"scala-app-template\",\n      \"version\": \"${nextRelease.version}\""
+          from: '\"name\": \"lambdas-as-a-service\",\n      \"version\": \".*\"'
+          to: "\"name\": \"lambdas-as-a-service\",\n      \"version\": \"${nextRelease.version}\""
           results:
             - file: package-lock.json
               hasChanged: true
@@ -59,8 +59,12 @@ plugins:
           countMatches: true
   - - '@semantic-release/exec'
     - publishCmd: |
-        sbt assembly;
-        sbt dockerBuildAndPush;
+        sbt server:assembly;
+        sbt server:dockerBuildAndPush;
+        sbt worker:assembly;
+        sbt worker:dockerBuildAndPush;
+        sbt master:assembly;
+        sbt master:dockerBuildAndPush;
       shell: /bin/bash
   - - '@semantic-release/git'
     - assets:
@@ -72,5 +76,9 @@ plugins:
         - sonar-project.properties
   - - '@semantic-release/github'
     - assets:
-        - path: target/scala-3.3.0/main.jar
-          label: Main JAR file
+        - path: server/target/scala-3.3.0/main.jar
+          label: TS Server JAR file
+        - path: worker/target/scala-3.3.0/main.jar
+          label: Worker JAR file
+        - path: master/target/scala-3.3.0/main.jar
+          label: Master JAR file
