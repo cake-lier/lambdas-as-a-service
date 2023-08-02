@@ -28,14 +28,14 @@ import laas.tuplespace.*
 
 /** A response that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] can receive from its server.
   *
-  * This trait represents a generic response that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] client can receive
-  * after sending a corresponding [[io.github.cakelier.laas.tuplespace.request.Request]] to the server it has connected to. Responses
-  * can be divided in two categories: proper responses and meta-responses. The first ones are used to carry data from the server
-  * to the client, sometimes just the content of the corresponding request to signal that the operation completed with success.
-  * Some other times, they have a proper content in addition, which represents the result of the operation. Their content can be a
-  * single [[JsonTuple]], a [[Seq]] of them etc. Meta-responses are instead used for carrying metadata from the server to the
-  * client, for example for signalling that the connection has been established with success and a new id is provided to the
-  * client or that the client wants to use another id instead.
+  * This trait represents a generic response that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] client can
+  * receive after sending a corresponding [[io.github.cakelier.laas.tuplespace.request.Request]] to the server it has connected
+  * to. Responses can be divided in two categories: proper responses and meta-responses. The first ones are used to carry data
+  * from the server to the client, sometimes just the content of the corresponding request to signal that the operation completed
+  * with success. Some other times, they have a proper content in addition, which represents the result of the operation. Their
+  * content can be a single [[JsonTuple]], a [[Seq]] of them etc. Meta-responses are instead used for carrying metadata from the
+  * server to the client, for example for signalling that the connection has been established with success and a new id is
+  * provided to the client or that the client wants to use another id instead.
   */
 sealed private[client] trait Response
 
@@ -324,8 +324,8 @@ private[client] object Response {
     * abruptly followed by an error, the server keeps the pending operations, but it will never know if the client will reappear
     * or not. This [[Response]] is sent from the server to confirm just that: the server is telling that a client previously
     * connected has now reconnected and its id is now the one given in the previously sent
-    * [[io.github.cakelier.laas.tuplespace.request.Request]]. This way, the client can regain access to the [[Response]]s associated
-    * to the [[Request]]s placed before the disconnection, if they where not satisfied during its absence.
+    * [[io.github.cakelier.laas.tuplespace.request.Request]]. This way, the client can regain access to the [[Response]]s
+    * associated to the [[Request]]s placed before the disconnection, if they where not satisfied during its absence.
     */
   sealed trait MergeSuccessResponse extends Response {
 

@@ -34,12 +34,12 @@ import laas.tuplespace.*
 
 /** A request that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] can make to its server.
   *
-  * This trait represents a generic request that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] client can make, in
-  * order to obtain a [[io.github.cakelier.laas.tuplespace.response.Response]] from the server it has connected to. Requests can be
-  * divided in two categories: proper requests and meta-requests. The first ones are used to carry data from the client to the
-  * server and they always have a content, which can be a single [[JsonTuple]], a [[Seq]] of them etc. Meta-requests are instead
-  * used for carrying metadata from the client to the server, for example for managing the [[UUID]] that the server has given to
-  * the client.
+  * This trait represents a generic request that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] client can make,
+  * in order to obtain a [[io.github.cakelier.laas.tuplespace.response.Response]] from the server it has connected to. Requests
+  * can be divided in two categories: proper requests and meta-requests. The first ones are used to carry data from the client to
+  * the server and they always have a content, which can be a single [[JsonTuple]], a [[Seq]] of them etc. Meta-requests are
+  * instead used for carrying metadata from the client to the server, for example for managing the [[UUID]] that the server has
+  * given to the client.
   */
 sealed private[client] trait Request
 
