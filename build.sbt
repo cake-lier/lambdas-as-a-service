@@ -36,17 +36,16 @@ ThisBuild / version := "0.0.0"
 ThisBuild / coverageMinimumStmtTotal := 80
 ThisBuild / coverageMinimumBranchTotal := 80
 
-ThisBuild / headerLicense := Some(HeaderLicense.MIT(
-  LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
-  "Matteo Castellucci"
-))
-
 lazy val tsCore =
   project
     .in(file("core"))
     .enablePlugins(AutomateHeaderPlugin)
     .settings(
       name := "laas-ts-core",
+      headerLicense := Some(HeaderLicense.MIT(
+        LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
+        "Matteo Castellucci"
+      ))
     )
 
 lazy val tsClient =
@@ -64,6 +63,10 @@ lazy val tsClient =
         akkaHttpTestkit,
         akkaTestkit
       ),
+      headerLicense := Some(HeaderLicense.MIT(
+        LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
+        "Matteo Castellucci"
+      ))
     )
 
 lazy val tsServer =
@@ -95,7 +98,11 @@ lazy val tsServer =
           repository = name.value,
           tag = Some(version.value)
         )
-      )
+      ),
+      headerLicense := Some(HeaderLicense.MIT(
+        LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
+        "Matteo Castellucci"
+      ))
     )
 
 lazy val worker = project
@@ -125,7 +132,11 @@ lazy val worker = project
         repository = name.value,
         tag = Some(version.value)
       )
-    )
+    ),
+    headerLicense := Some(HeaderLicense.MIT(
+      LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
+      "Matteo Castellucci"
+    ))
   )
 
 lazy val master = project
@@ -155,7 +166,11 @@ lazy val master = project
         repository = name.value,
         tag = Some(version.value)
       )
-    )
+    ),
+    headerLicense := Some(HeaderLicense.MIT(
+      LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
+      "Matteo Castellucci"
+    ))
   )
 
 lazy val root = project
