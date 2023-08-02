@@ -1,0 +1,25 @@
+name: Mirror on GitLab
+
+on: 
+  push:
+  create:
+  delete:
+  workflow_dispatch:
+
+
+jobs:
+  mirror:
+    name: Mirror on GitLab
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Mirror
+        uses: yesolutions/mirror-action@v0.7.0
+        with:
+          REMOTE: 'https://gitlab.com/pika-lab/courses/ds/projects/ds-project-castellucci-ay2021.git'
+          GIT_USERNAME: matteo.castellucci3
+          GIT_PASSWORD: ${{ secrets.GITLAB_PASSWORD }}
