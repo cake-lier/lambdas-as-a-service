@@ -59,12 +59,12 @@ plugins:
           countMatches: true
   - - '@semantic-release/exec'
     - publishCmd: |
-        sbt server:assembly;
-        sbt server:dockerBuildAndPush;
-        sbt worker:assembly;
-        sbt worker:dockerBuildAndPush;
-        sbt master:assembly;
-        sbt master:dockerBuildAndPush;
+        sbt tsServer / assembly;
+        sbt tsServer / dockerBuildAndPush;
+        sbt worker / assembly;
+        sbt worker / dockerBuildAndPush;
+        sbt master / assembly;
+        sbt master / dockerBuildAndPush;
       shell: /bin/bash
   - - '@semantic-release/git'
     - assets:
