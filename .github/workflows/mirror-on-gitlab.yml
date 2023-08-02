@@ -2,7 +2,6 @@ name: Mirror on GitLab
 
 on: 
   push:
-  create:
   delete:
   workflow_dispatch:
 
