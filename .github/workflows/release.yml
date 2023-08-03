@@ -83,8 +83,8 @@ jobs:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
       - name: Generate scaladoc
-        run: sbt doc
+        run: sbt unidoc
       - name: Publish scaladoc on GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: target/scala-3.3.0/api
+          folder: target/scala-3.3.0/unidoc

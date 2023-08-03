@@ -11,7 +11,7 @@ plugins:
         - files:
             - build.sbt
           from: version := .*
-          to: version := "${nextRelease.version}",
+          to: version := "${nextRelease.version}"
           results:
             - file: build.sbt
               hasChanged: true
@@ -60,12 +60,8 @@ plugins:
           countMatches: true
   - - '@semantic-release/exec'
     - publishCmd: |
-        sbt tsServer / assembly;
-        sbt tsServer / dockerBuildAndPush;
-        sbt worker / assembly;
-        sbt worker / dockerBuildAndPush;
-        sbt master / assembly;
-        sbt master / dockerBuildAndPush;
+        sbt tsServer/assembly;
+        sbt tsServer/dockerBuildAndPush;
       shell: /bin/bash
   - - '@semantic-release/git'
     - assets:

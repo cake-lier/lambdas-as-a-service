@@ -36,6 +36,8 @@ ThisBuild / version := "0.0.0"
 ThisBuild / coverageMinimumStmtTotal := 80
 ThisBuild / coverageMinimumBranchTotal := 80
 
+ThisBuild / autoAPIMappings := true
+
 lazy val tsCore =
   project
     .in(file("core"))
@@ -176,6 +178,7 @@ lazy val master = project
 lazy val root = project
   .in(file("."))
   .aggregate(tsCore, tsClient, tsServer, worker, master)
+  .enablePlugins(ScalaUnidocPlugin)
   .settings(
     name := "laas"
   )
