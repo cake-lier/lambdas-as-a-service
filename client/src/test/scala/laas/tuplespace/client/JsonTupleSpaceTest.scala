@@ -66,7 +66,8 @@ import laas.tuplespace.JsonTuple.JsonNil
     "org.wartremover.warts.Var",
     "org.wartremover.warts.Nothing",
     "scalafix:DisableSyntax.throw",
-    "scalafix:DisableSyntax.var"
+    "scalafix:DisableSyntax.var",
+    "org.wartremover.warts.ThreadSleep"
   )
 )
 class JsonTupleSpaceTest extends AnyFunSpec with BeforeAndAfterAll with Eventually {
@@ -92,7 +93,12 @@ class JsonTupleSpaceTest extends AnyFunSpec with BeforeAndAfterAll with Eventual
             handleWebSocketMessages {
               val (actorRef, actorSource) =
                 ActorSource
-                  .actorRef[Message](PartialFunction.empty, PartialFunction.empty, 100, OverflowStrategy.dropHead)
+                  .actorRef[Message](
+                    PartialFunction.empty,
+                    { case t: TextMessage.Strict if t.text === "Failure" => RuntimeException() },
+                    100,
+                    OverflowStrategy.dropHead
+                  )
                   .preMaterialize()
               actor = Some(actorRef)
               actorRef ! TextMessage(ConnectionSuccessResponse(if (useFirstUUID) firstUUID else secondUUID).asJson.noSpaces)
@@ -104,7 +110,7 @@ class JsonTupleSpaceTest extends AnyFunSpec with BeforeAndAfterAll with Eventual
                       j <- parse(t.text)
                       m <- j.as[Request]
                       r = m match {
-                        case t: TupleRequest if t.content === poisonPill => throw new RuntimeException()
+                        case t: TupleRequest if t.content === poisonPill => TextMessage("Failure") :: Nil
                         case t: TupleRequest => TextMessage(TupleResponse(t.content).asJson.noSpaces) :: Nil
                         case t: TemplateRequest if t.content === foreverPendingTemplate => Nil
                         case t: TemplateRequest =>
@@ -420,6 +426,7 @@ class JsonTupleSpaceTest extends AnyFunSpec with BeforeAndAfterAll with Eventual
         } shouldBe ()
         useFirstUUID = false
         a[IllegalStateException] should be thrownBy Await.result(client.out(poisonPill), Integer.MAX_VALUE.seconds)
+        Thread.sleep(10_000)
         val inResult = client.in(template)
         eventually(Timeout(Span(10, Seconds))) {
           inResult.value.value.success.value
