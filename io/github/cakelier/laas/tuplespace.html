@@ -1,0 +1,1614 @@
+<html data-pathToRoot="../../../../"><head><meta charset="utf-8"></meta><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta><title>io.github.cakelier.laas.tuplespace</title><link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.ico"></link><script type="text/javascript" src="../../../../scripts/theme.js"></script><script type="text/javascript" src="../../../../scripts/searchData.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/scastieConfiguration.js" defer="true"></script><link rel="stylesheet" href="../../../../styles/theme/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/components/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/components/button/bundle.css"></link><link rel="stylesheet" href="../../../../styles/theme/layout/bundle.css"></link><link rel="stylesheet" href="../../../../styles/nord-light.css"></link><link rel="stylesheet" href="../../../../styles/dotty-icons.css"></link><link rel="stylesheet" href="../../../../styles/filter-bar.css"></link><link rel="stylesheet" href="../../../../styles/code-snippets.css"></link><link rel="stylesheet" href="../../../../styles/searchbar.css"></link><link rel="stylesheet" href="../../../../styles/social-links.css"></link><link rel="stylesheet" href="../../../../styles/versions-dropdown.css"></link><link rel="stylesheet" href="../../../../styles/content-contributors.css"></link><link rel="stylesheet" href="../../../../styles/fontawesome.css"></link><script type="text/javascript" src="../../../../hljs/highlight.pack.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/hljs-scala3.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/ux.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/common/component.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/common/utils.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/FilterBar.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/DocumentableList.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/Input.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/FilterGroup.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/components/Filter.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/scaladoc-scalajs.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/contributors.js" defer="true"></script><script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js" defer="true"></script><script type="text/javascript" src="https://d3js.org/d3.v6.min.js" defer="true"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/npm/graphlib-dot@0.6.2/dist/graphlib-dot.min.js" defer="true"></script><script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dagre-d3/0.6.1/dagre-d3.min.js" defer="true"></script><script type="text/javascript" src="https://scastie.scala-lang.org/embedded.js" defer="true"></script><script type="text/javascript" src="../../../../scripts/data.js" defer="true"></script><link rel="stylesheet" href="../../../../styles/apistyles.css"></link><script>var pathToRoot = "../../../../";</script></head><body><div id=""><div id="header" class="body-small"><div class="header-container-left"><a href="../../../../" class="logo-container"><span class="project-name h300">laas</span></a><span onclick="dropdownHandler(event)" class="text-button with-arrow" id="dropdown-trigger"><a></a></span><div id="version-dropdown" class="dropdown-menu"></div></div><div class="header-container-right"><button id="search-toggle" class="icon-button"></button><span id="theme-toggle" class="icon-button"></span><span id="mobile-menu-toggle" class="icon-button hamburger"></span></div></div><div id="mobile-menu"><div class="mobile-menu-header body-small"><span class="mobile-menu-logo"><span class="project-name h300">laas</span></span><button id="mobile-menu-close" class="icon-button close"></button></div><div class="mobile-menu-container body-medium"><input id="mobile-scaladoc-searchbar-input" class="scaladoc-searchbar-input" type="search" placeholder="Find anything"></input><span id="mobile-theme-toggle" class="mobile-menu-item mode"></span></div></div><span id="mobile-sidebar-toggle" class="floating-button"></span><div id="leftColumn" class="body-small"><div class="switcher-container"><a id="api-nav-button" class="switcher h100 selected" href="../../../../index.html">API</a></div><nav id="api-nav" class="side-menu"><div class="ni n0 expanded"><span class="nh h100 expanded cs"><button class="ar icon-button expanded"></button><a href="../../cakelier.html"><span class="micon pa"></span><span>io.github.cakelier</span></a></span><div class="ni n1 expanded"><span class="nh h100 selected"><button class="ar icon-button expanded"></button><a href="#"><span class="micon pa"></span><span>laas.tuplespace</span></a></span><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/client.html"><span class="micon pa"></span><span>client</span></a></span><div class="ni n3 "><span class="nh "><a href="tuplespace/client/request.html"><span class="micon pa"></span><span>request</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/client/response.html"><span class="micon pa"></span><span>response</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/client/JsonTupleSpace.html"><span class="micon tr"></span><span>JsonTupleSpace</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/client/JsonTupleSpace$.html"><span class="micon ob"></span><span>JsonTupleSpace</span></a></span></div></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl.html"><span class="micon pa"></span><span>dsl</span></a></span><div class="ni n3"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric.html"><span class="micon pa"></span><span>numeric</span></a></span><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric/DoubleTemplate$.html"><span class="micon ob"></span><span>DoubleTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/DoubleTemplate$$CompleteDoubleTemplate.html"><span class="micon cl"></span><span>CompleteDoubleTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/DoubleTemplate$$EmptyDoubleTemplate.html"><span class="micon cl"></span><span>EmptyDoubleTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/DoubleTemplate$$WithMaximumDoubleTemplate.html"><span class="micon cl"></span><span>WithMaximumDoubleTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/DoubleTemplate$$WithMinimumDoubleTemplate.html"><span class="micon cl"></span><span>WithMinimumDoubleTemplate</span></a></span></div></div><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric/FloatTemplate$.html"><span class="micon ob"></span><span>FloatTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/FloatTemplate$$CompleteFloatTemplate.html"><span class="micon cl"></span><span>CompleteFloatTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/FloatTemplate$$EmptyFloatTemplate.html"><span class="micon cl"></span><span>EmptyFloatTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/FloatTemplate$$WithMaximumFloatTemplate.html"><span class="micon cl"></span><span>WithMaximumFloatTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/FloatTemplate$$WithMinimumFloatTemplate.html"><span class="micon cl"></span><span>WithMinimumFloatTemplate</span></a></span></div></div><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric/IntTemplate$.html"><span class="micon ob"></span><span>IntTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$CompleteIntTemplate.html"><span class="micon cl"></span><span>CompleteIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$EmptyIntTemplate.html"><span class="micon cl"></span><span>EmptyIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$WithMaxWithMultipleIntTemplate.html"><span class="micon cl"></span><span>WithMaxWithMultipleIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$WithMaximumIntTemplate.html"><span class="micon cl"></span><span>WithMaximumIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$WithMinWithMaxIntTemplate.html"><span class="micon cl"></span><span>WithMinWithMaxIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$WithMinWithMultipleIntTemplate.html"><span class="micon cl"></span><span>WithMinWithMultipleIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$WithMinimumIntTemplate.html"><span class="micon cl"></span><span>WithMinimumIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntTemplate$$WithMultipleIntTemplate.html"><span class="micon cl"></span><span>WithMultipleIntTemplate</span></a></span></div></div><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric/IntegralTemplate.html"><span class="micon tr"></span><span>IntegralTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$CompleteIntegralTemplate.html"><span class="micon tr"></span><span>CompleteIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$EmptyIntegralTemplate.html"><span class="micon tr"></span><span>EmptyIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$WithMaxWithMultipleIntegralTemplate.html"><span class="micon tr"></span><span>WithMaxWithMultipleIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$WithMaximumIntegralTemplate.html"><span class="micon tr"></span><span>WithMaximumIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$WithMinWithMaxIntegralTemplate.html"><span class="micon tr"></span><span>WithMinWithMaxIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$WithMinWithMultipleIntegralTemplate.html"><span class="micon tr"></span><span>WithMinWithMultipleIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$WithMinimumIntegralTemplate.html"><span class="micon tr"></span><span>WithMinimumIntegralTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/IntegralTemplate$WithMultipleIntegralTemplate.html"><span class="micon tr"></span><span>WithMultipleIntegralTemplate</span></a></span></div></div><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric/LongTemplate$.html"><span class="micon ob"></span><span>LongTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$CompleteLongTemplate.html"><span class="micon cl"></span><span>CompleteLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$EmptyLongTemplate.html"><span class="micon cl"></span><span>EmptyLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$WithMaxWithMultipleLongTemplate.html"><span class="micon cl"></span><span>WithMaxWithMultipleLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$WithMaximumLongTemplate.html"><span class="micon cl"></span><span>WithMaximumLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$WithMinWithMaxLongTemplate.html"><span class="micon cl"></span><span>WithMinWithMaxLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$WithMinWithMultipleLongTemplate.html"><span class="micon cl"></span><span>WithMinWithMultipleLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$WithMinimumLongTemplate.html"><span class="micon cl"></span><span>WithMinimumLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/LongTemplate$$WithMultipleLongTemplate.html"><span class="micon cl"></span><span>WithMultipleLongTemplate</span></a></span></div></div><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/numeric/NumericTemplate.html"><span class="micon tr"></span><span>NumericTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/NumericTemplate$CompleteNumericTemplate.html"><span class="micon tr"></span><span>CompleteNumericTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/NumericTemplate$EmptyNumericTemplate.html"><span class="micon tr"></span><span>EmptyNumericTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/NumericTemplate$WithMaximumNumericTemplate.html"><span class="micon tr"></span><span>WithMaximumNumericTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/dsl/numeric/NumericTemplate$WithMinimumNumericTemplate.html"><span class="micon tr"></span><span>WithMinimumNumericTemplate</span></a></span></div></div></div><div class="ni n3"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/dsl/StringTemplate$.html"><span class="micon ob"></span><span>StringTemplate</span></a></span><div class="ni n4 "><span class="nh "><a href="tuplespace/dsl/StringTemplate$$CompleteStringTemplate.html"><span class="micon cl"></span><span>CompleteStringTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/dsl/StringTemplate$$EmptyStringTemplate.html"><span class="micon cl"></span><span>EmptyStringTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/dsl/StringTemplate$$WithMaximumStringTemplate.html"><span class="micon cl"></span><span>WithMaximumStringTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/dsl/StringTemplate$$WithMinimumStringTemplate.html"><span class="micon cl"></span><span>WithMinimumStringTemplate</span></a></span></div></div><div class="ni n3 "><span class="nh "><a href="tuplespace/dsl/Template.html"><span class="micon tr"></span><span>Template</span></a></span></div></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/server.html"><span class="micon pa"></span><span>server</span></a></span><div class="ni n3 "><span class="nh "><a href="tuplespace/server/request.html"><span class="micon pa"></span><span>request</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/server/response.html"><span class="micon pa"></span><span>response</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/server/JsonTupleSpace$.html"><span class="micon ob"></span><span>JsonTupleSpace</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/server/main.html"><span class="micon cl"></span><span>main</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="tuplespace/DSL$.html"><span class="micon ob"></span><span>DSL</span></a></span></div><div class="ni n2 "><span class="nh "><a href="tuplespace/JsonSerializable.html"><span class="micon tr"></span><span>JsonSerializable</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/JsonSerializable$.html"><span class="micon ob"></span><span>JsonSerializable</span></a></span><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonSerializable$$given_JsonSerializable_JsonElement$.html"><span class="micon ob"></span><span>given_JsonSerializable_JsonElement</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="tuplespace/JsonTemplate.html"><span class="micon tr"></span><span>JsonTemplate</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/JsonTemplate$.html"><span class="micon ob"></span><span>JsonTemplate</span></a></span><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonAnyTemplate$.html"><span class="micon ob"></span><span>JsonAnyTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonBooleanTemplate$.html"><span class="micon ob"></span><span>JsonBooleanTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonBooleanTemplate.html"><span class="micon tr"></span><span>JsonBooleanTemplate</span></a></span></div><div class="ni n3"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$.html"><span class="micon ob"></span><span>JsonMultipleTemplate</span></a></span><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAllOfTemplate$.html"><span class="micon ob"></span><span>JsonAllOfTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAllOfTemplate.html"><span class="micon tr"></span><span>JsonAllOfTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAnyOfTemplate$.html"><span class="micon ob"></span><span>JsonAnyOfTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAnyOfTemplate.html"><span class="micon tr"></span><span>JsonAnyOfTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonOneOfTemplate$.html"><span class="micon ob"></span><span>JsonOneOfTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonOneOfTemplate.html"><span class="micon tr"></span><span>JsonOneOfTemplate</span></a></span></div></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate.html"><span class="micon tr"></span><span>JsonMultipleTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNotTemplate$.html"><span class="micon ob"></span><span>JsonNotTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNotTemplate.html"><span class="micon tr"></span><span>JsonNotTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNullTemplate$.html"><span class="micon ob"></span><span>JsonNullTemplate</span></a></span></div><div class="ni n3"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$.html"><span class="micon ob"></span><span>JsonNumericTemplate</span></a></span><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonDoubleTemplate$.html"><span class="micon ob"></span><span>JsonDoubleTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonDoubleTemplate.html"><span class="micon tr"></span><span>JsonDoubleTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonFloatTemplate$.html"><span class="micon ob"></span><span>JsonFloatTemplate</span></a></span></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonFloatTemplate.html"><span class="micon tr"></span><span>JsonFloatTemplate</span></a></span></div><div class="ni n4"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$.html"><span class="micon ob"></span><span>JsonIntegralTemplate</span></a></span><div class="ni n5 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonIntTemplate$.html"><span class="micon ob"></span><span>JsonIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonIntTemplate.html"><span class="micon tr"></span><span>JsonIntTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonLongTemplate$.html"><span class="micon ob"></span><span>JsonLongTemplate</span></a></span></div><div class="ni n5 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonLongTemplate.html"><span class="micon tr"></span><span>JsonLongTemplate</span></a></span></div></div><div class="ni n4 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate.html"><span class="micon tr"></span><span>JsonIntegralTemplate</span></a></span></div></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonNumericTemplate.html"><span class="micon tr"></span><span>JsonNumericTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonStringTemplate$.html"><span class="micon ob"></span><span>JsonStringTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonStringTemplate.html"><span class="micon tr"></span><span>JsonStringTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonTupleTemplate$.html"><span class="micon ob"></span><span>JsonTupleTemplate</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTemplate$$JsonTupleTemplate.html"><span class="micon tr"></span><span>JsonTupleTemplate</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="tuplespace/JsonTuple.html"><span class="micon tr"></span><span>JsonTuple</span></a></span></div><div class="ni n2"><span class="nh "><button class="ar icon-button "></button><a href="tuplespace/JsonTuple$.html"><span class="micon ob"></span><span>JsonTuple</span></a></span><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTuple$$%23:.html"><span class="micon cl"></span><span>#:</span></a></span></div><div class="ni n3 "><span class="nh "><a href="tuplespace/JsonTuple$$JsonNil$.html"><span class="micon ob"></span><span>JsonNil</span></a></span></div></div><div class="ni n2 "><span class="nh "><a href="tuplespace/TupleOps.html"><span class="micon tr"></span><span>TupleOps</span></a></span></div><div class="ni n2 "><span class="nh "><a href="tuplespace/TupleOps$.html"><span class="micon ob"></span><span>TupleOps</span></a></span></div></div><div class="ni n1 "><span class="nh "><a href="../AnyOps$.html"><span class="micon ob"></span><span>AnyOps</span></a></span></div></div></nav></div><div id="footer" class="body-small"><div class="left-container">Generated with</div><div class="right-container"><div class="text"></div></div><div class="text-mobile"></div></div><div id="scaladoc-searchBar"></div><div id="main"><div class="breadcrumbs container"><a href="../../../../index.html">laas</a>/<a href="../../cakelier.html">io.github.cakelier</a>/<a href="tuplespace.html">io.github.cakelier.laas.tuplespace</a></div><div id="content" class="body-medium"><div><div class="cover-header">
+ <span class="icon"><span class="micon pa"></span></span>
+ <h1 class="h600 single">io.github.cakelier.laas.tuplespace</h1>
+</div>
+<div class="fqname body-large">
+ <span></span>
+</div>
+<div class="main-signature mono-small-block">
+ <div class="signature">
+  <span class="modifiers"></span><span class="kind"><span t="k">package </span></span><a href="tuplespace.html" t="n" class="documentableName ">io.github.cakelier.laas.tuplespace</a>
+ </div>
+</div>
+<section id="members-list">
+ <h2 class="h500">Members list</h2>
+ <div class="documentableFilter">
+  <div class="filtersContainer"></div>
+  <input class="filterableInput" placeholder="Filter by any phrase" data-test-id="filterBarInput" type="search"><button class="clearButton label-only-button" data-test-id="filterBarClearButton">Clear all</button>
+ </div>
+ <div class="membersList expand">
+  <div class="tabs">
+   <div class="contents">
+    <section id="Packages">
+     <div data-togglable="packages" class="tab expand">
+      <div class="documentableList expand">
+       <div class="documentableList-expander">
+        <button class="icon-button show-content expand"></button>
+        <h3 class="groupHeader h400">Packages</h3>
+       </div>
+       <div class="documentableElement">
+        <div class="documentableElement-expander">
+         <div class="header monospace mono-medium">
+          <div class="signature">
+           <span class="modifiers"></span><span class="kind"><span t="k">package </span></span><a href="tuplespace/client.html" t="n" class="documentableName ">io.github.cakelier.laas.tuplespace.client</a>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="documentableElement">
+        <div class="documentableElement-expander">
+         <div class="header monospace mono-medium">
+          <div class="signature">
+           <span class="modifiers"></span><span class="kind"><span t="k">package </span></span><a href="tuplespace/dsl.html" t="n" class="documentableName ">io.github.cakelier.laas.tuplespace.dsl</a>
+          </div>
+         </div>
+        </div>
+       </div>
+       <div class="documentableElement">
+        <div class="documentableElement-expander">
+         <div class="header monospace mono-medium">
+          <div class="signature">
+           <span class="modifiers"></span><span class="kind"><span t="k">package </span></span><a href="tuplespace/server.html" t="n" class="documentableName ">io.github.cakelier.laas.tuplespace.server</a>
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </section>
+    <section id="Type-members">
+     <div data-togglable="Type members" class="tab expand">
+      <div class="member-group-header">
+       <h3 data-togglable="Type members" class="h400">Type members</h3>
+      </div>
+      <section id="Classlikes">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Classlikes</h4>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="tuplespace/DSL$.html" t="n" class="documentableName ">DSL</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The object allowing the access to the DSL for creating <a href="tuplespace.html#JsonTupleTemplate-0">JsonTupleTemplate</a>s.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The object allowing the access to the DSL for creating <a href="tuplespace.html#JsonTupleTemplate-0">JsonTupleTemplate</a>s.</p> 
+              <p>This objects contains all methods for creating a tuple template with simplicity and conciseness. The starting point are the <a href="tuplespace/DSL$.html#complete-dc7">complete</a> and <a href="tuplespace/DSL$.html#partial-dc7">partial</a> methods, to be used for allowing the creation of new <a href="tuplespace.html#JsonTupleTemplate-0">JsonTupleTemplate</a>s. These are the only top-level templates allowed to be created. All other templates can be used as elements of this type of templates. An example of syntax using this DSL is:</p> 
+              <p><code>complete(string in ("event-type-1", "event-type-2"), *, anyOf(bool, nil))</code></p> 
+              <p>If a constant value is to be used for matching, it can be inserted as any other template in a tuple template, for example:</p> 
+              <p><code>partial("event-type-1", 5.33f, *)</code></p> 
+              <p>The use of this DSL is the main tool for creating new <a href="tuplespace/JsonTemplate.html">JsonTemplate</a>s of any kind, because it is able to limit the ways in which a template can be created. The API exposed by the <a href="tuplespace/JsonTemplate.html">JsonTemplate</a> trait and all its subtypes it is not designed to capture the constraints of their creation or the use cases for this library, while this DSL is. Being so, it is highly encouraged to use DSL for creating templates.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Self type
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="tuplespace/DSL$.html" t="n">DSL</a>.type
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">trait </span></span><a href="tuplespace/JsonSerializable.html" t="n" class="documentableName ">JsonSerializable</a>[<span t="k">-</span><span data-unresolved-link="" t="t">A</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A type-class representing the operations that need to be supported by an object which can be serialized into a JSON-formatted string.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A type-class representing the operations that need to be supported by an object which can be serialized into a JSON-formatted string.</p> 
+              <p>An object which can be serialized into a string using the JSON formatting needs to specify how to do so using a specific operation, which takes the object as input and returns a JSON-formatted string as output. Whether or not this function returns valid JSON, or JSON at all, is left to the right implementation of the function for the corresponding type of the object.</p> 
+             </div>
+             <h2 class="h200">Type parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               A
+              </dt>
+              <dd class="body-medium">
+               <p>the type of the object that can be serialized in a JSON-formatted way</p> 
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/JsonSerializable$.html">object</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Known subtypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 object <a href="tuplespace/JsonSerializable$$given_JsonSerializable_JsonElement$.html" t="n">given_JsonSerializable_JsonElement</a>.type
+                </div><span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="tuplespace/JsonSerializable$.html" t="n" class="documentableName ">JsonSerializable</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Companion object to the <a href="tuplespace/JsonSerializable.html">JsonSerializable</a> type-class, containing its interface and its implementations.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Companion object to the <a href="tuplespace/JsonSerializable.html">JsonSerializable</a> type-class, containing its interface and its implementations.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/JsonSerializable.html">trait</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Self type
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="tuplespace/JsonSerializable$.html" t="n">JsonSerializable</a>.type
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="sealed">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">sealed </span></span><span class="kind"><span t="k">trait </span></span><a href="tuplespace/JsonTemplate.html" t="n" class="documentableName ">JsonTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A template, also known as an anti-tuple, an entity capable of matching against a tuple.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A template, also known as an anti-tuple, an entity capable of matching against a tuple.</p> 
+              <p>Being the tuples "JSON" tuples, the templates should be "JSON" templates as well, being capable of matching them. This means that all the available templates are made for covering a different part of the "JSON Schema" specification, the only specification that can produce a JSON document which can be used for checking whether or not another JSON document conforms to it. This means that the JSON Schema allows to create templates for JSON documents, which can be matched against, the corresponding use case for this JSON template. Following the possible underlying representations of a JSON tuple and of an element of the tuple itself, a template can match against a null value, a boolean, an integer, a long integer, a single precision floating point number, a double precision floating point number, a string or a tuple itself. The JSON schema specification allows also for creating templates of templates, where the single templates are used for matching using different semantics. Then it can be possible to match a JSON element if any of the templates matches, if all of the templates matches, if only one of the templates matches. It is also possible to match a template if the inner template does not match.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/JsonTemplate$.html">object</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Known subtypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 object <a href="tuplespace/JsonTemplate$$JsonAnyTemplate$.html" t="n">JsonAnyTemplate</a>.type
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonBooleanTemplate.html" t="n">JsonBooleanTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate.html" t="n">JsonMultipleTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAllOfTemplate.html" t="n">JsonAllOfTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAnyOfTemplate.html" t="n">JsonAnyOfTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonOneOfTemplate.html" t="n">JsonOneOfTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNotTemplate.html" t="n">JsonNotTemplate</a>
+                </div>
+                <div>
+                 object <a href="tuplespace/JsonTemplate$$JsonNullTemplate$.html" t="n">JsonNullTemplate</a>.type
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNumericTemplate.html" t="n">JsonNumericTemplate</a>[<span t="t">A</span>]
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonDoubleTemplate.html" t="n">JsonDoubleTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonFloatTemplate.html" t="n">JsonFloatTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate.html" t="n">JsonIntegralTemplate</a>[<span t="t">A</span>]
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonIntTemplate.html" t="n">JsonIntTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonLongTemplate.html" t="n">JsonLongTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonStringTemplate.html" t="n">JsonStringTemplate</a>
+                </div>
+                <div>
+                 trait <a href="tuplespace/JsonTemplate$$JsonTupleTemplate.html" t="n">JsonTupleTemplate</a>
+                </div><span class="show-all-code show-content text-button h100">Show all</span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="tuplespace/JsonTemplate$.html" t="n" class="documentableName ">JsonTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>The companion object to the <a href="tuplespace/JsonTemplate.html">JsonTemplate</a> trait, containing its implementations.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>The companion object to the <a href="tuplespace/JsonTemplate.html">JsonTemplate</a> trait, containing its implementations.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/JsonTemplate.html">trait</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Sum</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Self type
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="tuplespace/JsonTemplate$.html" t="n">JsonTemplate</a>.type
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" data-f-keywords="sealed">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">sealed </span></span><span class="kind"><span t="k">trait </span></span><a href="tuplespace/JsonTuple.html" t="n" class="documentableName ">JsonTuple</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A tuple, an object representing an immutable and ordered sequence of values of different types.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A tuple, an object representing an immutable and ordered sequence of values of different types.</p> 
+              <p>This implementation of a tuple is a "JSON" tuple, meaning that it is built on the fundamental concepts of the JSON format, enabling an easier exchange of data over the wire. This is because JSON is now the de-facto format for the data exchange on the web, which in turn is the standard for building distributed architectures, namely webservices. This means that a JSON tuple is the same concept as a JSON array, so an indexed sequence of values allowed in JSON, minus the "JSON object". Objects are not allowed since this would violate the rigid structure of a tuple: this would allow to objects to nest tuples inside them, which could nest other objects, which in turn could nest other tuples and so on and so forth. This would not correctly represent what in most programming languages is a sequence or list of elements. However, tuples can be nested into other tuples, enabling the equivalent of a matrix or of a jagged array. Their usefulness is in representing simple, not deeply nested data structures, such as messages or events exchanged in a distributed system.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/JsonTuple$.html">object</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Known subtypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block subtypes">
+                <div>
+                 class <a href="tuplespace/JsonTuple$$%23:.html" t="n">#:</a>
+                </div>
+                <div>
+                 object <a href="tuplespace/JsonTuple$$JsonNil$.html" t="n">JsonNil</a>.type
+                </div><span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="tuplespace/JsonTuple$.html" t="n" class="documentableName ">JsonTuple</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Companion object to the <a href="tuplespace/JsonTuple.html">JsonTuple</a> trait, containing its factory methods and its implementations.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Companion object to the <a href="tuplespace/JsonTuple.html">JsonTuple</a> trait, containing its factory methods and its implementations.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/JsonTuple.html">trait</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 trait <span data-unresolved-link="" t="n">Sum</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Mirror</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Self type
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="tuplespace/JsonTuple$.html" t="n">JsonTuple</a>.type
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">trait </span></span><a href="tuplespace/TupleOps.html" t="n" class="documentableName ">TupleOps</a>[<span t="k">-</span><span data-unresolved-link="" t="t">T</span><span t="k"> &lt;: </span><span t="t">G</span>, <span t="k"></span><span data-unresolved-link="" t="t">E</span>, <span t="k"></span><span data-unresolved-link="" t="t">G</span>]
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A type-class representing the operations that must be supported by a tuple-like object.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A type-class representing the operations that must be supported by a tuple-like object.</p> 
+              <p>Objects representing tuples, being so, must provide some operations that are expected to work on them. A tuple must allow to peek its internal structure in a predictable way, giving access to its number of elements, the elements at any given position, its head or its tail, to the initial part of it or the ending element. A tuple must also provide operations to update it, returning a new tuple, in a similar fashion to a sequence. So, elements can be appended, dropped, filtered, mapped, flat-mapped, taken, folded or an action can be performed for each one of them. At last, a tuple can be concatenated to another tuple, it can be converted to a Seq, existing a bijective relationship between them, split into two or zipped with another.</p> 
+             </div>
+             <h2 class="h200">Type parameters</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               E
+              </dt>
+              <dd class="body-medium">
+               <p>the concrete type of an element in the tuple</p> 
+              </dd>
+              <dt class="body-small">
+               G
+              </dt>
+              <dd class="body-medium">
+               <p>the abstract type of tuple to which the concrete type belongs</p> 
+              </dd>
+              <dt class="body-small">
+               T
+              </dt>
+              <dd class="body-medium">
+               <p>the concrete type of tuple that must support these operations</p> 
+              </dd>
+             </dl>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/TupleOps$.html">object</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">object </span></span><a href="tuplespace/TupleOps$.html" t="n" class="documentableName ">TupleOps</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Companion object to the <a href="tuplespace/TupleOps.html">TupleOps</a> type-class, containing the type-class interface and the implementation for the <a href="tuplespace/JsonTuple.html">JsonTuple</a> type.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Companion object to the <a href="tuplespace/TupleOps.html">TupleOps</a> type-class, containing the type-class interface and the implementation for the <a href="tuplespace/JsonTuple.html">JsonTuple</a> type.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small">
+              <dt class="body-small">
+               Companion
+              </dt>
+              <dd class="body-medium">
+               <a href="tuplespace/TupleOps.html">trait</a>
+              </dd>
+              <dt class="body-small">
+               Supertypes
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <div>
+                 class <span data-unresolved-link="" t="n">Object</span>
+                </div>
+                <div>
+                 trait <span data-unresolved-link="" t="n">Matchable</span>
+                </div>
+                <div>
+                 class <span data-unresolved-link="" t="n">Any</span>
+                </div><span></span>
+               </div>
+              </dd>
+              <dt class="body-small">
+               Self type
+              </dt>
+              <dd class="body-medium">
+               <div class="mono-small-block supertypes">
+                <span></span>
+                <div>
+                 <a href="tuplespace/TupleOps$.html" t="n">TupleOps</a>.type
+                </div>
+               </div>
+              </dd>
+             </dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+      <section id="Types">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Types</h4>
+        </div>
+        <div class="documentableElement" id="JsonElement-0">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonElement-0" t="n" class="documentableName ">JsonElement</a> = <a href="https://www.scala-lang.org/api/2.13.10/scala/Int.html" t="t">Int</a><span t="k"> | </span><a href="https://www.scala-lang.org/api/2.13.10/scala/Long.html" t="t">Long</a><span t="k"> | </span><a href="https://www.scala-lang.org/api/2.13.10/scala/Double.html" t="t">Double</a><span t="k"> | </span><a href="https://www.scala-lang.org/api/2.13.10/scala/Float.html" t="t">Float</a><span t="k"> | </span><a href="https://www.scala-lang.org/api/2.13.10/scala/Boolean.html" t="t">Boolean</a><span t="k"> | </span><a href="https://www.scala-lang.org/api/2.13.10/scala/Predef$.html#String" t="t">String</a><span t="k"> | </span><a href="tuplespace/JsonTuple.html" t="t">JsonTuple</a><span t="k"> | </span><span data-unresolved-link="" t="t">Null</span>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo"></div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>A JSON element, an admissible element in the JSON specification.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>A JSON element, an admissible element in the JSON specification.</p> 
+              <p>This type represents an element in the JSON specification, such as an integer number, a long integer number, a floating point single precision number, a floating point double precision number, a boolean value, a string value, a null value or a <a href="tuplespace/JsonTuple.html">JsonTuple</a>. This last type is needed because not only this type is of a JSON element, it is also the type of all elements that can be contained into a <a href="tuplespace/JsonTuple.html">JsonTuple</a>. In this way, the <a href="tuplespace/JsonTuple.html">JsonTuple</a>s can be nested one inside the other, because an element in a tuple can be another tuple. Being so, a JSON element can also be a JSON array, because a JSON tuple is just that, but not a JSON object. Objects are not allowed since this would violate the rigid structure of a tuple: this would allow to objects to nest tuples inside them, which could nest other objects, which in turn could nest other tuples and so on and so forth. This would not correctly represent what in most programming languages is a sequence or list of elements.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+    </section>
+    <section id="Exports">
+     <div data-togglable="Exports" class="tab expand">
+      <div class="member-group-header">
+       <h3 data-togglable="Exports" class="h400">Exports</h3>
+      </div>
+      <section id="Defined-exports">
+       <div class="documentableList expand">
+        <div class="documentableList-expander">
+         <button class="icon-button show-content expand"></button>
+         <h4 class="groupHeader h200">Defined exports</h4>
+        </div>
+        <div class="documentableElement" id="#:-0" data-f-export="from JsonTuple$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html##:-0" t="n" class="documentableName ">#:</a><span t="k"> = </span><a href="tuplespace/JsonTuple$$%23:.html" t="t">#:</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTuple$.html">JsonTuple$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="*-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#*-0" t="n" class="documentableName ">*</a>: <a href="tuplespace/dsl/Template.html" t="t">Template</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "any" template, capable of matching any <a href="tuplespace.html#JsonElement-0">JsonElement</a>.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "any" template, capable of matching any <a href="tuplespace.html#JsonElement-0">JsonElement</a>.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonAllOfTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonAllOfTemplate-0" t="n" class="documentableName ">JsonAllOfTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAllOfTemplate$.html" t="t">JsonAllOfTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonAllOfTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonAllOfTemplate-0" t="n" class="documentableName ">JsonAllOfTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonAllOfTemplate-0" t="t">JsonAllOfTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonAnyOfTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonAnyOfTemplate-0" t="n" class="documentableName ">JsonAnyOfTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonAnyOfTemplate$.html" t="t">JsonAnyOfTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonAnyOfTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonAnyOfTemplate-0" t="n" class="documentableName ">JsonAnyOfTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonAnyOfTemplate-0" t="t">JsonAnyOfTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonAnyTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonAnyTemplate-0" t="n" class="documentableName ">JsonAnyTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonAnyTemplate$.html" t="t">JsonAnyTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonBooleanTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonBooleanTemplate-0" t="n" class="documentableName ">JsonBooleanTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonBooleanTemplate$.html" t="t">JsonBooleanTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonBooleanTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonBooleanTemplate-0" t="n" class="documentableName ">JsonBooleanTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonBooleanTemplate.html" t="t">JsonBooleanTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonDoubleTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonDoubleTemplate-0" t="n" class="documentableName ">JsonDoubleTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonDoubleTemplate$.html" t="t">JsonDoubleTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonDoubleTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonDoubleTemplate-0" t="n" class="documentableName ">JsonDoubleTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonDoubleTemplate-0" t="t">JsonDoubleTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonFloatTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonFloatTemplate-0" t="n" class="documentableName ">JsonFloatTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonFloatTemplate$.html" t="t">JsonFloatTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonFloatTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonFloatTemplate-0" t="n" class="documentableName ">JsonFloatTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonFloatTemplate-0" t="t">JsonFloatTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonIntTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonIntTemplate-0" t="n" class="documentableName ">JsonIntTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonIntTemplate$.html" t="t">JsonIntTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonIntTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonIntTemplate-0" t="n" class="documentableName ">JsonIntTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonIntTemplate-0" t="t">JsonIntTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonIntegralTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonIntegralTemplate-0" t="n" class="documentableName ">JsonIntegralTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$.html" t="t">JsonIntegralTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonIntegralTemplate-0" data-f-export="from JsonNumericTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonIntegralTemplate-0" t="n" class="documentableName ">JsonIntegralTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate.html" t="t">JsonIntegralTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$.html">JsonNumericTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonLongTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonLongTemplate-0" t="n" class="documentableName ">JsonLongTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$$JsonIntegralTemplate$$JsonLongTemplate$.html" t="t">JsonLongTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonLongTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonLongTemplate-0" t="n" class="documentableName ">JsonLongTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonLongTemplate-0" t="t">JsonLongTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonMultipleTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonMultipleTemplate-0" t="n" class="documentableName ">JsonMultipleTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$.html" t="t">JsonMultipleTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonMultipleTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonMultipleTemplate-0" t="n" class="documentableName ">JsonMultipleTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonMultipleTemplate.html" t="t">JsonMultipleTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonNil-0" data-f-export="from JsonTuple}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonNil-0" t="n" class="documentableName ">JsonNil</a>: <a href="tuplespace/JsonTuple$$JsonNil$.html" t="t">JsonNil</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTuple$.html">JsonTuple</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonNotTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonNotTemplate-0" t="n" class="documentableName ">JsonNotTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNotTemplate$.html" t="t">JsonNotTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonNotTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonNotTemplate-0" t="n" class="documentableName ">JsonNotTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonNotTemplate.html" t="t">JsonNotTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonNullTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonNullTemplate-0" t="n" class="documentableName ">JsonNullTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNullTemplate$.html" t="t">JsonNullTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonNumericTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonNumericTemplate-0" t="n" class="documentableName ">JsonNumericTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonNumericTemplate$.html" t="t">JsonNumericTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonNumericTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonNumericTemplate-0" t="n" class="documentableName ">JsonNumericTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonNumericTemplate.html" t="t">JsonNumericTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonOneOfTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonOneOfTemplate-0" t="n" class="documentableName ">JsonOneOfTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonMultipleTemplate$$JsonOneOfTemplate$.html" t="t">JsonOneOfTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonOneOfTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonOneOfTemplate-0" t="n" class="documentableName ">JsonOneOfTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$.html#JsonOneOfTemplate-0" t="t">JsonOneOfTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonStringTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonStringTemplate-0" t="n" class="documentableName ">JsonStringTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonStringTemplate$.html" t="t">JsonStringTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonStringTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonStringTemplate-0" t="n" class="documentableName ">JsonStringTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonStringTemplate.html" t="t">JsonStringTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonTupleTemplate-0" data-f-export="from JsonTemplate}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">val </span></span><a href="tuplespace.html#JsonTupleTemplate-0" t="n" class="documentableName ">JsonTupleTemplate</a>: <a href="tuplespace/JsonTemplate$$JsonTupleTemplate$.html" t="t">JsonTupleTemplate</a>.type
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="JsonTupleTemplate-0" data-f-export="from JsonTemplate$}" data-f-keywords="final">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"><span t="k">final </span></span><span class="kind"><span t="k">type </span></span><a href="tuplespace.html#JsonTupleTemplate-0" t="n" class="documentableName ">JsonTupleTemplate</a><span t="k"> = </span><a href="tuplespace/JsonTemplate$$JsonTupleTemplate.html" t="t">JsonTupleTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/JsonTemplate$.html">JsonTemplate$</a>
+           </div>
+           <div class="memberDocumentation"></div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="bool-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#bool-0" t="n" class="documentableName ">bool</a>: <a href="tuplespace/dsl/Template.html" t="t">Template</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "boolean" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Boolean.html">Boolean</a> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "boolean" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Boolean.html">Boolean</a> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="double-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#double-0" t="n" class="documentableName ">double</a>: <a href="tuplespace/dsl/numeric/DoubleTemplate$$EmptyDoubleTemplate.html" t="t">EmptyDoubleTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "double" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Double.html">Double</a> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "double" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Double.html">Double</a> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="float-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#float-0" t="n" class="documentableName ">float</a>: <a href="tuplespace/dsl/numeric/FloatTemplate$$EmptyFloatTemplate.html" t="t">EmptyFloatTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "float" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Float.html">Float</a> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "float" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Float.html">Float</a> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="int-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#int-0" t="n" class="documentableName ">int</a>: <a href="tuplespace/dsl/numeric/IntTemplate$$EmptyIntTemplate.html" t="t">EmptyIntTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "integer" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Int.html">Int</a> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "integer" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Int.html">Int</a> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="long-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#long-0" t="n" class="documentableName ">long</a>: <a href="tuplespace/dsl/numeric/LongTemplate$$EmptyLongTemplate.html" t="t">EmptyLongTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "long" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Long.html">Long</a> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "long" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Long.html">Long</a> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="nil-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#nil-0" t="n" class="documentableName ">nil</a>: <a href="tuplespace/dsl/Template.html" t="t">Template</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "null" template, capable of matching only the <code>null</code> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "null" template, capable of matching only the <code>null</code> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div class="documentableElement" id="string-0" data-f-export="from DSL}">
+         <div class="documentableElement-expander">
+          <button class="icon-button ar show-content"></button>
+          <div class="header monospace mono-medium">
+           <div class="signature">
+            <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="tuplespace.html#string-0" t="n" class="documentableName ">string</a>: <a href="tuplespace/dsl/StringTemplate$$EmptyStringTemplate.html" t="t">EmptyStringTemplate</a>
+           </div>
+          </div>
+         </div>
+         <div class="docs">
+          <span class="modifiers"></span>
+          <div>
+           <div class="originInfo">
+            Exported from <a href="tuplespace/DSL$.html">DSL</a>
+           </div>
+           <div class="memberDocumentation">
+            <div class="documentableBrief doc">
+             <p>Returns a new "string" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Predef$.html#String">String</a> value.</p> 
+            </div>
+            <div class="cover">
+             <div class="doc">
+              <p>Returns a new "string" template, capable of matching any <a href="https://www.scala-lang.org/api/2.13.10/scala/Predef$.html#String">String</a> value.</p> 
+             </div>
+             <h2 class="h200">Attributes</h2>
+             <dl class="attributes attributes-small"></dl>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+       </div>
+      </section>
+     </div>
+    </section>
+   </div>
+  </div>
+ </div>
+</section></div><div id="toc" class="body-small"><div id="toc-container"><span class="toc-title h200">In this article</span><nav class="toc-nav"><ul class="toc-list"><li><a href="#members-list">Members list</a><ul><li><a href="#Packages">Packages</a></li><li><a href="#Type-members">Type members</a><ul><li><a href="#Classlikes">Classlikes</a></li><li><a href="#Types">Types</a></li></ul></li><li><a href="#Exports">Exports</a><ul><li><a href="#Defined-exports">Defined exports</a></li></ul></li></ul></li></ul></nav></div></div></div><div id="footer" class="body-small mobile-footer"><div class="left-container">Generated with</div><div class="right-container"><a href="https://github.com/lampepfl/dotty"><button class="icon-button gh"></button></a><a href="https://twitter.com/scala_lang"><button class="icon-button twitter"></button></a><a href="https://discord.com/invite/scala"><button class="icon-button discord"></button></a><a href="https://gitter.im/scala/scala"><button class="icon-button gitter"></button></a><div class="text"></div></div><div class="text-mobile"></div></div></div></div></body></html>
