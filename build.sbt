@@ -118,8 +118,10 @@ lazy val worker = project
       akkaHttp,
       akkaStreamTestkit,
       akkaHttpTestkit,
-      akkaTestkit
+      akkaTestkit,
+      testContainers
     ),
+    Test / fork := true,
     assembly / assemblyJarName := "main.jar",
     assembly / mainClass := Some("io.github.cakelier.laas.worker"),
     docker / dockerfile := NativeDockerfile(file("worker") / "Dockerfile"),
