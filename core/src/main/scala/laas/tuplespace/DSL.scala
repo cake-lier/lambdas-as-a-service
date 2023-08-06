@@ -51,9 +51,10 @@ import laas.tuplespace.dsl.numeric.LongTemplate.*
   */
 object DSL {
 
-  private type ConstantElement = Int | Long | Float | Double | Boolean | String
+  private type ConstantElement = Int | Long | Float | Double | Boolean | String | JsonTuple
 
   /* Converts a constant element into a DSL template or, if the element is already a template, it does nothing. */
+  @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
   private def convertToTemplate(v: Template | ConstantElement): Template = v match {
     case e: ConstantElement =>
       e match {
@@ -86,6 +87,12 @@ object DSL {
           new Template {
 
             override def toJsonTemplate: JsonTemplate = JsonStringTemplate(Some(Set(s)), None, None, None)
+          }
+        case t: JsonTuple =>
+          new Template {
+
+            override def toJsonTemplate: JsonTemplate =
+              JsonTupleTemplate(t.toSeq.map(convertToTemplate).map(_.toJsonTemplate), additionalItems = false)
           }
       }
     case t: Template => t

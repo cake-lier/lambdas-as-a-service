@@ -10,10 +10,9 @@ object Execution {
   /** The arguments passed as input to the executable file to be executed. */
   type ExecutionArguments = Seq[String]
 
-  /**
-   * The output of an execution, it is made by the exit code of the process which executed the executable file, what was
-   * printed on standard output and what was printed on standard error.
-   */
+  /** The output of an execution, it is made by the exit code of the process which executed the executable file, what was printed
+    * on standard output and what was printed on standard error.
+    */
   trait ExecutionOutput {
 
     /** Returns the exit code of the process which executed a given executable file. */

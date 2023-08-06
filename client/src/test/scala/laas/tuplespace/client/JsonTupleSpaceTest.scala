@@ -62,10 +62,8 @@ import laas.tuplespace.JsonTuple.JsonNil
 
 @SuppressWarnings(
   Array(
-    "org.wartremover.warts.Throw",
     "org.wartremover.warts.Var",
     "org.wartremover.warts.Nothing",
-    "scalafix:DisableSyntax.throw",
     "scalafix:DisableSyntax.var",
     "org.wartremover.warts.ThreadSleep"
   )
