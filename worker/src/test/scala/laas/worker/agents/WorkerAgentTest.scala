@@ -335,7 +335,220 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
       }
     }
 
-    // TODO: transfer that fails and then new cfp succeeds
-    // TODO: double cfp so one succeeds and one fails due to missing slots
+    describe("when a call for proposal is issued, the request accepted but the executable not transferred") {
+      it("should notify it to the tuples space") {
+        val workerAgent = testKit.spawn(
+          WorkerAgent(
+            rootActorProbe.ref,
+            workerId,
+            tupleSpace.getOrElse(fail()),
+            _ => Future.failed[Unit](RuntimeException()),
+            Seq(ExecutableType.Java),
+            1
+          )
+        )
+        val cfpId = UUID.randomUUID()
+        val executableId = UUID.randomUUID()
+        Await.ready(
+          for {
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.Cfp.name #:
+                cfpId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Propose.name,
+                  cfpId.toString,
+                  workerId.toString,
+                  ExecutableType.Java.toString #: JsonNil,
+                  1
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.AcceptProposal.name #:
+                cfpId.toString #:
+                workerId.toString #:
+                executableId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Failure.name,
+                  "cfp",
+                  cfpId.toString
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.Cfp.name #:
+                cfpId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Propose.name,
+                  cfpId.toString,
+                  workerId.toString,
+                  ExecutableType.Java.toString #: JsonNil,
+                  1
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.AcceptProposal.name #:
+                cfpId.toString #:
+                workerId.toString #:
+                executableId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.InformDone.name,
+                  "cfp",
+                  cfpId.toString
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.Cfp.name #:
+                cfpId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Refuse.name,
+                  "cfp",
+                  cfpId.toString
+                )
+              )
+          } yield (),
+          30.seconds
+        )
+        testKit.stop(workerAgent)
+      }
+    }
+
+    describe("when two calls for proposal are issued, but only one slot is available") {
+      it("should accept only one request and refuse the other") {
+        val workerAgent = testKit.spawn(
+          WorkerAgent(
+            rootActorProbe.ref,
+            workerId,
+            tupleSpace.getOrElse(fail()),
+            _ => Future.successful(()),
+            Seq(ExecutableType.Java),
+            1
+          )
+        )
+        val cfpId1 = UUID.randomUUID()
+        val cfpId2 = UUID.randomUUID()
+        val executableId = UUID.randomUUID()
+        Await.ready(
+          for {
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.Cfp.name #:
+                cfpId1.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.Cfp.name #:
+                cfpId2.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Propose.name,
+                  cfpId1.toString,
+                  workerId.toString,
+                  ExecutableType.Java.toString #: JsonNil,
+                  1
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Propose.name,
+                  cfpId2.toString,
+                  workerId.toString,
+                  ExecutableType.Java.toString #: JsonNil,
+                  1
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.AcceptProposal.name #:
+                cfpId1.toString #:
+                workerId.toString #:
+                executableId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.InformDone.name,
+                  "cfp",
+                  cfpId1.toString
+                )
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .out(
+                Performative.AcceptProposal.name #:
+                cfpId2.toString #:
+                workerId.toString #:
+                executableId.toString #:
+                ExecutableType.Java.toString #:
+                JsonNil
+              )
+            _ <- tupleSpace
+              .getOrElse(fail())
+              .in(
+                complete(
+                  Performative.Failure.name,
+                  "cfp",
+                  cfpId2.toString
+                )
+              )
+          } yield (),
+          30.seconds
+        )
+        testKit.stop(workerAgent)
+      }
+    }
   }
 }

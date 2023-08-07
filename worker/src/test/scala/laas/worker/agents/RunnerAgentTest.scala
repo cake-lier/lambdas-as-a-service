@@ -84,8 +84,8 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
         output.standardOutput shouldBe "out\n"
         output.standardError should endWith(
           """Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
-             |\tat it.unibo.ds.laas.script.Main.main(Main.java:6)
-             |""".stripMargin
+            |\tat it.unibo.ds.laas.script.Main.main(Main.java:6)
+            |""".stripMargin
         )
         testKit.stop(runnerAgent)
       }
