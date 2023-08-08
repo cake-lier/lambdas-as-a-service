@@ -4,6 +4,7 @@ package laas.worker.agents
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.UUID
+import java.util.stream.Collectors
 
 import scala.reflect.ClassTag
 import scala.util.Failure
@@ -29,7 +30,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
   override protected def beforeAll(): Unit = {
     Files.createDirectory(Paths.get("executables"))
     Files.copy(
-      Paths.get("worker", "src", "test", "resources", "exec.jar"),
+      Paths.get("src", "test", "resources", "exec.jar"),
       Paths.get("executables", executableId.toString + ".jar")
     )
   }
@@ -83,9 +84,8 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
         output.exitCode shouldBe 1
         output.standardOutput shouldBe "out\n"
         output.standardError should endWith(
-          """Exception in thread "main" java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1
-            |\tat it.unibo.ds.laas.script.Main.main(Main.java:6)
-            |""".stripMargin
+          "Exception in thread \"main\" java.lang.ArrayIndexOutOfBoundsException: Index 1 out of bounds for length 1\n" +
+          "\tat it.unibo.ds.laas.script.Main.main(Main.java:6)\n"
         )
         testKit.stop(runnerAgent)
       }

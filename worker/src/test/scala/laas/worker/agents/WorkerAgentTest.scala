@@ -10,10 +10,8 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.Failure
-import scala.util.Success
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
-import com.dimafeng.testcontainers.ContainerDef
 import com.dimafeng.testcontainers.GenericContainer
 import com.dimafeng.testcontainers.scalatest.TestContainerForAll
 import org.scalatest.BeforeAndAfterAll
@@ -91,7 +89,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
       it("should notify its success on the tuples space") {
         val executableId = UUID.randomUUID()
         Files.copy(
-          Paths.get("worker", "src", "test", "resources", "exec.jar"),
+          Paths.get("src", "test", "resources", "exec.jar"),
           Paths.get("executables", executableId.toString + ".jar")
         )
         val workerAgent = testKit.spawn(
