@@ -12,6 +12,10 @@ object Dependencies {
 
   lazy val circeParser = "io.circe" %% "circe-parser" % "0.14.5"
 
+  lazy val postgresql: ModuleID = "org.postgresql" % "postgresql" % "42.6.0"
+
+  lazy val quill: ModuleID = "io.getquill" %% "quill-jdbc" % "4.6.0.1"
+
   lazy val akka = "com.typesafe.akka" %% "akka-actor-typed" % "2.8.3"
 
   lazy val akkaStream = "com.typesafe.akka" %% "akka-stream-typed" % "2.8.3"
@@ -24,5 +28,7 @@ object Dependencies {
 
   lazy val akkaTestkit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.8.3" % Test
 
-  lazy val testContainers = "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.40.17"
+  lazy val testContainers = "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.40.17" % Test
+
+  lazy val testContainersPostgresql: ModuleID = "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.40.17" % Test
 }

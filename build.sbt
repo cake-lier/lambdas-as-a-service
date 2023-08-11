@@ -154,7 +154,11 @@ lazy val master = project
       akkaHttp,
       akkaStreamTestkit,
       akkaHttpTestkit,
-      akkaTestkit
+      akkaTestkit,
+      testContainers,
+      testContainersPostgresql,
+      postgresql,
+      quill
     ),
     assembly / assemblyJarName := "main.jar",
     assembly / mainClass := Some("io.github.cakelier.laas.master"),
