@@ -40,7 +40,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
     waitStrategy = Wait.forListeningPort()
   )
 
-  given ExecutionContext = scala.concurrent.ExecutionContext.global
+  private given ExecutionContext = scala.concurrent.ExecutionContext.global
 
   private val testKit = ActorTestKit()
   private val workerActorProbe = testKit.createTestProbe[WorkerAgentCommand]()
@@ -195,7 +195,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
               .in(
                 complete(
                   Performative.Refuse.name,
-                  "cfp",
                   cfpId.toString
                 )
               )
@@ -236,7 +235,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
                   Performative.Propose.name,
                   cfpId.toString,
                   workerId.toString,
-                  ExecutableType.Java.toString #: JsonNil,
                   1
                 )
               )
@@ -286,7 +284,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
                   Performative.Propose.name,
                   cfpId.toString,
                   workerId.toString,
-                  ExecutableType.Java.toString #: JsonNil,
                   1
                 )
               )
@@ -322,7 +319,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
               .in(
                 complete(
                   Performative.Refuse.name,
-                  "cfp",
                   cfpId.toString
                 )
               )
@@ -364,7 +360,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
                   Performative.Propose.name,
                   cfpId.toString,
                   workerId.toString,
-                  ExecutableType.Java.toString #: JsonNil,
                   1
                 )
               )
@@ -402,7 +397,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
                   Performative.Propose.name,
                   cfpId.toString,
                   workerId.toString,
-                  ExecutableType.Java.toString #: JsonNil,
                   1
                 )
               )
@@ -438,7 +432,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
               .in(
                 complete(
                   Performative.Refuse.name,
-                  "cfp",
                   cfpId.toString
                 )
               )
@@ -489,7 +482,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
                   Performative.Propose.name,
                   cfpId1.toString,
                   workerId.toString,
-                  ExecutableType.Java.toString #: JsonNil,
                   1
                 )
               )
@@ -500,7 +492,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
                   Performative.Propose.name,
                   cfpId2.toString,
                   workerId.toString,
-                  ExecutableType.Java.toString #: JsonNil,
                   1
                 )
               )

@@ -132,7 +132,6 @@ object WorkerAgent {
               Performative.Propose.name #:
               strId #:
               strWorkerId #:
-              JsonTuple.fromSeq(acceptedExecutableTypes.map(_.toString)) #:
               slotsAvailable #:
               JsonNil
             )
