@@ -62,6 +62,10 @@ plugins:
     - publishCmd: |
         sbt tsServer/assembly;
         sbt tsServer/dockerBuildAndPush;
+        sbt worker/assembly;
+        sbt worker/dockerBuildAndPush;
+        sbt master/assembly;
+        sbt master/dockerBuildAndPush;
       shell: /bin/bash
   - - '@semantic-release/git'
     - assets:
