@@ -114,7 +114,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
                 .fromPath(
                   "file",
                   ContentTypes.`text/plain(UTF-8)`,
-                  Paths.get("src", "test", "resources", "exec.jar")
+                  Paths.get("master", "src", "test", "resources", "exec.jar")
                 ),
               Multipart
                 .FormData

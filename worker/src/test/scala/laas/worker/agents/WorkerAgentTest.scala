@@ -64,7 +64,6 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
   private given ExecutionContext = scala.concurrent.ExecutionContext.global
 
   private val testKit = ActorTestKit()
-  private val workerActorProbe = testKit.createTestProbe[WorkerAgentCommand]()
   private val rootActorProbe = testKit.createTestProbe[RootActorCommand]()
   private val workerId = UUID.randomUUID()
   private var tupleSpace: Option[JsonTupleSpace] = None
