@@ -110,6 +110,7 @@ lazy val tsServer =
 lazy val worker = project
   .in(file("worker"))
   .dependsOn(tsClient)
+  .enablePlugins(DockerPlugin, AutomateHeaderPlugin)
   .settings(
     name := "laas-worker",
     libraryDependencies ++= Seq(
@@ -146,6 +147,7 @@ lazy val worker = project
 lazy val master = project
   .in(file("master"))
   .dependsOn(tsClient)
+  .enablePlugins(DockerPlugin, AutomateHeaderPlugin)
   .settings(
     name := "laas-master",
     libraryDependencies ++= Seq(
