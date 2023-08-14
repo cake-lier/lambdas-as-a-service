@@ -22,23 +22,30 @@
 package io.github.cakelier
 package laas.master.ws.service
 
-import laas.master.model.Executable.ExecutableType
-import laas.master.ws.presentation.{Request, Response}
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.UUID
+
+import scala.util.Failure
+import scala.util.Success
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity, Multipart, StatusCodes}
+import akka.http.scaladsl.model.ContentTypes
+import akka.http.scaladsl.model.HttpEntity
+import akka.http.scaladsl.model.Multipart
+import akka.http.scaladsl.model.StatusCodes
+import akka.http.scaladsl.testkit.ScalatestRouteTest
+import akka.http.scaladsl.testkit.WSProbe
 import akka.http.scaladsl.testkit.WSTestRequestBuilding.WS
-import akka.http.scaladsl.testkit.{ScalatestRouteTest, WSProbe}
-import io.github.cakelier.laas.master.model.Execution.ExecutionOutput
-import io.github.cakelier.laas.master.model.User.DeployedExecutable
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
 
-import java.nio.file.{Files, Paths}
-import java.util.UUID
-import scala.util.{Failure, Success}
+import laas.master.model.Executable.ExecutableType
+import laas.master.model.Execution.ExecutionOutput
+import laas.master.model.User.DeployedExecutable
+import laas.master.ws.presentation.{Request, Response}
 
 @SuppressWarnings(
   Array(
@@ -84,7 +91,9 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           wsProbe.sendMessage(s"{\"type\":\"logout\",\"username\":\"$username\"}")
           apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Logout(username), openMessage.actorRef))
           wsProbe.sendMessage(s"{\"type\":\"execute\",\"id\":\"${executableId.toString}\",\"args\":\"out;err\"}")
-          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Execute(executableId, executionArgs), openMessage.actorRef))
+          apiProbe.expectMessage(
+            ServiceApiCommand.RequestCommand(Request.Execute(executableId, executionArgs), openMessage.actorRef)
+          )
           wsProbe.sendCompletion()
           apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
         }
@@ -99,19 +108,28 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           val name = "test"
           val multipartForm =
             Multipart.FormData(
-              Multipart.FormData.BodyPart.fromPath(
-                "file",
-                ContentTypes.`text/plain(UTF-8)`,
-                Paths.get("master", "src", "test", "resources", "exec.jar")
-              ),
-              Multipart.FormData.BodyPart.Strict(
-                "name",
-                HttpEntity(ContentTypes.`text/plain(UTF-8)`, name)
-              ),
-              Multipart.FormData.BodyPart.Strict(
-                "id",
-                HttpEntity(ContentTypes.`text/plain(UTF-8)`, openMessage.id.toString)
-              )
+              Multipart
+                .FormData
+                .BodyPart
+                .fromPath(
+                  "file",
+                  ContentTypes.`text/plain(UTF-8)`,
+                  Paths.get("src", "test", "resources", "exec.jar")
+                ),
+              Multipart
+                .FormData
+                .BodyPart
+                .Strict(
+                  "name",
+                  HttpEntity(ContentTypes.`text/plain(UTF-8)`, name)
+                ),
+              Multipart
+                .FormData
+                .BodyPart
+                .Strict(
+                  "id",
+                  HttpEntity(ContentTypes.`text/plain(UTF-8)`, openMessage.id.toString)
+                )
             )
           Post("/deploy", multipartForm) ~> controller ~> check {
             response.status shouldBe StatusCodes.OK
@@ -146,7 +164,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           openMessage.actorRef ! Response.ExecuteOutput(generatedId, Success(ExecutionOutput(0, "out\n", "err\n")))
           wsProbe.expectMessage(
             s"{\"type\":\"executeOutput\",\"id\":\"${generatedId.toString}\",\"output\":{\"exitCode\":0," +
-              s"\"stdout\":\"out\\n\",\"stderr\":\"err\\n\"}}"
+            "\"stdout\":\"out\\n\",\"stderr\":\"err\\n\"}}"
           )
           openMessage.actorRef ! Response.ExecuteOutput(generatedId, Failure(Exception(error)))
           wsProbe.expectMessage(s"{\"type\":\"executeOutput\",\"id\":\"${generatedId.toString}\",\"error\":\"$error\"}")

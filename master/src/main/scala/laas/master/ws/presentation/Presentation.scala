@@ -22,42 +22,57 @@
 package io.github.cakelier
 package laas.master.ws.presentation
 
+import java.util.UUID
+
+import scala.util.Failure
+import scala.util.Success
+
+import io.circe.Decoder
+import io.circe.DecodingFailure
+import io.circe.Encoder
+import io.circe.Json
+import io.circe.syntax.*
+
 import laas.master.model.Executable.{ExecutableId, ExecutableType}
 import laas.master.model.Execution.ExecutionArguments
 import laas.master.model.User.DeployedExecutable
 import laas.master.ws.presentation.Request.{Execute, Logout, Register}
 import AnyOps.*
 
-import io.circe.{Decoder, DecodingFailure, Encoder, Json}
-import io.circe.syntax.*
-
-import java.util.UUID
-import scala.util.{Failure, Success}
-
 object Presentation {
 
-  private given Decoder[Request.Login] = c => for {
-    _ <- c.downField("type").as[String].filterOrElse(_ === "login", DecodingFailure("The type field was not valid", c.history))
-    u <- c.downField("username").as[String]
-    p <- c.downField("password").as[String]
-  } yield Request.Login(u, p)
+  private given Decoder[Request.Login] = c =>
+    for {
+      _ <- c.downField("type").as[String].filterOrElse(_ === "login", DecodingFailure("The type field was not valid", c.history))
+      u <- c.downField("username").as[String]
+      p <- c.downField("password").as[String]
+    } yield Request.Login(u, p)
 
-  private given Decoder[Request.Logout] = c => for {
-    _ <- c.downField("type").as[String].filterOrElse(_ === "logout", DecodingFailure("The type field was not valid", c.history))
-    u <- c.downField("username").as[String]
-  } yield Request.Logout(u)
+  private given Decoder[Request.Logout] = c =>
+    for {
+      _ <- c.downField("type").as[String].filterOrElse(_ === "logout", DecodingFailure("The type field was not valid", c.history))
+      u <- c.downField("username").as[String]
+    } yield Request.Logout(u)
 
-  private given Decoder[Request.Register] = c => for {
-    _ <- c.downField("type").as[String].filterOrElse(_ === "register", DecodingFailure("The type field was not valid", c.history))
-    u <- c.downField("username").as[String]
-    p <- c.downField("password").as[String]
-  } yield Request.Register(u, p)
+  private given Decoder[Request.Register] = c =>
+    for {
+      _ <- c
+        .downField("type")
+        .as[String]
+        .filterOrElse(_ === "register", DecodingFailure("The type field was not valid", c.history))
+      u <- c.downField("username").as[String]
+      p <- c.downField("password").as[String]
+    } yield Request.Register(u, p)
 
-  private given Decoder[Request.Execute] = c => for {
-    _ <- c.downField("type").as[String].filterOrElse(_ === "execute", DecodingFailure("The type field was not valid", c.history))
-    i <- c.downField("id").as[ExecutableId]
-    a <- c.downField("args").as[String].map(_.split(';').toSeq)
-  } yield Request.Execute(i, a)
+  private given Decoder[Request.Execute] = c =>
+    for {
+      _ <- c
+        .downField("type")
+        .as[String]
+        .filterOrElse(_ === "execute", DecodingFailure("The type field was not valid", c.history))
+      i <- c.downField("id").as[ExecutableId]
+      a <- c.downField("args").as[String].map(_.split(';').toSeq)
+    } yield Request.Execute(i, a)
 
   given Decoder[Request] = r =>
     r.as[Request.Login]
