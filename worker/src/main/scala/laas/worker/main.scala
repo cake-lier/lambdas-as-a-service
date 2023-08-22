@@ -68,12 +68,8 @@ def main(
           "worker-" + id
         )
         Behaviors.receiveMessage[RootActorCommand] {
-          case RootActorCommand.WorkerUp(true) =>
-            println("it worked!")
-            Behaviors.empty
-          case RootActorCommand.WorkerUp(false) =>
-            println("it doesn't work")
-            Behaviors.stopped
+          case RootActorCommand.WorkerUp(true) => Behaviors.empty
+          case RootActorCommand.WorkerUp(false) => Behaviors.stopped
         }
       }),
       "root-worker-" + id

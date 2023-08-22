@@ -180,7 +180,6 @@ object ServiceApi {
       case ServiceApiCommand.TryProposals(cfpId, executableId, tpe, proposals, username, fileName, replyTo) =>
         val strCfpId = cfpId.toString
         val bestProposal = proposals.maxByOption(_._2).map(_._1)
-        println(bestProposal)
         bestProposal.fold(
           replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
         )(b =>
