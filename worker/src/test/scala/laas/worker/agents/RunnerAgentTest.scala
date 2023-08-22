@@ -78,9 +78,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
         val executionId = UUID.randomUUID()
         runnerAgent ! RunnerAgentCommand.Execute(executionId, Seq("out", "err"))
         val executionComplete: WorkerAgentCommand.ExecutionComplete =
-          workerActorProbe.expectMessageType(
-            ClassTag.apply[WorkerAgentCommand.ExecutionComplete](classOf[WorkerAgentCommand.ExecutionComplete])
-          )
+          workerActorProbe.expectMessageType[WorkerAgentCommand.ExecutionComplete]
         executionComplete.id shouldBe executionId
         val output = executionComplete.output.success.value
         output.exitCode shouldBe 0
@@ -97,9 +95,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
         val executionId = UUID.randomUUID()
         runnerAgent ! RunnerAgentCommand.Execute(executionId, Seq("out\n"))
         val executionComplete: WorkerAgentCommand.ExecutionComplete =
-          workerActorProbe.expectMessageType(
-            ClassTag.apply[WorkerAgentCommand.ExecutionComplete](classOf[WorkerAgentCommand.ExecutionComplete])
-          )
+          workerActorProbe.expectMessageType[WorkerAgentCommand.ExecutionComplete]
         executionComplete.id shouldBe executionId
         val output = executionComplete.output.success.value
         output.exitCode shouldBe 1
@@ -120,9 +116,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
         val executionId = UUID.randomUUID()
         runnerAgent ! RunnerAgentCommand.Execute(executionId, Seq("out", "err"))
         val executionComplete: WorkerAgentCommand.ExecutionComplete =
-          workerActorProbe.expectMessageType(
-            ClassTag.apply[WorkerAgentCommand.ExecutionComplete](classOf[WorkerAgentCommand.ExecutionComplete])
-          )
+          workerActorProbe.expectMessageType[WorkerAgentCommand.ExecutionComplete]
         executionComplete.id shouldBe executionId
         val output = executionComplete.output.success.value
         output.exitCode shouldBe 1
