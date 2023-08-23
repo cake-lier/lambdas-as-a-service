@@ -138,7 +138,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
             deployMessage.websocketId shouldBe openMessage.id
             Get(s"/files/${deployMessage.id}") ~> controller ~> check {
               response.status shouldBe StatusCodes.OK
-              val copyPath = Paths.get("copy.jar")
+              val copyPath = Paths.get("master", "copy.jar")
               responseEntity.dataBytes.runWith(FileIO.toPath(copyPath))
               FileUtils.contentEquals(originalFilePath.toFile, copyPath.toFile) shouldBe true
               Files.delete(Paths.get(deployMessage.id.toString))
