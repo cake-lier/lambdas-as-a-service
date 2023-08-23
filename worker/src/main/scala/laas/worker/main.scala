@@ -25,18 +25,21 @@ package laas.worker
 import java.nio.file.Paths
 import java.util.UUID
 import java.util.concurrent.ForkJoinPool
+
 import scala.concurrent.ExecutionContext
+
+import akka.actor.ClassicActorSystemProvider
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.stream.scaladsl.FileIO
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
+
 import laas.worker.agents.{RootActorCommand, WorkerAgent}
 import laas.tuplespace.client.*
 import laas.worker.model.Executable.ExecutableType
-
-import akka.actor.ClassicActorSystemProvider
-import com.typesafe.config.{Config, ConfigFactory}
 
 @main
 def main(): Unit = {

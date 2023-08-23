@@ -25,8 +25,10 @@ package laas.master.ws.service
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.UUID
+
 import scala.util.Failure
 import scala.util.Success
+
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.ContentTypes
@@ -36,16 +38,16 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.http.scaladsl.testkit.WSProbe
 import akka.http.scaladsl.testkit.WSTestRequestBuilding.WS
+import akka.stream.scaladsl.FileIO
+import org.apache.commons.io.FileUtils
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
+
 import laas.master.model.Executable.ExecutableType
 import laas.master.model.Execution.ExecutionOutput
 import laas.master.model.User.DeployedExecutable
 import laas.master.ws.presentation.{Request, Response}
-
-import akka.stream.scaladsl.FileIO
-import org.apache.commons.io.FileUtils
 
 @SuppressWarnings(Array("org.wartremover.warts.ToString"))
 class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with BeforeAndAfterAll {

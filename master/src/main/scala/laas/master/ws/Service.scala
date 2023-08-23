@@ -22,18 +22,20 @@
 package io.github.cakelier
 package laas.master.ws
 
-import laas.master.ws.service.{ServiceApi, ServiceController, ServiceStorage}
-import laas.tuplespace.client.JsonTupleSpace
+import java.util.concurrent.ForkJoinPool
+
+import scala.concurrent.ExecutionContext
+import scala.jdk.CollectionConverters.*
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
-import com.typesafe.config.{Config, ConfigFactory}
+import com.typesafe.config.Config
+import com.typesafe.config.ConfigFactory
 import io.getquill.JdbcContextConfig
 
-import java.util.concurrent.ForkJoinPool
-import scala.concurrent.ExecutionContext
-import scala.jdk.CollectionConverters.*
+import laas.master.ws.service.{ServiceApi, ServiceController, ServiceStorage}
+import laas.tuplespace.client.JsonTupleSpace
 
 @main
 def main(): Unit = {
