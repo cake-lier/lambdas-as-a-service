@@ -160,7 +160,8 @@ lazy val master = project
       testContainers,
       testContainersPostgresql,
       postgresql,
-      quill
+      quill,
+      commonsIO
     ),
     assembly / assemblyJarName := "main.jar",
     assembly / mainClass := Some("io.github.cakelier.laas.master"),

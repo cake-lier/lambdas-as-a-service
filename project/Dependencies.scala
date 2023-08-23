@@ -2,9 +2,9 @@ import sbt._
 
 object Dependencies {
 
-  lazy val scalactic: ModuleID = "org.scalactic" %% "scalactic" % "3.2.16"
+  lazy val scalactic = "org.scalactic" %% "scalactic" % "3.2.16"
 
-  lazy val scalatest: ModuleID = "org.scalatest" %% "scalatest" % "3.2.16" % Test
+  lazy val scalatest = "org.scalatest" %% "scalatest" % "3.2.16" % Test
 
   lazy val circeCore = "io.circe" %% "circe-core" % "0.14.5"
 
@@ -12,9 +12,9 @@ object Dependencies {
 
   lazy val circeParser = "io.circe" %% "circe-parser" % "0.14.5"
 
-  lazy val postgresql: ModuleID = "org.postgresql" % "postgresql" % "42.6.0"
+  lazy val postgresql = "org.postgresql" % "postgresql" % "42.6.0"
 
-  lazy val quill: ModuleID = "io.getquill" %% "quill-jdbc" % "4.6.0.1"
+  lazy val quill = "io.getquill" %% "quill-jdbc" % "4.6.0.1"
 
   lazy val akka = "com.typesafe.akka" %% "akka-actor-typed" % "2.8.3"
 
@@ -30,5 +30,7 @@ object Dependencies {
 
   lazy val testContainers = "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.40.17" % Test
 
-  lazy val testContainersPostgresql: ModuleID = "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.40.17" % Test
+  lazy val testContainersPostgresql = "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.40.17" % Test
+
+  lazy val commonsIO = "commons-io" % "commons-io" % "2.13.0" % Test
 }
