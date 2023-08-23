@@ -25,54 +25,48 @@ package laas.worker
 import java.nio.file.Paths
 import java.util.UUID
 import java.util.concurrent.ForkJoinPool
-
 import scala.concurrent.ExecutionContext
-
-import akka.actor.ActorSystem as ClassicActorSystem
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.stream.scaladsl.FileIO
-
 import laas.worker.agents.{RootActorCommand, WorkerAgent}
 import laas.tuplespace.client.*
 import laas.worker.model.Executable.ExecutableType
 
+import akka.actor.ClassicActorSystemProvider
+import com.typesafe.config.{Config, ConfigFactory}
+
 @main
-def main(
-  id: String,
-  tupleSpaceUri: String,
-  httpClientUri: String,
-  acceptedExecutableTypes: String,
-  slotsAvailable: Int
-): Unit = {
+def main(): Unit = {
   given ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool.commonPool())
-  JsonTupleSpace(tupleSpaceUri).foreach(s => {
-    given ClassicActorSystem = ClassicActorSystem()
-    val client = Http()
+  val config: Config = ConfigFactory.systemEnvironment()
+  JsonTupleSpace(config.getString("WORKER_TS_URI")).foreach(s => {
     ActorSystem[RootActorCommand](
       Behaviors.setup(ctx => {
+        given ClassicActorSystemProvider = ctx.system
+        val client = Http()
         ctx.spawn(
           WorkerAgent(
             ctx.self,
-            UUID.fromString(id),
+            UUID.fromString(config.getString("WORKER_ID")),
             s,
             e =>
               client
-                .singleRequest(Get(s"$httpClientUri/${e.toString}"))
+                .singleRequest(Get(s"${config.getString("WORKER_HTTP_CLIENT_URI")}/${e.toString}"))
                 .flatMap(_.entity.dataBytes.runWith(FileIO.toPath(Paths.get("executables", e.toString))).map(_ => ())),
-            acceptedExecutableTypes.split(';').toSeq.map(ExecutableType.valueOf),
-            slotsAvailable
+            config.getString("WORKER_ACCEPTED_EXECUTABLES").split(';').toSeq.map(ExecutableType.valueOf),
+            config.getInt("WORKER_AVAILABLE_SLOTS")
           ),
-          "worker-" + id
+          "worker-" + config.getString("WORKER_ID")
         )
         Behaviors.receiveMessage[RootActorCommand] {
           case RootActorCommand.WorkerUp(true) => Behaviors.empty
           case RootActorCommand.WorkerUp(false) => Behaviors.stopped
         }
       }),
-      "root-worker-" + id
+      name = "root-worker-" + config.getString("WORKER_ID")
     )
   })
 }
