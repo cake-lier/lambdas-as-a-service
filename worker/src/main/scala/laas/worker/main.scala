@@ -61,6 +61,7 @@ def main(): Unit = {
           ),
           "worker-" + config.getString("WORKER_ID")
         )
+        ctx.system.whenTerminated.onComplete(_ => s.close())
         Behaviors.receiveMessage[RootActorCommand] {
           case RootActorCommand.WorkerUp(true) => Behaviors.empty
           case RootActorCommand.WorkerUp(false) => Behaviors.stopped
