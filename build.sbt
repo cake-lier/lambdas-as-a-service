@@ -124,7 +124,7 @@ lazy val worker = project
     ),
     Test / fork := true,
     assembly / assemblyJarName := "main.jar",
-    assembly / mainClass := Some("io.github.cakelier.laas.worker"),
+    assembly / mainClass := Some("io.github.cakelier.laas.worker.main"),
     docker / dockerfile := NativeDockerfile(file("worker") / "Dockerfile"),
     docker / imageNames := Seq(
       ImageName(
@@ -164,7 +164,11 @@ lazy val master = project
       commonsIO
     ),
     assembly / assemblyJarName := "main.jar",
-    assembly / mainClass := Some("io.github.cakelier.laas.master"),
+    assembly / mainClass := Some("io.github.cakelier.laas.master.ws.main"),
+    assembly / assemblyMergeStrategy := {
+      case PathList("io", "getquill", _*) => MergeStrategy.first
+      case v => MergeStrategy.defaultMergeStrategy(v)
+    },
     docker / dockerfile := NativeDockerfile(file("master") / "Dockerfile"),
     docker / imageNames := Seq(
       ImageName(
