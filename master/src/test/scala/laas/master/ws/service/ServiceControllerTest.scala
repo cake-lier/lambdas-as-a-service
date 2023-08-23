@@ -25,10 +25,8 @@ package laas.master.ws.service
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.UUID
-
 import scala.util.Failure
 import scala.util.Success
-
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.model.ContentTypes
@@ -41,17 +39,15 @@ import akka.http.scaladsl.testkit.WSTestRequestBuilding.WS
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
-
 import laas.master.model.Executable.ExecutableType
 import laas.master.model.Execution.ExecutionOutput
 import laas.master.model.User.DeployedExecutable
 import laas.master.ws.presentation.{Request, Response}
 
-@SuppressWarnings(
-  Array(
-    "org.wartremover.warts.ToString"
-  )
-)
+import akka.stream.scaladsl.FileIO
+import org.apache.commons.io.FileUtils
+
+@SuppressWarnings(Array("org.wartremover.warts.ToString"))
 class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with BeforeAndAfterAll {
 
   private val testKit = ActorTestKit()
@@ -101,11 +97,12 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
     }
 
     describe("when a deploy request is sent") {
-      it("should forward it to the api") {
+      it("should forward it to the api and the file should be downloadable") {
         val wsProbe: WSProbe = WSProbe()
         WS("/service", wsProbe.flow) ~> controller ~> check {
           val openMessage = apiProbe.expectMessageType[ServiceApiCommand.Open]
           val name = "test"
+          val originalFilePath = Paths.get("master", "src", "test", "resources", "exec.jar")
           val multipartForm =
             Multipart.FormData(
               Multipart
@@ -114,7 +111,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
                 .fromPath(
                   "file",
                   ContentTypes.`text/plain(UTF-8)`,
-                  Paths.get("master", "src", "test", "resources", "exec.jar")
+                  originalFilePath
                 ),
               Multipart
                 .FormData
@@ -137,7 +134,14 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
             deployMessage.tpe shouldBe ExecutableType.Java
             deployMessage.fileName shouldBe name
             deployMessage.websocketId shouldBe openMessage.id
-            Files.delete(Paths.get(deployMessage.id.toString + ".jar"))
+            Get(s"/files/${deployMessage.id}") ~> controller ~> check {
+              response.status shouldBe StatusCodes.OK
+              val copyPath = Paths.get("copy.jar")
+              responseEntity.dataBytes.runWith(FileIO.toPath(copyPath))
+              FileUtils.contentEquals(originalFilePath.toFile, copyPath.toFile) shouldBe true
+              Files.delete(Paths.get(deployMessage.id.toString))
+              Files.delete(copyPath)
+            }
           }
           wsProbe.sendCompletion()
           apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))

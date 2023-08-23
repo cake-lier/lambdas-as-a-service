@@ -107,7 +107,7 @@ object ServiceController {
           val executableId = UUID.randomUUID()
           storeUploadedFile(
             "file",
-            i => Files.createFile(Paths.get(executableId.toString + "." + i.fileName.split('.')(1))).toFile
+            i => Files.createFile(Paths.get(executableId.toString)).toFile
           ) { (fileInfo, file) =>
             api ! ServiceApiCommand.Deploy(
               executableId,
@@ -118,6 +118,9 @@ object ServiceController {
             complete(StatusCodes.OK)
           }
         }
+      },
+      path("files" / JavaUUID) { id =>
+        getFromFile(id.toString)
       }
     )
   }
