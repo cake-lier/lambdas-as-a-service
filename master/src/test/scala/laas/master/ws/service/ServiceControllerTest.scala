@@ -26,6 +26,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.UUID
 
+import scala.concurrent.Await
+import scala.concurrent.duration.DurationInt
 import scala.util.Failure
 import scala.util.Success
 
@@ -39,7 +41,7 @@ import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.http.scaladsl.testkit.WSProbe
 import akka.http.scaladsl.testkit.WSTestRequestBuilding.WS
 import akka.stream.scaladsl.FileIO
-import org.apache.commons.io.FileUtils
+import org.apache.commons.io.file.PathUtils
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
@@ -103,8 +105,8 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
         val wsProbe: WSProbe = WSProbe()
         WS("/service", wsProbe.flow) ~> controller ~> check {
           val openMessage = apiProbe.expectMessageType[ServiceApiCommand.Open]
-          val name = "test"
           val originalFilePath = Paths.get("master", "src", "test", "resources", "exec.jar")
+          val name = "test"
           val multipartForm =
             Multipart.FormData(
               Multipart
@@ -136,13 +138,15 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
             deployMessage.tpe shouldBe ExecutableType.Java
             deployMessage.fileName shouldBe name
             deployMessage.websocketId shouldBe openMessage.id
+            val uploadedFilePath = Paths.get(deployMessage.id.toString)
+            PathUtils.fileContentEquals(uploadedFilePath, originalFilePath) shouldBe true
             Get(s"/files/${deployMessage.id}") ~> controller ~> check {
               response.status shouldBe StatusCodes.OK
-              val copyPath = Paths.get("master", "copy.jar")
-              responseEntity.dataBytes.runWith(FileIO.toPath(copyPath))
-              FileUtils.contentEquals(originalFilePath.toFile, copyPath.toFile) shouldBe true
-              Files.delete(Paths.get(deployMessage.id.toString))
-              Files.delete(copyPath)
+              val downloadedFilePath = Paths.get("master", "copy.jar")
+              Await.result(responseEntity.dataBytes.runWith(FileIO.toPath(downloadedFilePath)), 30.seconds)
+              PathUtils.fileContentEquals(uploadedFilePath, downloadedFilePath) shouldBe true
+              Files.delete(uploadedFilePath)
+              Files.delete(downloadedFilePath)
             }
           }
           wsProbe.sendCompletion()
