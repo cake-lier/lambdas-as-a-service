@@ -65,14 +65,4 @@ enum Performative(val name: String) {
 
     /** The action of rejecting a proposal to perform some action during a negotiation. */
   case RejectProposal extends Performative("reject-proposal")
-
-    /** Returns the correct performative given the name of the performative itself.
-      *
-      * @param name
-      *   the name of the performative to get
-      * @return
-      *   the correct performative given the name of the performative itself
-      */
-  @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
-  def fromName(name: String): Performative = Performative.values.find(_.name === name).get
 }
