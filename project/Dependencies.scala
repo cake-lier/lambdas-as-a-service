@@ -16,7 +16,7 @@ object Dependencies {
 
   lazy val quill = "io.getquill" %% "quill-jdbc" % "4.6.0.1"
 
-  lazy val akka = "com.typesafe.akka" %% "akka-actor-typed" % "2.8.3"
+  lazy val akka = "com.typesafe.akka" %% "akka-actor-typed" % "2.8.4"
 
   lazy val akkaStream = "com.typesafe.akka" %% "akka-stream-typed" % "2.8.3"
 
