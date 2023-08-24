@@ -143,6 +143,127 @@ node3 -> node2;
          <h4 class="groupHeader h200">Extensions</h4>
         </div>
         <div>
+         <span class="groupHeader"><span t="k">extension </span>[<span t="k"></span><span data-unresolved-link="" t="t">T</span><span t="k"> &lt;: </span><span data-unresolved-link="" t="t">G</span>, <span t="k"></span><span data-unresolved-link="" t="t">E</span>, <span t="k"></span><span data-unresolved-link="" t="t">G</span>](t1: <span data-unresolved-link="" t="t">T</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">t1</span>: <span t="t">T</span>)(<span t="k">using </span><span t="k"></span><a href="TupleOps.html" t="t">TupleOps</a>[<span t="t">T</span>, <span t="t">E</span>, <span t="t">G</span>])</span>
+         <div class="documentableElement" id="foldLeft-fffff1b7">
+          <div class="documentableElement-expander">
+           <button class="icon-button ar show-content"></button>
+           <div class="header monospace mono-medium">
+            <div class="signature">
+             <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="TupleOps$.html#foldLeft-fffff1b7" t="n" class="documentableName ">foldLeft</a>[<span t="k"></span><span data-unresolved-link="" t="t">A</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">z</span>: <span data-unresolved-link="" t="t">A</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">a</span>: (<span data-unresolved-link="" t="t">A</span>, <span data-unresolved-link="" t="t">E</span>)<span t="k"> =&gt; </span><span data-unresolved-link="" t="t">A</span>): <span data-unresolved-link="" t="t">A</span>
+            </div>
+           </div>
+          </div>
+          <div class="docs">
+           <span class="modifiers"></span>
+           <div>
+            <div class="originInfo"></div>
+            <div class="memberDocumentation">
+             <div class="documentableBrief doc">
+              <p>Returns an element which is the result of accumulating all elements of this tuple from left to right, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
+             </div>
+             <div class="cover">
+              <div class="doc">
+               <p>Returns an element which is the result of accumulating all elements of this tuple from left to right, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
+              </div>
+              <h2 class="h200">Type parameters</h2>
+              <dl class="attributes attributes-small">
+               <dt class="body-small">
+                A
+               </dt>
+               <dd class="body-medium">
+                <p>the type of the resulting element of this function</p> 
+               </dd>
+              </dl>
+              <h2 class="h200">Value parameters</h2>
+              <dl class="attributes attributes-small">
+               <dt class="body-small">
+                a
+               </dt>
+               <dd class="body-medium">
+                <p>the accumulation function</p> 
+               </dd>
+               <dt class="body-small">
+                z
+               </dt>
+               <dd class="body-medium">
+                <p>the starting element of the folding operation</p> 
+               </dd>
+              </dl>
+              <h2 class="h200">Attributes</h2>
+              <dl class="attributes attributes-small">
+               <dt class="body-small">
+                Returns
+               </dt>
+               <dd class="body-medium">
+                <p>all elements in this tuple folded into one, starting from the given element and combining them once at a time using the given accumulation function</p> 
+               </dd>
+              </dl>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+         <div class="documentableElement" id="foldRight-fffff1b7">
+          <div class="documentableElement-expander">
+           <button class="icon-button ar show-content"></button>
+           <div class="header monospace mono-medium">
+            <div class="signature">
+             <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="TupleOps$.html#foldRight-fffff1b7" t="n" class="documentableName ">foldRight</a>[<span t="k"></span><span data-unresolved-link="" t="t">A</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">z</span>: <span data-unresolved-link="" t="t">A</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">a</span>: (<span data-unresolved-link="" t="t">E</span>, <span data-unresolved-link="" t="t">A</span>)<span t="k"> =&gt; </span><span data-unresolved-link="" t="t">A</span>): <span data-unresolved-link="" t="t">A</span>
+            </div>
+           </div>
+          </div>
+          <div class="docs">
+           <span class="modifiers"></span>
+           <div>
+            <div class="originInfo"></div>
+            <div class="memberDocumentation">
+             <div class="documentableBrief doc">
+              <p>Returns an element which is the result of accumulating all elements of this tuple from right to left, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
+             </div>
+             <div class="cover">
+              <div class="doc">
+               <p>Returns an element which is the result of accumulating all elements of this tuple from right to left, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
+              </div>
+              <h2 class="h200">Type parameters</h2>
+              <dl class="attributes attributes-small">
+               <dt class="body-small">
+                A
+               </dt>
+               <dd class="body-medium">
+                <p>the type of the resulting element of this function</p> 
+               </dd>
+              </dl>
+              <h2 class="h200">Value parameters</h2>
+              <dl class="attributes attributes-small">
+               <dt class="body-small">
+                a
+               </dt>
+               <dd class="body-medium">
+                <p>the accumulation function</p> 
+               </dd>
+               <dt class="body-small">
+                z
+               </dt>
+               <dd class="body-medium">
+                <p>the starting element of the folding operation</p> 
+               </dd>
+              </dl>
+              <h2 class="h200">Attributes</h2>
+              <dl class="attributes attributes-small">
+               <dt class="body-small">
+                Returns
+               </dt>
+               <dd class="body-medium">
+                <p>all elements in this tuple folded into one, starting from the given element and combining them once at a time using the given accumulation function</p> 
+               </dd>
+              </dl>
+             </div>
+            </div>
+           </div>
+          </div>
+         </div>
+        </div>
+        <div>
          <span class="groupHeader"><span t="k">extension </span>[<span t="k"></span><span data-unresolved-link="" t="t">T</span><span t="k"> &lt;: </span><span t="t">G</span>, <span t="k"></span><span data-unresolved-link="" t="t">E</span>, <span t="k"></span><span data-unresolved-link="" t="t">G</span>](t1: <span data-unresolved-link="" t="t">T</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">t1</span>: <span t="t">T</span>)(<span t="k">using </span><span t="k"></span><a href="TupleOps.html" t="t">TupleOps</a>[<span t="t">T</span>, <span t="t">E</span>, <span t="t">G</span>])</span>
          <div class="documentableElement" id=":#-fc" data-f-keywords="infix">
           <div class="documentableElement-expander">
@@ -782,127 +903,6 @@ node3 -> node2;
                </dt>
                <dd class="body-medium">
                 <p>a tuple which elements are tuples which couple the corresponding elements of this tuple and the given tuple</p> 
-               </dd>
-              </dl>
-             </div>
-            </div>
-           </div>
-          </div>
-         </div>
-        </div>
-        <div>
-         <span class="groupHeader"><span t="k">extension </span>[<span t="k"></span><span data-unresolved-link="" t="t">T</span><span t="k"> &lt;: </span><span data-unresolved-link="" t="t">G</span>, <span t="k"></span><span data-unresolved-link="" t="t">E</span>, <span t="k"></span><span data-unresolved-link="" t="t">G</span>](t1: <span data-unresolved-link="" t="t">T</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">t1</span>: <span t="t">T</span>)(<span t="k">using </span><span t="k"></span><a href="TupleOps.html" t="t">TupleOps</a>[<span t="t">T</span>, <span t="t">E</span>, <span t="t">G</span>])</span>
-         <div class="documentableElement" id="foldLeft-fffff1b7">
-          <div class="documentableElement-expander">
-           <button class="icon-button ar show-content"></button>
-           <div class="header monospace mono-medium">
-            <div class="signature">
-             <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="TupleOps$.html#foldLeft-fffff1b7" t="n" class="documentableName ">foldLeft</a>[<span t="k"></span><span data-unresolved-link="" t="t">A</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">z</span>: <span data-unresolved-link="" t="t">A</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">a</span>: (<span data-unresolved-link="" t="t">A</span>, <span data-unresolved-link="" t="t">E</span>)<span t="k"> =&gt; </span><span data-unresolved-link="" t="t">A</span>): <span data-unresolved-link="" t="t">A</span>
-            </div>
-           </div>
-          </div>
-          <div class="docs">
-           <span class="modifiers"></span>
-           <div>
-            <div class="originInfo"></div>
-            <div class="memberDocumentation">
-             <div class="documentableBrief doc">
-              <p>Returns an element which is the result of accumulating all elements of this tuple from left to right, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
-             </div>
-             <div class="cover">
-              <div class="doc">
-               <p>Returns an element which is the result of accumulating all elements of this tuple from left to right, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
-              </div>
-              <h2 class="h200">Type parameters</h2>
-              <dl class="attributes attributes-small">
-               <dt class="body-small">
-                A
-               </dt>
-               <dd class="body-medium">
-                <p>the type of the resulting element of this function</p> 
-               </dd>
-              </dl>
-              <h2 class="h200">Value parameters</h2>
-              <dl class="attributes attributes-small">
-               <dt class="body-small">
-                a
-               </dt>
-               <dd class="body-medium">
-                <p>the accumulation function</p> 
-               </dd>
-               <dt class="body-small">
-                z
-               </dt>
-               <dd class="body-medium">
-                <p>the starting element of the folding operation</p> 
-               </dd>
-              </dl>
-              <h2 class="h200">Attributes</h2>
-              <dl class="attributes attributes-small">
-               <dt class="body-small">
-                Returns
-               </dt>
-               <dd class="body-medium">
-                <p>all elements in this tuple folded into one, starting from the given element and combining them once at a time using the given accumulation function</p> 
-               </dd>
-              </dl>
-             </div>
-            </div>
-           </div>
-          </div>
-         </div>
-         <div class="documentableElement" id="foldRight-fffff1b7">
-          <div class="documentableElement-expander">
-           <button class="icon-button ar show-content"></button>
-           <div class="header monospace mono-medium">
-            <div class="signature">
-             <span class="modifiers"></span><span class="kind"><span t="k">def </span></span><a href="TupleOps$.html#foldRight-fffff1b7" t="n" class="documentableName ">foldRight</a>[<span t="k"></span><span data-unresolved-link="" t="t">A</span>](<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">z</span>: <span data-unresolved-link="" t="t">A</span>)(<span t="k"></span><span t="k"></span><span data-unresolved-link="" t="n">a</span>: (<span data-unresolved-link="" t="t">E</span>, <span data-unresolved-link="" t="t">A</span>)<span t="k"> =&gt; </span><span data-unresolved-link="" t="t">A</span>): <span data-unresolved-link="" t="t">A</span>
-            </div>
-           </div>
-          </div>
-          <div class="docs">
-           <span class="modifiers"></span>
-           <div>
-            <div class="originInfo"></div>
-            <div class="memberDocumentation">
-             <div class="documentableBrief doc">
-              <p>Returns an element which is the result of accumulating all elements of this tuple from right to left, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
-             </div>
-             <div class="cover">
-              <div class="doc">
-               <p>Returns an element which is the result of accumulating all elements of this tuple from right to left, using the given element as a starting point and the given function as the accumulator. Being so, the accumulator will specify how to combine the elements folded so far into a single value with a new element of this tuple. If this tuple is empty the starting element will be returned.</p> 
-              </div>
-              <h2 class="h200">Type parameters</h2>
-              <dl class="attributes attributes-small">
-               <dt class="body-small">
-                A
-               </dt>
-               <dd class="body-medium">
-                <p>the type of the resulting element of this function</p> 
-               </dd>
-              </dl>
-              <h2 class="h200">Value parameters</h2>
-              <dl class="attributes attributes-small">
-               <dt class="body-small">
-                a
-               </dt>
-               <dd class="body-medium">
-                <p>the accumulation function</p> 
-               </dd>
-               <dt class="body-small">
-                z
-               </dt>
-               <dd class="body-medium">
-                <p>the starting element of the folding operation</p> 
-               </dd>
-              </dl>
-              <h2 class="h200">Attributes</h2>
-              <dl class="attributes attributes-small">
-               <dt class="body-small">
-                Returns
-               </dt>
-               <dd class="body-medium">
-                <p>all elements in this tuple folded into one, starting from the given element and combining them once at a time using the given accumulation function</p> 
                </dd>
               </dl>
              </div>
