@@ -78,8 +78,11 @@ plugins:
   - - '@semantic-release/github'
     - assets:
         - path: server/target/scala-3.3.0/main.jar
+          name: ts-server.jar
           label: TS Server JAR file
         - path: worker/target/scala-3.3.0/main.jar
+          name: worker.jar
           label: Worker JAR file
         - path: master/target/scala-3.3.0/main.jar
+          name: master.jar
           label: Master JAR file
