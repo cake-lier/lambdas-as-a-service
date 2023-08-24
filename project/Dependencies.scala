@@ -18,15 +18,15 @@ object Dependencies {
 
   lazy val akka = "com.typesafe.akka" %% "akka-actor-typed" % "2.8.4"
 
-  lazy val akkaStream = "com.typesafe.akka" %% "akka-stream-typed" % "2.8.3"
+  lazy val akkaStream = "com.typesafe.akka" %% "akka-stream-typed" % "2.8.4"
 
   lazy val akkaHttp = "com.typesafe.akka" %% "akka-http" % "10.5.2"
 
-  lazy val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit" % "2.8.3" % Test
+  lazy val akkaStreamTestkit = "com.typesafe.akka" %% "akka-stream-testkit" % "2.8.4" % Test
 
   lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % "10.5.2" % Test
 
-  lazy val akkaTestkit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.8.3" % Test
+  lazy val akkaTestkit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.8.4" % Test
 
   lazy val testContainers = "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.40.17" % Test
 
