@@ -66,7 +66,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
     describe("when first booted up") {
       it("should inform its worker agent") {
         val runnerAgent = testKit.spawn(RunnerAgent(workerActorProbe.ref, executableId, ExecutableType.Java))
-        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(executableId))
+        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(executableId, ExecutableType.Java))
         testKit.stop(runnerAgent)
       }
     }
@@ -74,7 +74,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
     describe("after receiving the correct arguments") {
       it("should return the execution results") {
         val runnerAgent = testKit.spawn(RunnerAgent(workerActorProbe.ref, executableId, ExecutableType.Java))
-        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(executableId))
+        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(executableId, ExecutableType.Java))
         val executionId = UUID.randomUUID()
         runnerAgent ! RunnerAgentCommand.Execute(executionId, Seq("out", "err"))
         val executionComplete: WorkerAgentCommand.ExecutionComplete =
@@ -91,7 +91,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
     describe("after receiving the wrong arguments") {
       it("should return an exception") {
         val runnerAgent = testKit.spawn(RunnerAgent(workerActorProbe.ref, executableId, ExecutableType.Java))
-        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(executableId))
+        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(executableId, ExecutableType.Java))
         val executionId = UUID.randomUUID()
         runnerAgent ! RunnerAgentCommand.Execute(executionId, Seq("out\n"))
         val executionComplete: WorkerAgentCommand.ExecutionComplete =
@@ -112,7 +112,7 @@ class RunnerAgentTest extends AnyFunSpec with BeforeAndAfterAll {
       it("should fail while trying to execute") {
         val wrongExecutionId = UUID.randomUUID()
         val runnerAgent = testKit.spawn(RunnerAgent(workerActorProbe.ref, wrongExecutionId, ExecutableType.Java))
-        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(wrongExecutionId))
+        workerActorProbe.expectMessage(WorkerAgentCommand.RunnerUp(wrongExecutionId, ExecutableType.Java))
         val executionId = UUID.randomUUID()
         runnerAgent ! RunnerAgentCommand.Execute(executionId, Seq("out", "err"))
         val executionComplete: WorkerAgentCommand.ExecutionComplete =

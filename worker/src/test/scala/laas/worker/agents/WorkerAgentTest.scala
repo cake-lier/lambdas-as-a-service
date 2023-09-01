@@ -95,7 +95,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             1
           )
@@ -117,7 +117,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             1
           )
@@ -162,7 +162,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             1
           )
@@ -194,7 +194,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             0
           )
@@ -232,7 +232,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             1
           )
@@ -280,7 +280,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             1
           )
@@ -356,7 +356,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.failed[Unit](RuntimeException()),
+            (_, _) => Future.failed[Unit](RuntimeException()),
             Seq(ExecutableType.Java),
             1
           )
@@ -469,7 +469,7 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
             rootActorProbe.ref,
             workerId,
             tupleSpace.getOrElse(fail()),
-            _ => Future.successful(()),
+            (_, _) => Future.successful(()),
             Seq(ExecutableType.Java),
             1
           )

@@ -22,10 +22,14 @@
 package io.github.cakelier
 package laas.worker
 
-import java.nio.file.{Files, Paths}
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.UUID
 import java.util.concurrent.ForkJoinPool
+import java.util.stream.Collectors
+
 import scala.concurrent.ExecutionContext
+
 import akka.actor.ClassicActorSystemProvider
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -34,11 +38,10 @@ import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.stream.scaladsl.FileIO
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
+
 import laas.worker.agents.{RootActorCommand, WorkerAgent}
 import laas.tuplespace.client.*
 import laas.worker.model.Executable.ExecutableType
-
-import java.util.stream.Collectors
 
 @main
 def main(): Unit = {
@@ -58,8 +61,7 @@ def main(): Unit = {
               client
                 .singleRequest(Get(s"${config.getString("WORKER_HTTP_CLIENT_URI")}/${e.toString}"))
                 .flatMap(
-                  _
-                    .entity
+                  _.entity
                     .dataBytes
                     .runWith(FileIO.toPath(Paths.get("executables", s"${e.toString}.${t.extension}")))
                     .map(_ => ())

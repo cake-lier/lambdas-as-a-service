@@ -25,28 +25,36 @@ package laas.master.ws.service
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.UUID
+
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
+
 import akka.NotUsed
 import akka.actor.ActorSystem as ClassicActorSystem
 import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.DispatcherSelector
 import akka.actor.typed.scaladsl.AskPattern.*
-import akka.http.scaladsl.model.{ContentType, HttpCharsets, MediaTypes, StatusCodes}
+import akka.http.scaladsl.model.ContentType
+import akka.http.scaladsl.model.HttpCharsets
+import akka.http.scaladsl.model.MediaTypes
+import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.ws.BinaryMessage
 import akka.http.scaladsl.model.ws.Message
 import akka.http.scaladsl.model.ws.TextMessage
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import akka.stream.OverflowStrategy
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.scaladsl.Flow
+import akka.stream.scaladsl.Sink
+import akka.stream.scaladsl.Source
 import akka.stream.typed.scaladsl.ActorSink
 import akka.stream.typed.scaladsl.ActorSource
 import akka.util.Timeout
 import io.circe.parser.*
 import io.circe.syntax.EncoderOps
+
 import laas.master.model.Execution.{ExecutionArguments, ExecutionOutput}
 import laas.master.model.Executable.ExecutableType
 import laas.master.ws.presentation.{Request, Response}

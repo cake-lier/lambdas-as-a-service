@@ -44,12 +44,12 @@ object Executable {
   object ExecutableType {
 
     /** Returns the correct [[ExecutableType]] given the file extension associated to the type itself.
-     *
-     * @param extension
-     * the file extension for which getting the correct [[ExecutableType]]
-     * @return
-     * the correct [[ExecutableType]] given the file extension associated to the type itself
-     */
+      *
+      * @param extension
+      *   the file extension for which getting the correct [[ExecutableType]]
+      * @return
+      *   the correct [[ExecutableType]] given the file extension associated to the type itself
+      */
     @SuppressWarnings(Array("org.wartremover.warts.OptionPartial"))
     def getByExtension(extension: String): ExecutableType = ExecutableType.values.find(_.extension === extension).get
   }
