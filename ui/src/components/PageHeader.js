@@ -1,6 +1,5 @@
 import { useCallback, useState, useRef } from "react";
 import { Button } from 'primereact/button';
-import { Divider } from "primereact/divider";
 import { InputText } from "primereact/inputtext";
 import { FileUpload } from 'primereact/fileupload';
 import { Dialog } from "primereact/dialog";
