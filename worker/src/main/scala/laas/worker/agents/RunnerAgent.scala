@@ -44,8 +44,9 @@ object RunnerAgent {
   @SuppressWarnings(Array("org.wartremover.warts.ToString", "org.wartremover.warts.Null", "scalafix:DisableSyntax.null"))
   def apply(worker: ActorRef[WorkerAgentCommand], executableId: ExecutableId, tpe: ExecutableType): Behavior[RunnerAgentCommand] =
     Behaviors.setup { ctx =>
-      worker ! WorkerAgentCommand.RunnerUp(executableId)
+      worker ! WorkerAgentCommand.RunnerUp(executableId, tpe)
       given ExecutionContext = ctx.system.dispatchers.lookup(DispatcherSelector.blocking())
+      println(s"Runner ${executableId.toString} up")
       Behaviors.receiveMessage {
         case RunnerAgentCommand.Execute(id, args) =>
           Future {

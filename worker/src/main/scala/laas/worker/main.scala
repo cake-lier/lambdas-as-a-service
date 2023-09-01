@@ -22,12 +22,10 @@
 package io.github.cakelier
 package laas.worker
 
-import java.nio.file.Paths
+import java.nio.file.{Files, Paths}
 import java.util.UUID
 import java.util.concurrent.ForkJoinPool
-
 import scala.concurrent.ExecutionContext
-
 import akka.actor.ClassicActorSystemProvider
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
@@ -36,16 +34,17 @@ import akka.http.scaladsl.client.RequestBuilding.Get
 import akka.stream.scaladsl.FileIO
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
-
 import laas.worker.agents.{RootActorCommand, WorkerAgent}
 import laas.tuplespace.client.*
 import laas.worker.model.Executable.ExecutableType
+
+import java.util.stream.Collectors
 
 @main
 def main(): Unit = {
   given ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool.commonPool())
   val config: Config = ConfigFactory.systemEnvironment()
-  JsonTupleSpace(config.getString("WORKER_TS_URI")).foreach(s => {
+  JsonTupleSpace(config.getString("WORKER_TS_URI"), config.getInt("WORKER_BUFFER")).foreach(s => {
     ActorSystem[RootActorCommand](
       Behaviors.setup(ctx => {
         given ClassicActorSystemProvider = ctx.system
@@ -55,10 +54,16 @@ def main(): Unit = {
             ctx.self,
             UUID.fromString(config.getString("WORKER_ID")),
             s,
-            e =>
+            (e, t) =>
               client
                 .singleRequest(Get(s"${config.getString("WORKER_HTTP_CLIENT_URI")}/${e.toString}"))
-                .flatMap(_.entity.dataBytes.runWith(FileIO.toPath(Paths.get("executables", e.toString))).map(_ => ())),
+                .flatMap(
+                  _
+                    .entity
+                    .dataBytes
+                    .runWith(FileIO.toPath(Paths.get("executables", s"${e.toString}.${t.extension}")))
+                    .map(_ => ())
+                ),
             config.getString("WORKER_ACCEPTED_EXECUTABLES").split(';').toSeq.map(ExecutableType.valueOf),
             config.getInt("WORKER_AVAILABLE_SLOTS")
           ),

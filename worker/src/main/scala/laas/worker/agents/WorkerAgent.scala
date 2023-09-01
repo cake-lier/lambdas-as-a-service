@@ -53,19 +53,22 @@ import AnyOps.*
 
 object WorkerAgent {
 
+  @SuppressWarnings(Array("org.wartremover.warts.ToString"))
   private def launchAwaitExecutionRequest(
     ctx: ActorContext[WorkerAgentCommand],
     tupleSpace: JsonTupleSpace,
-    runnersSpawnedNames: Seq[UUID]
+    executableId: ExecutableId
+  )(
+    using ExecutionContext
   ): Unit = {
-    given ExecutionContext = ctx.system.dispatchers.lookup(DispatcherSelector.blocking())
+    val strExecutableId = executableId.toString
     tupleSpace
       .in(
         complete(
           Performative.Request.name,
           "execute",
           string matches "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$".r,
-          string.in(runnersSpawnedNames.map(_.toString): _*),
+          strExecutableId,
           string
         )
       )
@@ -74,25 +77,28 @@ object WorkerAgent {
                Performative.Request.name
                #: "execute"
                #: (executionId: String)
-               #: (executableId: String)
+               #: strExecutableId
                #: (args: String)
                #: JsonNil
              ) =>
           ctx.self ! WorkerAgentCommand.ExecutionRequest(
             UUID.fromString(executionId),
-            UUID.fromString(executableId),
+            executableId,
             args.split(';').toSeq
           )
         case _ => ()
       }
   }
 
+  @SuppressWarnings(Array("org.wartremover.warts.ToString", "org.wartremover.warts.Recursion"))
   private def launchAwaitCallForProposals(
     ctx: ActorContext[WorkerAgentCommand],
     tupleSpace: JsonTupleSpace,
-    acceptedExecutableTypes: Seq[ExecutableType]
-  ): Unit = {
-    given ExecutionContext = ctx.system.dispatchers.lookup(DispatcherSelector.blocking())
+    acceptedExecutableTypes: Seq[ExecutableType],
+    callsAlreadyProcessed: Seq[CallForProposalId]
+  )(
+    using ExecutionContext
+  ): Unit =
     tupleSpace
       .rd(
         complete(
@@ -102,11 +108,10 @@ object WorkerAgent {
         )
       )
       .onComplete {
-        case Success(Performative.Cfp.name #: (id: String) #: JsonNil) =>
+        case Success(Performative.Cfp.name #: (id: String) #: _ #: JsonNil) if !callsAlreadyProcessed.contains(UUID.fromString(id)) =>
           ctx.self ! WorkerAgentCommand.CallForProposal(UUID.fromString(id))
-        case _ => ()
+        case _ => launchAwaitCallForProposals(ctx, tupleSpace, acceptedExecutableTypes, callsAlreadyProcessed)
       }
-  }
 
   @SuppressWarnings(Array("org.wartremover.warts.ToString", "org.wartremover.warts.Recursion"))
   private def main(
@@ -116,134 +121,176 @@ object WorkerAgent {
     runnersSpawned: Map[ExecutableId, ActorRef[RunnerAgentCommand]],
     runnersSpawning: Map[ExecutableId, CallForProposalId],
     tupleSpace: JsonTupleSpace,
-    downloader: ExecutableId => Future[Unit],
+    downloader: (ExecutableId, ExecutableType) => Future[Unit],
     acceptedExecutableTypes: Seq[ExecutableType],
-    slotsAvailable: Int
-  ): Behavior[WorkerAgentCommand] = {
-    given ExecutionContext = ctx.system.dispatchers.lookup(DispatcherSelector.blocking())
-    rootActor ! RootActorCommand.WorkerUp(success = true)
-    launchAwaitExecutionRequest(ctx, tupleSpace, runnersSpawned.keys.toSeq)
-    launchAwaitCallForProposals(ctx, tupleSpace, acceptedExecutableTypes)
-    Behaviors.receiveMessage[WorkerAgentCommand] {
-      case WorkerAgentCommand.ExecutionComplete(id, output) =>
-        output match {
-          case Failure(e) => tupleSpace.out(Performative.Failure.name #: "execute" #: id.toString #: e.getMessage #: JsonNil)
-          case Success(v) =>
-            tupleSpace.out(
-              Performative.InformResult.name #:
-              "execute" #:
-              id.toString #:
-              v.exitCode #:
-              v.standardOutput #:
-              v.standardError #:
-              JsonNil
-            )
-        }
-        Behaviors.same
-      case WorkerAgentCommand.ExecutionRequest(executionId, executableId, args) =>
-        runnersSpawned.get(executableId).foreach(_ ! RunnerAgentCommand.Execute(executionId, args))
-        launchAwaitExecutionRequest(ctx, tupleSpace, runnersSpawned.keys.toSeq)
-        Behaviors.same
-      case WorkerAgentCommand.CallForProposal(id) =>
-        if (slotsAvailable > 0) {
-          val strId = id.toString
-          val strWorkerId = workerId.toString
-          tupleSpace
-            .out(
-              Performative.Propose.name #:
-              strId #:
-              strWorkerId #:
-              slotsAvailable #:
-              JsonNil
-            )
-            .flatMap(_ =>
-              tupleSpace.in(
-                partial(
-                  string in (Performative.RejectProposal.name, Performative.AcceptProposal.name),
-                  strWorkerId
-                )
+    slotsAvailable: Int,
+    callsAlreadyProcessed: Seq[CallForProposalId]
+  )(
+    using ExecutionContext
+  ): Behavior[WorkerAgentCommand] = Behaviors.receiveMessage[WorkerAgentCommand] {
+    case WorkerAgentCommand.ExecutionComplete(id, output) =>
+      output match {
+        case Failure(e) => tupleSpace.out(Performative.Failure.name #: "execute" #: id.toString #: e.getMessage #: JsonNil)
+        case Success(v) =>
+          tupleSpace.out(
+            Performative.InformResult.name #:
+            "execute" #:
+            id.toString #:
+            v.exitCode #:
+            v.standardOutput #:
+            v.standardError #:
+            JsonNil
+          )
+      }
+      Behaviors.same
+    case WorkerAgentCommand.ExecutionRequest(executionId, executableId, args) =>
+      runnersSpawned.get(executableId).foreach(_ ! RunnerAgentCommand.Execute(executionId, args))
+      launchAwaitExecutionRequest(ctx, tupleSpace, executableId)
+      Behaviors.same
+    case WorkerAgentCommand.CallForProposal(id) =>
+      if (slotsAvailable > 0) {
+        val strId = id.toString
+        val strWorkerId = workerId.toString
+        tupleSpace
+          .out(
+            Performative.Propose.name #:
+            strId #:
+            strWorkerId #:
+            slotsAvailable #:
+            JsonNil
+          )
+          .flatMap(_ =>
+            tupleSpace.in(
+              partial(
+                string in (Performative.RejectProposal.name, Performative.AcceptProposal.name),
+                strId,
+                strWorkerId
               )
             )
-            .onComplete {
-              case Success(
-                     Performative.AcceptProposal.name #:
-                     strId #:
-                     strWorkerId #:
-                     (executableId: String) #:
-                     (executableType: String) #:
-                     JsonNil
-                   ) =>
-                ctx.self ! WorkerAgentCommand.ProposalAccepted(
-                  id,
-                  UUID.fromString(executableId),
-                  ExecutableType.valueOf(executableType)
-                )
-              case _ => ()
-            }
-          launchAwaitCallForProposals(ctx, tupleSpace, acceptedExecutableTypes)
-        } else {
-          tupleSpace.out(Performative.Refuse.name #: id.toString #: JsonNil)
-        }
-        Behaviors.same
-      case WorkerAgentCommand.ProposalAccepted(cfpId, executableId, executableType) =>
-        if (slotsAvailable > 0) {
-          main(
-            ctx,
-            rootActor,
-            workerId,
-            runnersSpawned +
-            (executableId -> ctx.spawn(RunnerAgent(ctx.self, executableId, executableType), executableId.toString)),
-            runnersSpawning + (executableId -> cfpId),
-            tupleSpace,
-            downloader,
-            acceptedExecutableTypes,
-            slotsAvailable - 1
           )
-        } else {
-          tupleSpace.out(Performative.Failure.name #: "cfp" #: cfpId.toString #: JsonNil)
-          Behaviors.same
-        }
-      case WorkerAgentCommand.RunnerUp(id) =>
-        runnersSpawning
-          .get(id)
-          .foreach(i =>
-            downloader(id).onComplete {
-              case Failure(_) =>
-                ctx.self ! WorkerAgentCommand.RunnerDown(id)
-                tupleSpace.out(Performative.Failure.name #: "cfp" #: i.toString #: JsonNil)
-              case Success(_) => tupleSpace.out(Performative.InformDone.name #: "cfp" #: i.toString #: JsonNil)
-            }
-          )
+          .onComplete {
+            case Success(
+                   Performative.AcceptProposal.name #:
+                   strId #:
+                   strWorkerId #:
+                   (executableId: String) #:
+                   (executableType: String) #:
+                   JsonNil
+                 ) =>
+              ctx.self ! WorkerAgentCommand.ProposalAccepted(
+                id,
+                UUID.fromString(executableId),
+                ExecutableType.valueOf(executableType)
+              )
+            case Success(
+              Performative.RejectProposal.name #:
+                strId #:
+                strWorkerId #:
+                JsonNil
+              ) => ctx.self ! WorkerAgentCommand.ProposalRejected(id)
+            case _ => ()
+          }
+        launchAwaitCallForProposals(ctx, tupleSpace, acceptedExecutableTypes, callsAlreadyProcessed :+ id)
+      } else {
+        tupleSpace.out(Performative.Refuse.name #: id.toString #: JsonNil)
+      }
+      Behaviors.same
+    case WorkerAgentCommand.ProposalRejected(cfpId) =>
+      main(ctx, rootActor, workerId, runnersSpawned, runnersSpawning, tupleSpace, downloader, acceptedExecutableTypes, slotsAvailable, callsAlreadyProcessed.filter(_ !== cfpId))
+    case WorkerAgentCommand.ProposalAccepted(cfpId, executableId, executableType) =>
+      if (slotsAvailable > 0) {
         main(
           ctx,
           rootActor,
           workerId,
-          runnersSpawned,
-          runnersSpawning - id,
+          runnersSpawned +
+          (executableId -> ctx.spawn(RunnerAgent(ctx.self, executableId, executableType), executableId.toString)),
+          runnersSpawning + (executableId -> cfpId),
           tupleSpace,
           downloader,
           acceptedExecutableTypes,
-          slotsAvailable
+          slotsAvailable - 1,
+          callsAlreadyProcessed.filter(_ !== cfpId)
         )
-      case WorkerAgentCommand.RunnerDown(id) =>
-        runnersSpawned.get(id).foreach(ctx.stop)
-        main(
-          ctx,
-          rootActor,
-          workerId,
-          runnersSpawned,
-          runnersSpawning,
-          tupleSpace,
-          downloader,
-          acceptedExecutableTypes,
-          slotsAvailable + 1
+      } else {
+        tupleSpace.out(Performative.Failure.name #: "cfp" #: cfpId.toString #: JsonNil)
+        main(ctx, rootActor, workerId, runnersSpawned, runnersSpawning, tupleSpace, downloader, acceptedExecutableTypes, slotsAvailable, callsAlreadyProcessed.filter(_ !== cfpId))
+      }
+    case WorkerAgentCommand.RunnerUp(id, tpe) =>
+      runnersSpawning
+        .get(id)
+        .foreach(i =>
+          downloader(id, tpe).onComplete {
+            case Failure(_) =>
+              ctx.self ! WorkerAgentCommand.RunnerDown(id)
+              tupleSpace.out(Performative.Failure.name #: "cfp" #: i.toString #: JsonNil)
+            case Success(_) =>
+              launchAwaitExecutionRequest(ctx, tupleSpace, id)
+              tupleSpace.out(Performative.InformDone.name #: "cfp" #: i.toString #: JsonNil)
+          }
         )
-      case _ => Behaviors.ignore
-    }
+      main(
+        ctx,
+        rootActor,
+        workerId,
+        runnersSpawned,
+        runnersSpawning - id,
+        tupleSpace,
+        downloader,
+        acceptedExecutableTypes,
+        slotsAvailable,
+        callsAlreadyProcessed
+      )
+    case WorkerAgentCommand.RunnerDown(id) =>
+      runnersSpawned.get(id).foreach(ctx.stop)
+      main(
+        ctx,
+        rootActor,
+        workerId,
+        runnersSpawned,
+        runnersSpawning,
+        tupleSpace,
+        downloader,
+        acceptedExecutableTypes,
+        slotsAvailable + 1,
+        callsAlreadyProcessed
+      )
+    case _ => Behaviors.ignore
   }.receiveSignal {
     case (_, PostStop) =>
       tupleSpace.close()
       Behaviors.same
+  }
+
+  @SuppressWarnings(Array("org.wartremover.warts.ToString"))
+  private def setup(
+    ctx: ActorContext[WorkerAgentCommand],
+    rootActor: ActorRef[RootActorCommand],
+    workerId: UUID,
+    runnersSpawned: Map[ExecutableId, ActorRef[RunnerAgentCommand]],
+    tupleSpace: JsonTupleSpace,
+    downloader: (ExecutableId, ExecutableType) => Future[Unit],
+    acceptedExecutableTypes: Seq[ExecutableType],
+    slotsAvailable: Int
+  )(
+    using ExecutionContext
+  ): Behavior[WorkerAgentCommand] = {
+    rootActor ! RootActorCommand.WorkerUp(success = true)
+    runnersSpawned.keys.foreach(launchAwaitExecutionRequest(ctx, tupleSpace, _))
+    launchAwaitCallForProposals(ctx, tupleSpace, acceptedExecutableTypes, Seq.empty)
+    println(s"Worker ${workerId.toString} up")
+    main(
+      ctx,
+      rootActor,
+      workerId,
+      runnersSpawned,
+      Map.empty,
+      tupleSpace,
+      downloader,
+      acceptedExecutableTypes,
+      slotsAvailable,
+      Seq.empty
+    )
   }
 
   @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
@@ -254,11 +301,13 @@ object WorkerAgent {
     rootActor: ActorRef[RootActorCommand],
     workerId: UUID,
     tupleSpace: JsonTupleSpace,
-    downloader: ExecutableId => Future[Unit],
+    downloader: (ExecutableId, ExecutableType) => Future[Unit],
     acceptedExecutableTypes: Seq[ExecutableType],
     slotsAvailable: Int
+  )(
+    using ExecutionContext
   ): Behavior[WorkerAgentCommand] = Behaviors.receiveMessage {
-    case WorkerAgentCommand.RunnerUp(_) if remainingRunnersSpawned > 1 =>
+    case WorkerAgentCommand.RunnerUp(_, _) if remainingRunnersSpawned > 1 =>
       awaitRunnerStart(
         remainingRunnersSpawned - 1,
         runnersSpawned,
@@ -270,8 +319,8 @@ object WorkerAgent {
         acceptedExecutableTypes,
         slotsAvailable
       )
-    case WorkerAgentCommand.RunnerUp(_) =>
-      main(ctx, rootActor, workerId, runnersSpawned, Map.empty, tupleSpace, downloader, acceptedExecutableTypes, slotsAvailable)
+    case WorkerAgentCommand.RunnerUp(_, _) =>
+      setup(ctx, rootActor, workerId, runnersSpawned, tupleSpace, downloader, acceptedExecutableTypes, slotsAvailable)
     case _ => Behaviors.ignore
   }
 
@@ -280,7 +329,7 @@ object WorkerAgent {
     rootActor: ActorRef[RootActorCommand],
     workerId: UUID,
     tupleSpace: JsonTupleSpace,
-    downloader: ExecutableId => Future[Unit],
+    downloader: (ExecutableId, ExecutableType) => Future[Unit],
     acceptedExecutableTypes: Seq[ExecutableType],
     slotsAvailable: Int
   ): Behavior[WorkerAgentCommand] = Behaviors.setup { ctx =>
@@ -298,7 +347,7 @@ object WorkerAgent {
             nameParts(0).matches("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$") &&
             ExecutableType.values.map(_.extension).toSeq.contains(nameParts(1))
           )
-            Some((UUID.fromString(nameParts(0)), ExecutableType.valueOf(nameParts(1))))
+            Some((UUID.fromString(nameParts(0)), ExecutableType.getByExtension(nameParts(1))))
           else
             None
         })
@@ -322,12 +371,11 @@ object WorkerAgent {
             slotsAvailable
           )
         else
-          main(
+          setup(
             ctx,
             rootActor,
             workerId,
             runnersSpawned,
-            Map.empty,
             tupleSpace,
             downloader,
             acceptedExecutableTypes,

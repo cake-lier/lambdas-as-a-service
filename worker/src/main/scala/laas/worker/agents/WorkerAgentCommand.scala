@@ -31,7 +31,7 @@ import laas.worker.model.Execution.{ExecutionArguments, ExecutionId, ExecutionOu
 
 enum WorkerAgentCommand {
 
-  case RunnerUp(id: ExecutableId) extends WorkerAgentCommand
+  case RunnerUp(id: ExecutableId, tpe: ExecutableType) extends WorkerAgentCommand
 
   case ExecutionComplete(id: ExecutionId, output: Try[ExecutionOutput]) extends WorkerAgentCommand
 
@@ -45,6 +45,8 @@ enum WorkerAgentCommand {
 
   case ProposalAccepted(cfpId: CallForProposalId, executableId: ExecutableId, executableType: ExecutableType)
     extends WorkerAgentCommand
+
+  case ProposalRejected(cfpId: CallForProposalId) extends WorkerAgentCommand
 
   case RunnerDown(id: ExecutableId) extends WorkerAgentCommand
 }
