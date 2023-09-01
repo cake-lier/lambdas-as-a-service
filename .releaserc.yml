@@ -64,6 +64,10 @@ plugins:
         sbt tsServer/dockerBuildAndPush;
         sbt worker/assembly;
         sbt worker/dockerBuildAndPush;
+        cd ui;
+        npm install;
+        npm run build;
+        cd ..;
         sbt master/assembly;
         sbt master/dockerBuildAndPush;
       shell: /bin/bash
