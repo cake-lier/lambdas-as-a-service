@@ -33,6 +33,8 @@ services:
       - WORKER_HTTP_CLIENT_URI=http://master:8080/files
       - WORKER_ACCEPTED_EXECUTABLES=Java;Python
       - WORKER_AVAILABLE_SLOTS=100
+    volumes:
+      - worker1_volume:/executables
   second_worker:
     image: "matteocastellucci3/laas-worker:latest"
     build: ./worker
@@ -44,6 +46,8 @@ services:
       - WORKER_HTTP_CLIENT_URI=http://master:8080/files
       - WORKER_ACCEPTED_EXECUTABLES=Java;Python
       - WORKER_AVAILABLE_SLOTS=100
+    volumes:
+      - worker2_volume:/executables
   master:
     image: "matteocastellucci3/laas-master:latest"
     build: ./master
@@ -62,3 +66,7 @@ services:
       - DB_PORT_NUMBER=5432
       - DB_HOSTNAME=postgres
       - DB_TIMEOUT=30000
+
+volumes:
+  worker1_volume:
+  worker2_volume:
