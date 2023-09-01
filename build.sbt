@@ -1,5 +1,8 @@
-import Dependencies._
+import Dependencies.*
+
 import java.time.{LocalDateTime, ZoneId}
+import scala.language.postfixOps
+import scala.sys.process.*
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 
@@ -146,7 +149,7 @@ lazy val worker = project
 
 lazy val master = project
   .in(file("master"))
-  .dependsOn(tsClient)
+  .dependsOn(tsClient, ui)
   .enablePlugins(DockerPlugin, AutomateHeaderPlugin)
   .settings(
     name := "laas-master",
@@ -186,6 +189,23 @@ lazy val master = project
       LocalDateTime.now(ZoneId.of("UTC+1")).getYear.toString,
       "Matteo Castellucci"
     ))
+  )
+
+lazy val ui = project
+  .in(file("ui"))
+  .settings(
+    name := "laas-ui",
+    Compile / resourceGenerators += Def.task {
+      "bash -c cd ui; npm run build" !
+      val webapp = baseDirectory.value / "build"
+      (webapp ** "*")
+        .pair(Path.rebase(webapp, resourceManaged.value / "main" / "ui"))
+        .map {
+          case (from, to) =>
+            Sync.copy(from, to)
+            to
+        }
+    }.taskValue
   )
 
 lazy val root = project
