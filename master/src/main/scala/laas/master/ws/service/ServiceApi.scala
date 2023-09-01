@@ -23,20 +23,15 @@ package io.github.cakelier
 package laas.master.ws.service
 
 import java.util.UUID
-
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.duration.DurationInt
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
-import akka.actor.typed.ActorRef
-import akka.actor.typed.Behavior
-import akka.actor.typed.DispatcherSelector
+import akka.actor.typed.{ActorRef, Behavior, DispatcherSelector, PostStop}
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
-
 import AnyOps.*
 import laas.master.model.Execution.ExecutionOutput
 import laas.master.model.Performative
@@ -44,6 +39,8 @@ import laas.master.model.User.DeployedExecutable
 import laas.master.ws.presentation.{Request, Response}
 import laas.tuplespace.*
 import laas.tuplespace.client.JsonTupleSpace
+
+import java.nio.file.{Files, Paths}
 
 object ServiceApi {
 
@@ -56,8 +53,7 @@ object ServiceApi {
     sessions: Map[UUID, ActorRef[Response]]
   ): Behavior[ServiceApiCommand] = {
     given ExecutionContext = ctx.system.dispatchers.lookup(DispatcherSelector.blocking())
-
-    Behaviors.receiveMessage {
+    Behaviors.receiveMessage[ServiceApiCommand] {
       case ServiceApiCommand.RequestCommand(request, replyTo) =>
         request match {
           case Request.Login(username, password) =>
@@ -127,9 +123,10 @@ object ServiceApi {
           .foreach(replyTo =>
             users
               .get(replyTo)
-              .fold(
+              .fold {
+                Files.delete(Paths.get(id.toString))
                 replyTo ! Response.DeployOutput(Failure(Exception("You need to be logged in to perform this operation.")))
-              )(username => {
+              }(username => {
                 val cfpId = UUID.randomUUID()
                 jsonTupleSpace
                   .out(
@@ -140,7 +137,9 @@ object ServiceApi {
                   )
                   .onComplete {
                     case Success(_) => ctx.self ! ServiceApiCommand.StartTimer(cfpId, tpe, id, username, fileName, replyTo)
-                    case Failure(_) => replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+                    case Failure(_) =>
+                      Files.delete(Paths.get(id.toString))
+                      replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
                   }
               })
           )
@@ -174,15 +173,18 @@ object ServiceApi {
           }
         } yield p).onComplete {
           case Success(v) => ctx.self ! ServiceApiCommand.TryProposals(cfpId, executableId, tpe, v, username, fileName, replyTo)
-          case Failure(_) => replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+          case Failure(_) =>
+            Files.delete(Paths.get(executableId.toString))
+            replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
         }
         Behaviors.same
       case ServiceApiCommand.TryProposals(cfpId, executableId, tpe, proposals, username, fileName, replyTo) =>
         val strCfpId = cfpId.toString
         val bestProposal = proposals.maxByOption(_._2).map(_._1)
-        bestProposal.fold(
+        bestProposal.fold {
+          Files.delete(Paths.get(executableId.toString))
           replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
-        )(b =>
+        }(b =>
           (for {
             _ <- jsonTupleSpace.out(
               Performative.AcceptProposal.name #:
@@ -200,12 +202,14 @@ object ServiceApi {
               )
             )
           } yield t).onComplete {
-            case Failure(_) => replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+            case Failure(_) =>
+              Files.delete(Paths.get(executableId.toString))
+              replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
             case Success(v) =>
               v match {
                 case Performative.InformDone.name #: "cfp" #: strCfpId #: JsonNil =>
                   for {
-                    a <- storage.addExecutableToUser(username, executableId, fileName)
+                    _ <- storage.addExecutableToUser(username, executableId, fileName)
                     _ <- jsonTupleSpace.outAll(
                       proposals
                         .filter(_._1 !== b)
@@ -216,6 +220,7 @@ object ServiceApi {
                           JsonNil
                         ): _*
                     )
+                    _ = Files.delete(Paths.get(executableId.toString))
                     _ = replyTo ! Response.DeployOutput(Success(executableId))
                   } ()
                 case Performative.Failure.name #: "cfp" #: strCfpId #: JsonNil =>
@@ -234,9 +239,16 @@ object ServiceApi {
         )
         Behaviors.same
       case ServiceApiCommand.Close(actorRef, id) => main(ctx, storage, jsonTupleSpace, users - actorRef, sessions - id)
+    }.receiveSignal {
+      case (_, PostStop) =>
+        jsonTupleSpace.close()
+        Behaviors.same
     }
   }
 
   def apply(storage: ServiceStorage, jsonTupleSpace: JsonTupleSpace): Behavior[ServiceApiCommand] =
-    Behaviors.setup(ctx => main(ctx, storage, jsonTupleSpace, Map.empty, Map.empty))
+    Behaviors.setup(ctx => {
+      println("Master up")
+      main(ctx, storage, jsonTupleSpace, Map.empty, Map.empty)
+    })
 }
