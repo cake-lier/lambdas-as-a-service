@@ -10,7 +10,7 @@ import PageHeader from "./PageHeader";
 export default function Execute({ userState, logout, deploy, execute, setLastExecution, lastExecution, lastDeployment }) {
     const [executable, setExecutable] = useState("");
     const [args, setArgs] = useState("");
-    const [open, setOpen] = useState(lastExecution !== null);
+    const [open, setOpen] = useState(false);
     const [executing, setExecuting] = useState(false);
     const doExecute = useCallback(() => {
         execute(executable, args.split(/\r?\n/));
@@ -19,7 +19,7 @@ export default function Execute({ userState, logout, deploy, execute, setLastExe
     return (
         <>
             <Dialog
-                dismissableMask={ !executing || lastExecution !== null }
+                dismissableMask={ true }
                 draggable={ false }
                 resizable={ false }
                 footer={ <div className="grid"><br/><br/></div> }
@@ -109,7 +109,7 @@ export default function Execute({ userState, logout, deploy, execute, setLastExe
                                     <Button
                                         className="w-full mt-3"
                                         label="Execute"
-                                        onClick={ () => { setExecutable(userState.executables[index].id); setOpen(true) } }
+                                        onClick={ () => { setExecutable(userState.executables[index].id); setLastExecution(null); setOpen(true) } }
                                     />
                                 </Card>
                             )
@@ -138,7 +138,7 @@ export default function Execute({ userState, logout, deploy, execute, setLastExe
                                     <Button
                                         className="w-full mt-3"
                                         label="Execute"
-                                        onClick={ () => { setExecutable(userState.executables[index]); setOpen(true) } }
+                                        onClick={ () => { setExecutable(userState.executables[index]); setLastExecution(null); setOpen(true) } }
                                     />
                                 </Card>
                             )

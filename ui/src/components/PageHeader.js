@@ -17,10 +17,10 @@ export default function PageHeader({ logout, isResponsive, deploy, lastDeploymen
     return (
         <>
             <Dialog
-                dismissableMask={ lastDeployment === null }
+                dismissableMask={ true }
                 draggable={ false }
                 resizable={ false }
-                visible={ lastDeployment !== null || open }
+                visible={ open }
                 onHide={ () => { setOpen(false); setName(""); setFile(null); fileUploader.current.clear(); } }
             >
                 <div className="grid">
