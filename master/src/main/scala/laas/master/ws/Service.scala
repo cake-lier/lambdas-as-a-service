@@ -41,13 +41,13 @@ import laas.tuplespace.client.JsonTupleSpace
 def main(): Unit = {
   given ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool.commonPool())
   val config: Config = ConfigFactory.systemEnvironment()
-  JsonTupleSpace(config.getString("MASTER_TS_URI")).foreach(s => {
+  JsonTupleSpace(config.getString("MASTER_TS_URI"), config.getInt("MASTER_BUFFER")).foreach(s => {
     ActorSystem[Unit](
       Behaviors.setup(ctx => {
         given ActorSystem[Nothing] = ctx.system
         val server =
           Http()
-            .newServerAt("0.0.0.0", config.getInt("MASTER_PORT_NUMBER"))
+            .newServerAt("0.0.0.0", 8081)
             .bind(
               ServiceController(
                 ctx.spawn(

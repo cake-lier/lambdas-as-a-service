@@ -1,7 +1,7 @@
 FROM eclipse-temurin:19.0.2_7-jre
 
 ENV MASTER_TS_URI=ws://localhost:8080/tuplespace
-ENV MASTER_PORT_NUMBER=8081
+ENV MASTER_BUFFER=100
 ENV DB_USERNAME=postgres
 ENV DB_PASSWORD=postgres
 ENV DB_NAME=laas
