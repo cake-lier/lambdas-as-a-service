@@ -71,7 +71,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
     describe("when a new websocket is opened and then closed") {
       it("should notify the api") {
         val wsProbe: WSProbe = WSProbe()
-        WS("/service", wsProbe.flow) ~> controller ~> check {
+        WS("/service/ws", wsProbe.flow) ~> controller ~> check {
           val openMessage: ServiceApiCommand.Open = apiProbe.expectMessageType[ServiceApiCommand.Open]
           wsProbe.sendCompletion()
           apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
@@ -82,14 +82,14 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
     describe("when a request is sent") {
       it("should forward it to the api") {
         val wsProbe: WSProbe = WSProbe()
-        WS("/service", wsProbe.flow) ~> controller ~> check {
+        WS("/service/ws", wsProbe.flow) ~> controller ~> check {
           val openMessage = apiProbe.expectMessageType[ServiceApiCommand.Open]
           wsProbe.sendMessage(s"{\"type\":\"login\",\"username\":\"$username\",\"password\":\"$password\"}")
           apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Login(username, password), openMessage.actorRef))
           wsProbe.sendMessage(s"{\"type\":\"register\",\"username\":\"$username\",\"password\":\"$password\"}")
           apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Register(username, password), openMessage.actorRef))
-          wsProbe.sendMessage(s"{\"type\":\"logout\",\"username\":\"$username\"}")
-          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Logout(username), openMessage.actorRef))
+          wsProbe.sendMessage("{\"type\":\"logout\"}")
+          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Logout, openMessage.actorRef))
           wsProbe.sendMessage(s"{\"type\":\"execute\",\"id\":\"${executableId.toString}\",\"args\":\"out;err\"}")
           apiProbe.expectMessage(
             ServiceApiCommand.RequestCommand(Request.Execute(executableId, executionArgs), openMessage.actorRef)
@@ -103,7 +103,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
     describe("when a deploy request is sent") {
       it("should forward it to the api and the file should be downloadable") {
         val wsProbe: WSProbe = WSProbe()
-        WS("/service", wsProbe.flow) ~> controller ~> check {
+        WS("/service/ws", wsProbe.flow) ~> controller ~> check {
           val openMessage = apiProbe.expectMessageType[ServiceApiCommand.Open]
           val originalFilePath = Paths.get("master", "src", "test", "resources", "exec.jar")
           val name = "test"
@@ -132,7 +132,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
                   HttpEntity(ContentTypes.`text/plain(UTF-8)`, openMessage.id.toString)
                 )
             )
-          Post("/deploy", multipartForm) ~> controller ~> check {
+          Post("/service/deploy", multipartForm) ~> controller ~> check {
             response.status shouldBe StatusCodes.OK
             val deployMessage = apiProbe.expectMessageType[ServiceApiCommand.Deploy]
             deployMessage.tpe shouldBe ExecutableType.Java
@@ -140,7 +140,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
             deployMessage.websocketId shouldBe openMessage.id
             val uploadedFilePath = Paths.get(deployMessage.id.toString)
             PathUtils.fileContentEquals(uploadedFilePath, originalFilePath) shouldBe true
-            Get(s"/files/${deployMessage.id}") ~> controller ~> check {
+            Get(s"/service/files/${deployMessage.id}") ~> controller ~> check {
               response.status shouldBe StatusCodes.OK
               val downloadedFilePath = Paths.get("master", "copy.jar")
               Await.result(responseEntity.dataBytes.runWith(FileIO.toPath(downloadedFilePath)), 30.seconds)
@@ -158,7 +158,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
     describe("when a response is generated") {
       it("should send it to the opened websocket") {
         val wsProbe: WSProbe = WSProbe()
-        WS("/service", wsProbe.flow) ~> controller ~> check {
+        WS("/service/ws", wsProbe.flow) ~> controller ~> check {
           val openMessage = apiProbe.expectMessageType[ServiceApiCommand.Open]
           val generatedId = UUID.randomUUID()
           val name = "test"
@@ -178,6 +178,10 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           )
           openMessage.actorRef ! Response.ExecuteOutput(generatedId, Failure(Exception(error)))
           wsProbe.expectMessage(s"{\"type\":\"executeOutput\",\"id\":\"${generatedId.toString}\",\"error\":\"$error\"}")
+          openMessage.actorRef ! Response.DeployOutput(Success(generatedId))
+          wsProbe.expectMessage(s"{\"type\":\"deployOutput\",\"id\":\"${generatedId.toString}\"}")
+          openMessage.actorRef ! Response.DeployOutput(Failure(Exception(error)))
+          wsProbe.expectMessage(s"{\"type\":\"deployOutput\",\"error\":\"$error\"}")
           wsProbe.sendCompletion()
           apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
         }

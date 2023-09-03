@@ -22,6 +22,8 @@
 package io.github.cakelier
 package laas.master.ws.service
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.UUID
 
 import scala.concurrent.Await
@@ -77,7 +79,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
   override def startContainers(): Containers = {
     val storageContainer = PostgreSQLContainer
       .Def(
-        dockerImageName = DockerImageName.parse("postgres:15.3"),
+        dockerImageName = DockerImageName.parse("postgres:15.4"),
         databaseName = databaseName,
         username = databaseUsername,
         password = databasePassword,
@@ -99,7 +101,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
   private val testKit: ActorTestKit = ActorTestKit()
   private val responseActorProbe: TestProbe[Response] = testKit.createTestProbe[Response]()
   private var storage: Option[ServiceStorage] = None
-  private var tupleSpace: Option[JsonTupleSpace] = None
+  private var tupleSpaceFactory: Option[() => JsonTupleSpace] = None
   private val username = "mario"
   private val password = "password"
   private val executableName = "test"
@@ -123,10 +125,10 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         ).dataSource
       )
     )
-    tupleSpace = Some(
+    tupleSpaceFactory = Some(() =>
       Await.result(
         JsonTupleSpace("ws://localhost:" + containers.tail.container.getFirstMappedPort.toString + "/tuplespace"),
-        30.seconds
+        timeout
       )
     )
   }
@@ -139,7 +141,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
   describe("A master agent") {
     describe("when receives a websocket open message") {
       it("should send to the websocket the newly generated id") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
@@ -151,7 +153,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when a new user registers to the system") {
       it("should add them to the system") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
@@ -165,7 +167,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when an already registered user is added to the system") {
       it("should not add them to the system and return an error") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
@@ -180,13 +182,13 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when an already registered user logs in the system") {
       it("should log them in the system") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
         responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
-        master ! ServiceApiCommand.RequestCommand(Request.Logout(username), responseActorProbe.ref)
+        master ! ServiceApiCommand.RequestCommand(Request.Logout, responseActorProbe.ref)
         responseActorProbe.expectNoMessage()
         master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
         responseActorProbe.expectNoMessage()
@@ -196,11 +198,15 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when a new executable is deployed in the system but the user didn't log in") {
       it("should not deploy it and return an error") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         val executableId = UUID.randomUUID()
+        Files.copy(
+          Paths.get("master", "src", "test", "resources", "exec.jar"),
+          Paths.get(executableId.toString)
+        )
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val result: Response.DeployOutput = responseActorProbe.expectMessageType[Response.DeployOutput]
         result.id.failure.exception.getMessage shouldBe "You need to be logged in to perform this operation."
@@ -214,18 +220,22 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when a new executable is deployed in the system but no worker accepts the deployment") {
       it("should not deploy it and return an error") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         val executableId = UUID.randomUUID()
+        Files.copy(
+          Paths.get("master", "src", "test", "resources", "exec.jar"),
+          Paths.get(executableId.toString)
+        )
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
         responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
+        val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
           for {
             cfp <- tupleSpace
-              .getOrElse(fail())
               .rd(
                 complete(
                   Performative.Cfp.name,
@@ -235,14 +245,12 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
               )
             cfpId = cfp.elem(1).getOrElse(fail()).toString
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Refuse.name #:
                 cfpId #:
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .no(
                 complete(
                   Performative.Cfp.name,
@@ -265,19 +273,23 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when a new executable is deployed in the system but the worker fails") {
       it("should not deploy it and return an error") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         val executableId = UUID.randomUUID()
+        Files.copy(
+          Paths.get("master", "src", "test", "resources", "exec.jar"),
+          Paths.get(executableId.toString)
+        )
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
         responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val workerId = UUID.randomUUID()
+        val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
           for {
             cfp <- tupleSpace
-              .getOrElse(fail())
               .rd(
                 complete(
                   Performative.Cfp.name,
@@ -287,7 +299,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
               )
             cfpId = cfp.elem(1).getOrElse(fail()).toString
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Propose.name #:
                 cfpId #:
@@ -296,7 +307,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .in(
                 complete(
                   Performative.AcceptProposal.name,
@@ -307,7 +317,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 )
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Failure.name #:
                 "cfp" #:
@@ -329,20 +338,24 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when a new executable is deployed in the system and a worker succeeds") {
       it("should deploy it and return the id of the executable") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         val executableId = UUID.randomUUID()
+        Files.copy(
+          Paths.get("master", "src", "test", "resources", "exec.jar"),
+          Paths.get(executableId.toString)
+        )
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
         responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val firstWorkerId = UUID.randomUUID()
         val secondWorkerId = UUID.randomUUID()
+        val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
           for {
             cfp <- tupleSpace
-              .getOrElse(fail())
               .rd(
                 complete(
                   Performative.Cfp.name,
@@ -352,7 +365,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
               )
             cfpId = cfp.elem(1).getOrElse(fail()).toString
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Propose.name #:
                 cfpId #:
@@ -361,7 +373,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Propose.name #:
                 cfpId #:
@@ -370,7 +381,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .in(
                 complete(
                   Performative.AcceptProposal.name,
@@ -381,7 +391,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 )
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.InformDone.name #:
                 "cfp" #:
@@ -389,7 +398,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .in(
                 complete(
                   Performative.RejectProposal.name,
@@ -398,7 +406,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 )
               )
           } yield (),
-          60.seconds
+          timeout
         )
         val result: Response.DeployOutput = responseActorProbe.expectMessageType[Response.DeployOutput]
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
@@ -413,20 +421,24 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when a new executable is deployed in the system and a first worker fails, but a second succeeds") {
       it("should deploy it and return the id of the executable") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         val executableId = UUID.randomUUID()
+        Files.copy(
+          Paths.get("master", "src", "test", "resources", "exec.jar"),
+          Paths.get(executableId.toString)
+        )
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
         val previousExecutableId = responseActorProbe.expectMessageType[Response.LoginOutput].deployedExecutables.success.value
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val firstWorkerId = UUID.randomUUID()
         val secondWorkerId = UUID.randomUUID()
+        val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
           for {
             cfp <- tupleSpace
-              .getOrElse(fail())
               .rd(
                 complete(
                   Performative.Cfp.name,
@@ -436,7 +448,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
               )
             cfpId = cfp.elem(1).getOrElse(fail()).toString
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Propose.name #:
                 cfpId #:
@@ -445,7 +456,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Propose.name #:
                 cfpId #:
@@ -454,7 +464,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .in(
                 complete(
                   Performative.AcceptProposal.name,
@@ -465,7 +474,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 )
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.Failure.name #:
                 "cfp" #:
@@ -473,7 +481,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 JsonNil
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .in(
                 complete(
                   Performative.AcceptProposal.name,
@@ -484,7 +491,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
                 )
               )
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.InformDone.name #:
                 "cfp" #:
@@ -508,7 +514,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when an executable is to be executed but the user didn't log in") {
       it("should not execute it and return an error") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
@@ -524,7 +530,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when an executable is to be executed but is not associated to the logged in user") {
       it("should not execute it and return an error") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
@@ -546,7 +552,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
 
     describe("when an executable is to be executed") {
       it("should execute it and return the result") {
-        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpace.getOrElse(fail())))
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
@@ -555,10 +561,10 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val executableArgs = Seq("out", "err")
         val executionOutput = ExecutionOutput(0, "out\n", "err\n")
         master ! ServiceApiCommand.RequestCommand(Request.Execute(executableId, executableArgs), responseActorProbe.ref)
+        val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
           for {
             request <- tupleSpace
-              .getOrElse(fail())
               .in(
                 complete(
                   Performative.Request.name,
@@ -570,7 +576,6 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
               )
             executionId = request.elem(2).getOrElse(fail()).toString
             _ <- tupleSpace
-              .getOrElse(fail())
               .out(
                 Performative.InformResult.name #:
                 "execute" #:
