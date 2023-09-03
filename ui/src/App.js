@@ -13,7 +13,6 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: null,
             userState: null,
             socket: null,
             socketId: null,
@@ -35,14 +34,13 @@ class App extends Component {
             this.state.socket.send(JSON.stringify({ type: "login", username, password }));
             sessionStorage.setItem("username", username);
             sessionStorage.setItem("password", password);
-            this.setState({ username });
         }
     }
 
     logout() {
         if (this.state.userState) {
-            this.state.socket.send(JSON.stringify({ type: "logout", username: this.state.username }));
-            this.setState({ username: null, userState: null });
+            this.state.socket.send(JSON.stringify({ type: "logout" }));
+            this.setState({ userState: null });
             sessionStorage.removeItem("username");
             sessionStorage.removeItem("password");
         }
@@ -85,7 +83,7 @@ class App extends Component {
                     const password = sessionStorage.getItem("password");
                     if (username && password) {
                         this.state.socket.send(JSON.stringify({ type: "login", username, password }));
-                        this.setState({ socketId: message.id, username });
+                        this.setState({ socketId: message.id });
                     } else {
                         this.setState({ socketId: message.id, ready: true });
                     }

@@ -48,11 +48,10 @@ object Presentation {
       p <- c.downField("password").as[String]
     } yield Request.Login(u, p)
 
-  private given Decoder[Request.Logout] = c =>
+  private given Decoder[Request.Logout.type] = c =>
     for {
       _ <- c.downField("type").as[String].filterOrElse(_ === "logout", DecodingFailure("The type field was not valid", c.history))
-      u <- c.downField("username").as[String]
-    } yield Request.Logout(u)
+    } yield Request.Logout
 
   private given Decoder[Request.Register] = c =>
     for {
@@ -76,7 +75,7 @@ object Presentation {
 
   given Decoder[Request] = r =>
     r.as[Request.Login]
-      .orElse[DecodingFailure, Request](r.as[Request.Logout])
+      .orElse[DecodingFailure, Request](r.as[Request.Logout.type])
       .orElse[DecodingFailure, Request](r.as[Request.Register])
       .orElse[DecodingFailure, Request](r.as[Request.Execute])
 

@@ -29,7 +29,7 @@ enum Request {
 
   case Login(username: String, password: String) extends Request
 
-  case Logout(username: String) extends Request
+  case Logout extends Request
 
   case Register(username: String, password: String) extends Request
 

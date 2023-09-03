@@ -41,6 +41,7 @@ import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 
 import AnyOps.*
+import laas.master.model.Executable.ExecutableId
 import laas.master.model.Execution.ExecutionOutput
 import laas.master.model.Performative
 import laas.master.model.User.DeployedExecutable
@@ -49,6 +50,18 @@ import laas.tuplespace.*
 import laas.tuplespace.client.JsonTupleSpace
 
 object ServiceApi {
+
+  @SuppressWarnings(Array("org.wartremover.warts.ToString"))
+  private def deleteExecutableAndComplete(
+    executableId: ExecutableId,
+    message: String,
+    replyTo: ActorRef[Response]
+  )(
+    using
+    ExecutionContext
+  ): Unit =
+    Future(Files.delete(Paths.get(executableId.toString)))
+      .onComplete(_ => replyTo ! Response.DeployOutput(Failure(Exception(message))))
 
   @SuppressWarnings(Array("org.wartremover.warts.Recursion", "org.wartremover.warts.ToString"))
   private def main(
@@ -73,7 +86,7 @@ object ServiceApi {
                     Future.failed[Seq[DeployedExecutable]](Exception("Username or password are incorrect."))
               } yield e).onComplete(t => ctx.self ! ServiceApiCommand.StorageLoginResponseCommand(username, t, replyTo))
               Behaviors.same
-            case Request.Logout(username) => main(ctx, storage, jsonTupleSpace, users.filter((_, u) => u !== username), sessions)
+            case Request.Logout => main(ctx, storage, jsonTupleSpace, users - replyTo, sessions)
             case Request.Register(username, password) =>
               storage
                 .register(username, password)
@@ -133,10 +146,9 @@ object ServiceApi {
             .foreach(replyTo =>
               users
                 .get(replyTo)
-                .fold {
-                  Files.delete(Paths.get(id.toString))
-                  replyTo ! Response.DeployOutput(Failure(Exception("You need to be logged in to perform this operation.")))
-                }(username => {
+                .fold(
+                  deleteExecutableAndComplete(id, "You need to be logged in to perform this operation.", replyTo)
+                )(username => {
                   val cfpId = UUID.randomUUID()
                   jsonTupleSpace
                     .out(
@@ -147,9 +159,7 @@ object ServiceApi {
                     )
                     .onComplete {
                       case Success(_) => ctx.self ! ServiceApiCommand.StartTimer(cfpId, tpe, id, username, fileName, replyTo)
-                      case Failure(_) =>
-                        Files.delete(Paths.get(id.toString))
-                        replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+                      case Failure(_) => deleteExecutableAndComplete(id, "The executable cannot be allocated.", replyTo)
                     }
                 })
             )
@@ -183,18 +193,15 @@ object ServiceApi {
             }
           } yield p).onComplete {
             case Success(v) => ctx.self ! ServiceApiCommand.TryProposals(cfpId, executableId, tpe, v, username, fileName, replyTo)
-            case Failure(_) =>
-              Files.delete(Paths.get(executableId.toString))
-              replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+            case Failure(_) => deleteExecutableAndComplete(executableId, "The executable cannot be allocated.", replyTo)
           }
           Behaviors.same
         case ServiceApiCommand.TryProposals(cfpId, executableId, tpe, proposals, username, fileName, replyTo) =>
           val strCfpId = cfpId.toString
           val bestProposal = proposals.maxByOption(_._2).map(_._1)
-          bestProposal.fold {
-            Files.delete(Paths.get(executableId.toString))
-            replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
-          }(b =>
+          bestProposal.fold(
+            deleteExecutableAndComplete(executableId, "The executable cannot be allocated.", replyTo)
+          )(b =>
             (for {
               _ <- jsonTupleSpace.out(
                 Performative.AcceptProposal.name #:
@@ -212,9 +219,7 @@ object ServiceApi {
                 )
               )
             } yield t).onComplete {
-              case Failure(_) =>
-                Files.delete(Paths.get(executableId.toString))
-                replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+              case Failure(_) => deleteExecutableAndComplete(executableId, "The executable cannot be allocated.", replyTo)
               case Success(v) =>
                 v match {
                   case Performative.InformDone.name #: "cfp" #: strCfpId #: JsonNil =>
@@ -243,7 +248,7 @@ object ServiceApi {
                       fileName,
                       replyTo
                     )
-                  case _ => replyTo ! Response.DeployOutput(Failure(Exception("The executable cannot be allocated.")))
+                  case _ => deleteExecutableAndComplete(executableId, "The executable cannot be allocated.", replyTo)
                 }
             }
           )
