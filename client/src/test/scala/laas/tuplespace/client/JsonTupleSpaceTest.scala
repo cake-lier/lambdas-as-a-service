@@ -424,7 +424,6 @@ class JsonTupleSpaceTest extends AnyFunSpec with BeforeAndAfterAll with Eventual
         } shouldBe ()
         useFirstUUID = false
         a[IllegalStateException] should be thrownBy Await.result(client.out(poisonPill), Integer.MAX_VALUE.seconds)
-        Thread.sleep(10_000)
         val inResult = client.in(template)
         eventually(Timeout(Span(10, Seconds))) {
           inResult.value.value.success.value

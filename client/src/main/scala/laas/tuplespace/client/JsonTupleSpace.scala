@@ -262,8 +262,8 @@ object JsonTupleSpace {
     private val httpClient: HttpExt = Http()
 
     private val restartSettings: RestartSettings = RestartSettings(
-      minBackoff = 1.second,
-      maxBackoff = 30.seconds,
+      minBackoff = 500.milliseconds,
+      maxBackoff = 5.seconds,
       randomFactor = 0.1
     )
 
