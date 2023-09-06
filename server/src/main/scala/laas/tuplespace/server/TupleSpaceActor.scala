@@ -46,77 +46,74 @@ private[server] object TupleSpaceActor {
   @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
   private def main(
     ctx: ActorContext[TupleSpaceActorCommand],
-    connections: Map[ActorRef[Response], UUID],
+    connections: Map[UUID, ActorRef[Response]],
     jsonTupleSpace: JsonTupleSpace
   ): Behavior[TupleSpaceActorCommand] = {
     given ExecutionContext = ctx.executionContext
     Behaviors.receiveMessage {
-      case TupleSpaceActorCommand.Out(tuple, replyTo) =>
-        jsonTupleSpace.out(tuple)
-        replyTo ! TupleResponse(tuple)
+      case TupleSpaceActorCommand.Out(tuple, id) =>
+        connections.get(id).foreach(a => {
+          jsonTupleSpace.out(tuple)
+          a ! TupleResponse(tuple)
+        })
         Behaviors.same
-      case TupleSpaceActorCommand.In(template, replyTo) =>
-        connections
-          .get(replyTo)
-          .foreach(id =>
-            jsonTupleSpace
-              .in(template, id)
-              .onComplete(_.toOption.foreach(t => replyTo ! TemplateTupleResponse(template, TemplateTupleResponseType.In, t)))
-          )
+      case TupleSpaceActorCommand.In(template, id) =>
+        connections.get(id).foreach(a =>
+          jsonTupleSpace
+            .in(template, id)
+            .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.In, t)))
+        )
         Behaviors.same
-      case TupleSpaceActorCommand.Rd(template, replyTo) =>
-        connections
-          .get(replyTo)
-          .foreach(id =>
-            jsonTupleSpace
-              .rd(template, id)
-              .onComplete(_.toOption.foreach(t => replyTo ! TemplateTupleResponse(template, TemplateTupleResponseType.Rd, t)))
-          )
+      case TupleSpaceActorCommand.Rd(template, id) =>
+        connections.get(id).foreach(a =>
+          jsonTupleSpace
+            .rd(template, id)
+            .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.Rd, t)))
+        )
         Behaviors.same
-      case TupleSpaceActorCommand.No(template, replyTo) =>
-        connections
-          .get(replyTo)
-          .foreach(id =>
-            jsonTupleSpace
-              .no(template, id)
-              .onComplete(_.toOption.foreach(_ => replyTo ! TemplateResponse(template)))
-          )
+      case TupleSpaceActorCommand.No(template, id) =>
+        connections.get(id).foreach(a =>
+          jsonTupleSpace
+            .no(template, id)
+            .onComplete(_.toOption.foreach(t => a ! TemplateResponse(template)))
+        )
         Behaviors.same
-      case TupleSpaceActorCommand.Inp(template, replyTo) =>
-        replyTo ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Inp, jsonTupleSpace.inp(template))
+      case TupleSpaceActorCommand.Inp(template, id) =>
+        connections.get(id).foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Inp, jsonTupleSpace.inp(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.Rdp(template, replyTo) =>
-        replyTo ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Rdp, jsonTupleSpace.rdp(template))
+      case TupleSpaceActorCommand.Rdp(template, id) =>
+        connections.get(id).foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Rdp, jsonTupleSpace.rdp(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.Nop(template, replyTo) =>
-        replyTo ! TemplateBooleanResponse(template, jsonTupleSpace.nop(template))
+      case TupleSpaceActorCommand.Nop(template, id) =>
+        connections.get(id).foreach(_ ! TemplateBooleanResponse(template, jsonTupleSpace.nop(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.OutAll(tuples, replyTo) =>
-        jsonTupleSpace.outAll(tuples: _*)
-        replyTo ! SeqTupleResponse(tuples)
+      case TupleSpaceActorCommand.OutAll(tuples, id) =>
+        connections.get(id).foreach(a => {
+          jsonTupleSpace.outAll(tuples: _*)
+          a ! SeqTupleResponse(tuples)
+        })
         Behaviors.same
-      case TupleSpaceActorCommand.InAll(template, replyTo) =>
-        replyTo ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.InAll, jsonTupleSpace.inAll(template))
+      case TupleSpaceActorCommand.InAll(template, id) =>
+        connections.get(id).foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.InAll, jsonTupleSpace.inAll(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.RdAll(template, replyTo) =>
-        replyTo ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.RdAll, jsonTupleSpace.rdAll(template))
+      case TupleSpaceActorCommand.RdAll(template, id) =>
+        connections.get(id).foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.RdAll, jsonTupleSpace.rdAll(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.Enter(replyTo) =>
-        val id: UUID = UUID.randomUUID()
+      case TupleSpaceActorCommand.Enter(replyTo, id) =>
         replyTo ! ConnectionSuccessResponse(id)
-        main(ctx, connections + (replyTo -> id), jsonTupleSpace)
-      case TupleSpaceActorCommand.MergeIds(oldId, replyTo) =>
-        replyTo ! MergeSuccessResponse(oldId)
-        main(ctx, connections - replyTo + (replyTo -> oldId), jsonTupleSpace)
-      case TupleSpaceActorCommand.Exit(success, replyTo) =>
+        main(ctx, connections + (id -> replyTo), jsonTupleSpace)
+      case TupleSpaceActorCommand.MergeIds(oldId, id) =>
         connections
-          .get(replyTo)
-          .fold(main(ctx, connections - replyTo, jsonTupleSpace))(id => {
-            if (success) {
-              jsonTupleSpace.remove(id)
-            }
-            main(ctx, connections - replyTo, jsonTupleSpace)
+          .get(id)
+          .fold(Behaviors.same)(a => {
+            a ! MergeSuccessResponse(oldId)
+            main(ctx, connections - id + (oldId -> a), jsonTupleSpace)
           })
+      case TupleSpaceActorCommand.Exit(success, id) =>
+        if (success) {
+          jsonTupleSpace.remove(id)
+        }
+        main(ctx, connections - id, jsonTupleSpace)
     }
   }
 

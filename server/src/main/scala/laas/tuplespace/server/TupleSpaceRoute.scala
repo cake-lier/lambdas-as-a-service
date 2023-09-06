@@ -74,12 +74,7 @@ private[server] object TupleSpaceRoute {
     given ExecutionContextExecutor = actorSystem.dispatchers.lookup(DispatcherSelector.default())
     path(servicePath) {
       handleWebSocketMessages {
-        val (actorRef: ActorRef[Response], source: Source[Response, NotUsed]) =
-          ActorSource
-            .actorRef[Response](PartialFunction.empty, PartialFunction.empty, 1, OverflowStrategy.dropHead)
-            .preMaterialize()
-        tupleSpaceActor ! TupleSpaceActorCommand.Enter(actorRef)
-
+        val id: UUID = UUID.randomUUID()
         Flow[Message]
           .mapAsync(1) {
             case m: TextMessage.Strict => Future.successful(m)
@@ -91,20 +86,20 @@ private[server] object TupleSpaceRoute {
               j <- parse(t.text).toOption
               m <- j.as[Request].toOption
               r = m match {
-                case r: MergeRequest => TupleSpaceActorCommand.MergeIds(r.oldClientId, actorRef)
-                case r: TupleRequest => TupleSpaceActorCommand.Out(r.content, actorRef)
+                case r: MergeRequest => TupleSpaceActorCommand.MergeIds(r.oldClientId, id)
+                case r: TupleRequest => TupleSpaceActorCommand.Out(r.content, id)
                 case r: TemplateRequest =>
                   r.tpe match {
-                    case TemplateRequestType.In => TupleSpaceActorCommand.In(r.content, actorRef)
-                    case TemplateRequestType.Rd => TupleSpaceActorCommand.Rd(r.content, actorRef)
-                    case TemplateRequestType.No => TupleSpaceActorCommand.No(r.content, actorRef)
-                    case TemplateRequestType.InAll => TupleSpaceActorCommand.InAll(r.content, actorRef)
-                    case TemplateRequestType.RdAll => TupleSpaceActorCommand.RdAll(r.content, actorRef)
-                    case TemplateRequestType.Inp => TupleSpaceActorCommand.Inp(r.content, actorRef)
-                    case TemplateRequestType.Rdp => TupleSpaceActorCommand.Rdp(r.content, actorRef)
-                    case TemplateRequestType.Nop => TupleSpaceActorCommand.Nop(r.content, actorRef)
+                    case TemplateRequestType.In => TupleSpaceActorCommand.In(r.content, id)
+                    case TemplateRequestType.Rd => TupleSpaceActorCommand.Rd(r.content, id)
+                    case TemplateRequestType.No => TupleSpaceActorCommand.No(r.content, id)
+                    case TemplateRequestType.InAll => TupleSpaceActorCommand.InAll(r.content, id)
+                    case TemplateRequestType.RdAll => TupleSpaceActorCommand.RdAll(r.content, id)
+                    case TemplateRequestType.Inp => TupleSpaceActorCommand.Inp(r.content, id)
+                    case TemplateRequestType.Rdp => TupleSpaceActorCommand.Rdp(r.content, id)
+                    case TemplateRequestType.Nop => TupleSpaceActorCommand.Nop(r.content, id)
                   }
-                case r: SeqTupleRequest => TupleSpaceActorCommand.OutAll(r.content, actorRef)
+                case r: SeqTupleRequest => TupleSpaceActorCommand.OutAll(r.content, id)
               }
             } yield r).map(Source.single[TupleSpaceActorCommand]).getOrElse(Source.empty[TupleSpaceActorCommand])
           )
@@ -112,10 +107,12 @@ private[server] object TupleSpaceRoute {
             Flow.fromSinkAndSourceCoupled(
               ActorSink.actorRef[TupleSpaceActorCommand](
                 tupleSpaceActor,
-                TupleSpaceActorCommand.Exit(success = true, actorRef),
-                _ => TupleSpaceActorCommand.Exit(success = false, actorRef)
+                TupleSpaceActorCommand.Exit(success = true, id),
+                _ => TupleSpaceActorCommand.Exit(success = false, id)
               ),
-              source
+              ActorSource
+                .actorRef[Response](PartialFunction.empty, PartialFunction.empty, 100, OverflowStrategy.dropHead)
+                .mapMaterializedValue(a => tupleSpaceActor ! TupleSpaceActorCommand.Enter(a, id))
             )
           )
           .map(r => TextMessage(r.asJson.noSpaces))
