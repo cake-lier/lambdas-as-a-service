@@ -5,10 +5,10 @@ services:
     image: "matteocastellucci3/laas-ts-server:latest"
     build: ./server
     expose:
-      - 8080
+      - 80
     hostname: tuplespace
     environment:
-      - TUPLES_SPACE_PORT_NUMBER=8080
+      - TUPLES_SPACE_PORT_NUMBER=80
       - TUPLES_SPACE_SERVICE_PATH=tuplespace
   postgres:
     image: "postgres:15.4"
@@ -29,10 +29,11 @@ services:
       - tuplespace
     environment:
       - WORKER_ID=bdd00fa6-db48-4b08-8b3c-488a1795f1c5
-      - WORKER_TS_URI=ws://tuplespace:8080/tuplespace
-      - WORKER_HTTP_CLIENT_URI=http://master:8080/files
+      - WORKER_TS_URI=ws://tuplespace/tuplespace
+      - WORKER_HTTP_CLIENT_URI=http://master/service/files
       - WORKER_ACCEPTED_EXECUTABLES=Java;Python
       - WORKER_AVAILABLE_SLOTS=100
+      - WORKER_BUFFER=100
     volumes:
       - worker1_volume:/executables
   second_worker:
@@ -42,30 +43,33 @@ services:
       - tuplespace
     environment:
       - WORKER_ID=17439dad-d9ed-4ee6-af05-7eca427ae025
-      - WORKER_TS_URI=ws://tuplespace:8080/tuplespace
-      - WORKER_HTTP_CLIENT_URI=http://master:8080/files
+      - WORKER_TS_URI=ws://tuplespace/tuplespace
+      - WORKER_HTTP_CLIENT_URI=http://master/service/files
       - WORKER_ACCEPTED_EXECUTABLES=Java;Python
       - WORKER_AVAILABLE_SLOTS=100
+      - WORKER_BUFFER=100
     volumes:
       - worker2_volume:/executables
   master:
     image: "matteocastellucci3/laas-master:latest"
     build: ./master
     expose:
-      - 8080
+      - 80
+    ports:
+      - "8080:80"
     hostname: master
     depends_on:
-      - postgres
       - tuplespace
+      - postgres
     environment:
-      - MASTER_TS_URI=ws://tuplespace:8080/tuplespace
-      - MASTER_PORT_NUMBER=8080
+      - MASTER_TS_URI=ws://tuplespace/tuplespace
       - DB_USERNAME=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=laas
       - DB_PORT_NUMBER=5432
       - DB_HOSTNAME=postgres
       - DB_TIMEOUT=30000
+      - MASTER_BUFFER=100
 
 volumes:
   worker1_volume:
