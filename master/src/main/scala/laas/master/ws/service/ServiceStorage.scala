@@ -69,7 +69,7 @@ object ServiceStorage {
     override def register(username: String, password: String): Future[Unit] =
       Future.delegate(
         if (ctx.run(query[Users].filter(_.username === lift(username))).nonEmpty) {
-          Future.failed[Unit](IllegalArgumentException("The username is already taken, please choose another"))
+          Future.failed[Unit](IllegalArgumentException("The username is already taken, please choose another."))
         } else {
           Future(
             ctx.run(

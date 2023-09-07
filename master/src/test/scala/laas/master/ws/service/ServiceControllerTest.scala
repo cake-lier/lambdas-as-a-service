@@ -94,6 +94,10 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           apiProbe.expectMessage(
             ServiceApiCommand.RequestCommand(Request.Execute(executableId, executionArgs), openMessage.id)
           )
+          wsProbe.sendMessage(s"{\"type\":\"userState\",\"id\":\"${executableId.toString}\"}")
+          apiProbe.expectMessage(
+            ServiceApiCommand.RequestCommand(Request.UserState(executableId), openMessage.id)
+          )
           wsProbe.sendCompletion()
           apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.id))
         }

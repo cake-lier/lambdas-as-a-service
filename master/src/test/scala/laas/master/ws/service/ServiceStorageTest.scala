@@ -113,7 +113,7 @@ class ServiceStorageTest extends AnyFunSpec with BeforeAndAfterAll with TestCont
           storage.getOrElse(fail()).register(username, password),
           timeout
         ) should
-        have message "The username is already taken, please choose another"
+        have message "The username is already taken, please choose another."
       }
     }
 

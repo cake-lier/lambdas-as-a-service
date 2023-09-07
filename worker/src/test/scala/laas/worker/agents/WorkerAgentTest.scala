@@ -58,7 +58,11 @@ class WorkerAgentTest extends AnyFunSpec with BeforeAndAfterAll with TestContain
   override val containerDef: GenericContainer.Def[GenericContainer] = GenericContainer.Def(
     "matteocastellucci3/laas-ts-server:latest",
     exposedPorts = Seq(80),
-    waitStrategy = Wait.forListeningPort()
+    waitStrategy = Wait.forListeningPort(),
+    env = Map(
+      "TUPLES_SPACE_PORT_NUMBER" -> "80",
+      "TUPLES_SPACE_SERVICE_PATH" -> "tuplespace"
+    )
   )
 
   private given ExecutionContext = scala.concurrent.ExecutionContext.global

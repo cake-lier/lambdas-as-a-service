@@ -44,6 +44,7 @@ import com.dimafeng.testcontainers.scalatest.TestContainersForAll
 import com.typesafe.config.ConfigFactory
 import io.getquill.JdbcContextConfig
 import org.scalatest.BeforeAndAfterAll
+import org.scalatest.Inside.*
 import org.scalatest.TryValues.*
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
@@ -90,7 +91,11 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
       .Def(
         "matteocastellucci3/laas-ts-server:latest",
         exposedPorts = Seq(80),
-        waitStrategy = Wait.forListeningPort()
+        waitStrategy = Wait.forListeningPort(),
+        env = Map(
+          "TUPLES_SPACE_PORT_NUMBER" -> "80",
+          "TUPLES_SPACE_SERVICE_PATH" -> "tuplespace"
+        )
       )
       .start()
     storageContainer and tupleSpaceContainer
@@ -172,8 +177,9 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         master ! ServiceApiCommand.RequestCommand(Request.Register(username, "password2"), websocketId)
-        val response = responseActorProbe.expectMessageType[Response.UserStateOutput]
-        response.deployedExecutables.failure
+        inside(responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.failure.exception) {
+          case e: IllegalArgumentException => e.getMessage shouldBe "The username is already taken, please choose another."
+        }
         master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
@@ -192,6 +198,43 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         responseActorProbe.expectNoMessage()
         master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
+        testKit.stop(master)
+      }
+    }
+
+    describe("when a user who never registered logs in the system") {
+      it("should not log them in the system and return an error") {
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
+        val websocketId = UUID.randomUUID()
+        master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
+        responseActorProbe.expectMessage(Response.SendId(websocketId))
+        master ! ServiceApiCommand.RequestCommand(Request.Login("luigi", password), websocketId)
+        inside(responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.failure.exception) {
+          case e: Exception => e.getMessage shouldBe "Username or password are incorrect."
+        }
+        master ! ServiceApiCommand.RequestCommand(Request.Logout, websocketId)
+        responseActorProbe.expectNoMessage()
+        master ! ServiceApiCommand.Close(websocketId)
+        responseActorProbe.expectNoMessage()
+        testKit.stop(master)
+      }
+    }
+
+    describe("when an already registered user logs in the system, exits and reenters") {
+      it("should log them in without requiring the credentials if done less than a day after the first login") {
+        val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))
+        val firstWebsocketId = UUID.randomUUID()
+        master ! ServiceApiCommand.Open(responseActorProbe.ref, firstWebsocketId)
+        responseActorProbe.expectMessage(Response.SendId(firstWebsocketId))
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), firstWebsocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.Close(firstWebsocketId)
+        responseActorProbe.expectNoMessage()
+        val secondWebsocketId = UUID.randomUUID()
+        master ! ServiceApiCommand.Open(responseActorProbe.ref, secondWebsocketId)
+        responseActorProbe.expectMessage(Response.SendId(secondWebsocketId))
+        master ! ServiceApiCommand.RequestCommand(Request.UserState(firstWebsocketId), secondWebsocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
         testKit.stop(master)
       }
     }
