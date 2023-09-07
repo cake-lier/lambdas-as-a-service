@@ -27,7 +27,7 @@ export default function LoginForm({ setUser, isLogin }) {
                             name="email"
                             className="w-full"
                             value={ email }
-                            onChange={ e => setEmail(e.target.value) }
+                            onChange={ e => { if (e.target.value.length <= 40) { setEmail(e.target.value) } } }
                         />
                         <label htmlFor="email">E-mail</label>
                     </span>

@@ -7,7 +7,7 @@ CREATE TABLE executables (
 
 CREATE TABLE users (
   username character varying(40) NOT NULL,
-  password character varying(40) NOT NULL,
+  password character varying(60) NOT NULL,
   CONSTRAINT id_user PRIMARY KEY (username)
 );
 

@@ -34,7 +34,7 @@ export default function PageHeader({ logout, isResponsive, deploy, lastDeploymen
                                     name="name"
                                     className="w-full"
                                     value={ name }
-                                    onChange={ e => setName(e.target.value) }
+                                    onChange={ e => { if (e.target.value.length <= 40) { setName(e.target.value) } } }
                                     disabled={ lastDeployment !== null }
                                 />
                                 <label htmlFor="name">Name</label>

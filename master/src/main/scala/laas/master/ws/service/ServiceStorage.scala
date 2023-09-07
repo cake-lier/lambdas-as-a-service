@@ -34,6 +34,8 @@ import laas.master.model.Executable.ExecutableId
 import laas.master.model.User.DeployedExecutable
 import AnyOps.*
 
+import org.mindrot.jbcrypt.BCrypt
+
 trait ServiceStorage {
 
   def findByUsername(username: String): Future[Seq[DeployedExecutable]]
@@ -66,13 +68,22 @@ object ServiceStorage {
       }
 
     override def register(username: String, password: String): Future[Unit] =
-      Future(ctx.run(query[Users].insertValue(lift(Users(username, password)))))
+      Future.delegate(
+        if (ctx.run(query[Users].filter(_.username === lift(username))).nonEmpty) {
+          Future.failed[Unit](IllegalArgumentException("The username is already taken, please choose another"))
+        } else {
+          Future(ctx.run(query[Users].insertValue(lift(Users(
+            username,
+            BCrypt.hashpw(password, BCrypt.gensalt(12))
+          )))))
+        }
+      )
 
     override def login(username: String, password: String): Future[Boolean] =
       Future {
         ctx
-          .run(query[Users].filter(u => u.username === lift(username) && u.password === lift(password)))
-          .nonEmpty
+          .run(query[Users].filter(_.username === lift(username)).map(_.password))
+          .exists(BCrypt.checkpw(password, _))
       }
 
     override def isExecutableOfUser(username: String, id: ExecutableId): Future[Boolean] =
