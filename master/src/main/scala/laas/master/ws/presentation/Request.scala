@@ -22,10 +22,10 @@
 package io.github.cakelier
 package laas.master.ws.presentation
 
+import java.util.UUID
+
 import laas.master.model.Executable.{ExecutableId, ExecutableType}
 import laas.master.model.Execution.ExecutionArguments
-
-import java.util.UUID
 
 enum Request {
 

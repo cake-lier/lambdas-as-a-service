@@ -109,8 +109,11 @@ class ServiceStorageTest extends AnyFunSpec with BeforeAndAfterAll with TestCont
 
     describe("when registering a user with the same username") {
       it("should fail the operation") {
-        the[IllegalArgumentException] thrownBy Await.result(storage.getOrElse(fail()).register(username, password), timeout) should
-          have message "The username is already taken, please choose another"
+        the[IllegalArgumentException] thrownBy Await.result(
+          storage.getOrElse(fail()).register(username, password),
+          timeout
+        ) should
+        have message "The username is already taken, please choose another"
       }
     }
 

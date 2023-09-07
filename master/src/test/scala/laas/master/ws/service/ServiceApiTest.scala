@@ -431,7 +431,8 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           Paths.get(executableId.toString)
         )
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
-        val previousExecutableId = responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value
+        val previousExecutableId =
+          responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val firstWorkerId = UUID.randomUUID()
         val secondWorkerId = UUID.randomUUID()
@@ -557,7 +558,8 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
-        val executableId = responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value.head.id
+        val executableId =
+          responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value.head.id
         val executableArgs = Seq("out", "err")
         val executionOutput = ExecutionOutput(0, "out\n", "err\n")
         master ! ServiceApiCommand.RequestCommand(Request.Execute(executableId, executableArgs), websocketId)

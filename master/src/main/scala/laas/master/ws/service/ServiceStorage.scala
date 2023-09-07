@@ -29,12 +29,11 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 import io.getquill.*
+import org.mindrot.jbcrypt.BCrypt
 
 import laas.master.model.Executable.ExecutableId
 import laas.master.model.User.DeployedExecutable
 import AnyOps.*
-
-import org.mindrot.jbcrypt.BCrypt
 
 trait ServiceStorage {
 
@@ -72,10 +71,18 @@ object ServiceStorage {
         if (ctx.run(query[Users].filter(_.username === lift(username))).nonEmpty) {
           Future.failed[Unit](IllegalArgumentException("The username is already taken, please choose another"))
         } else {
-          Future(ctx.run(query[Users].insertValue(lift(Users(
-            username,
-            BCrypt.hashpw(password, BCrypt.gensalt(12))
-          )))))
+          Future(
+            ctx.run(
+              query[Users].insertValue(
+                lift(
+                  Users(
+                    username,
+                    BCrypt.hashpw(password, BCrypt.gensalt(12))
+                  )
+                )
+              )
+            )
+          )
         }
       )
 

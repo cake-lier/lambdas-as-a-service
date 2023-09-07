@@ -97,7 +97,9 @@ object ServiceApi {
                 case Request.Register(username, password) =>
                   storage
                     .register(username, password)
-                    .onComplete(t => ctx.self ! ServiceApiCommand.UserStateResponseCommand(username, id, t.map(_ => Seq.empty), replyTo))
+                    .onComplete(t =>
+                      ctx.self ! ServiceApiCommand.UserStateResponseCommand(username, id, t.map(_ => Seq.empty), replyTo)
+                    )
                   Behaviors.same
                 case Request.UserState(oldId) =>
                   users
@@ -123,11 +125,11 @@ object ServiceApi {
                       if (s)
                         jsonTupleSpace.out(
                           Performative.Request.name #:
-                            "execute" #:
-                            executionId.toString #:
-                            executableId.toString #:
-                            String.join(";", args: _*) #:
-                            JsonNil
+                          "execute" #:
+                          executionId.toString #:
+                          executableId.toString #:
+                          String.join(";", args: _*) #:
+                          JsonNil
                         )
                       else
                         Future.failed[Unit](Exception("The executable id provided was not found."))
@@ -183,7 +185,8 @@ object ServiceApi {
                       JsonNil
                     )
                     .onComplete {
-                      case Success(_) => ctx.self ! ServiceApiCommand.StartTimer(cfpId, tpe, executableId, username, fileName, replyTo)
+                      case Success(_) =>
+                        ctx.self ! ServiceApiCommand.StartTimer(cfpId, tpe, executableId, username, fileName, replyTo)
                       case Failure(_) => deleteExecutableAndComplete(executableId, "The executable cannot be allocated.", replyTo)
                     }
                 })

@@ -52,52 +52,70 @@ private[server] object TupleSpaceActor {
     given ExecutionContext = ctx.executionContext
     Behaviors.receiveMessage {
       case TupleSpaceActorCommand.Out(tuple, id) =>
-        connections.get(id).foreach(a => {
-          jsonTupleSpace.out(tuple)
-          a ! TupleResponse(tuple)
-        })
+        connections
+          .get(id)
+          .foreach(a => {
+            jsonTupleSpace.out(tuple)
+            a ! TupleResponse(tuple)
+          })
         Behaviors.same
       case TupleSpaceActorCommand.In(template, id) =>
-        connections.get(id).foreach(a =>
-          jsonTupleSpace
-            .in(template, id)
-            .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.In, t)))
-        )
+        connections
+          .get(id)
+          .foreach(a =>
+            jsonTupleSpace
+              .in(template, id)
+              .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.In, t)))
+          )
         Behaviors.same
       case TupleSpaceActorCommand.Rd(template, id) =>
-        connections.get(id).foreach(a =>
-          jsonTupleSpace
-            .rd(template, id)
-            .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.Rd, t)))
-        )
+        connections
+          .get(id)
+          .foreach(a =>
+            jsonTupleSpace
+              .rd(template, id)
+              .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.Rd, t)))
+          )
         Behaviors.same
       case TupleSpaceActorCommand.No(template, id) =>
-        connections.get(id).foreach(a =>
-          jsonTupleSpace
-            .no(template, id)
-            .onComplete(_.toOption.foreach(t => a ! TemplateResponse(template)))
-        )
+        connections
+          .get(id)
+          .foreach(a =>
+            jsonTupleSpace
+              .no(template, id)
+              .onComplete(_.toOption.foreach(t => a ! TemplateResponse(template)))
+          )
         Behaviors.same
       case TupleSpaceActorCommand.Inp(template, id) =>
-        connections.get(id).foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Inp, jsonTupleSpace.inp(template)))
+        connections
+          .get(id)
+          .foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Inp, jsonTupleSpace.inp(template)))
         Behaviors.same
       case TupleSpaceActorCommand.Rdp(template, id) =>
-        connections.get(id).foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Rdp, jsonTupleSpace.rdp(template)))
+        connections
+          .get(id)
+          .foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Rdp, jsonTupleSpace.rdp(template)))
         Behaviors.same
       case TupleSpaceActorCommand.Nop(template, id) =>
         connections.get(id).foreach(_ ! TemplateBooleanResponse(template, jsonTupleSpace.nop(template)))
         Behaviors.same
       case TupleSpaceActorCommand.OutAll(tuples, id) =>
-        connections.get(id).foreach(a => {
-          jsonTupleSpace.outAll(tuples: _*)
-          a ! SeqTupleResponse(tuples)
-        })
+        connections
+          .get(id)
+          .foreach(a => {
+            jsonTupleSpace.outAll(tuples: _*)
+            a ! SeqTupleResponse(tuples)
+          })
         Behaviors.same
       case TupleSpaceActorCommand.InAll(template, id) =>
-        connections.get(id).foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.InAll, jsonTupleSpace.inAll(template)))
+        connections
+          .get(id)
+          .foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.InAll, jsonTupleSpace.inAll(template)))
         Behaviors.same
       case TupleSpaceActorCommand.RdAll(template, id) =>
-        connections.get(id).foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.RdAll, jsonTupleSpace.rdAll(template)))
+        connections
+          .get(id)
+          .foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.RdAll, jsonTupleSpace.rdAll(template)))
         Behaviors.same
       case TupleSpaceActorCommand.Enter(replyTo, id) =>
         replyTo ! ConnectionSuccessResponse(id)
