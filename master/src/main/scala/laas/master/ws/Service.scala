@@ -47,7 +47,7 @@ def main(): Unit = {
         given ActorSystem[Nothing] = ctx.system
         val server =
           Http()
-            .newServerAt("0.0.0.0", 8081)
+            .newServerAt("0.0.0.0", config.getInt("MASTER_PORT_NUMBER"))
             .bind(
               ServiceController(
                 ctx.spawn(

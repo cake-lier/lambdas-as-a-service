@@ -60,7 +60,7 @@ class App extends Component {
         if (this.state.userState) {
             this.setState({ lastDeployment: name });
             axios.postForm(
-                "http://localhost/service/deploy",
+                "http://localhost:8080/service/deploy",
                 {
                     name,
                     file,
@@ -71,7 +71,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const socket = new WebSocket("ws://localhost/service/ws");
+        const socket = new WebSocket("ws://localhost:8080/service/ws");
         socket.onmessage = e => {
             const message = JSON.parse(e.data);
             switch (message.type) {

@@ -10,6 +10,12 @@ services:
     environment:
       - TUPLES_SPACE_PORT_NUMBER=80
       - TUPLES_SPACE_SERVICE_PATH=tuplespace
+    healthcheck:
+      test: ["CMD", "curl", "http://tuplespace/tuplespace"]
+      interval: 10s
+      timeout: 60s
+      start_period: 10s
+      start_interval: 3s
   postgres:
     image: "postgres:15.4"
     expose:
@@ -26,7 +32,8 @@ services:
     image: "matteocastellucci3/laas-worker:latest"
     build: ./worker
     depends_on:
-      - tuplespace
+      tuplespace:
+        condition: service_healthy
     environment:
       - WORKER_ID=bdd00fa6-db48-4b08-8b3c-488a1795f1c5
       - WORKER_TS_URI=ws://tuplespace/tuplespace
@@ -40,7 +47,8 @@ services:
     image: "matteocastellucci3/laas-worker:latest"
     build: ./worker
     depends_on:
-      - tuplespace
+      tuplespace:
+        condition: service_healthy
     environment:
       - WORKER_ID=17439dad-d9ed-4ee6-af05-7eca427ae025
       - WORKER_TS_URI=ws://tuplespace/tuplespace
@@ -59,8 +67,10 @@ services:
       - "8080:80"
     hostname: master
     depends_on:
-      - tuplespace
-      - postgres
+      tuplespace:
+        condition: service_healthy
+      postgres:
+        condition: service_started
     environment:
       - MASTER_TS_URI=ws://tuplespace/tuplespace
       - DB_USERNAME=postgres
@@ -70,6 +80,7 @@ services:
       - DB_HOSTNAME=postgres
       - DB_TIMEOUT=30000
       - MASTER_BUFFER=100
+      - MASTER_PORT_NUMBER=80
 
 volumes:
   worker1_volume:
