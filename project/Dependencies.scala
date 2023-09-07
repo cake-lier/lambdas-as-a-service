@@ -2,7 +2,7 @@ import sbt.*
 
 object Dependencies {
 
-  lazy val scalactic = "org.scalactic" %% "scalactic" % "3.2.16"
+  lazy val scalactic = "org.scalactic" %% "scalactic" % "3.2.17"
 
   lazy val scalatest = "org.scalatest" %% "scalatest" % "3.2.17" % Test
 
