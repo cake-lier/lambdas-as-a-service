@@ -4,7 +4,7 @@ object Dependencies {
 
   lazy val scalactic = "org.scalactic" %% "scalactic" % "3.2.16"
 
-  lazy val scalatest = "org.scalatest" %% "scalatest" % "3.2.16" % Test
+  lazy val scalatest = "org.scalatest" %% "scalatest" % "3.2.17" % Test
 
   lazy val circeCore = "io.circe" %% "circe-core" % "0.14.5"
 
