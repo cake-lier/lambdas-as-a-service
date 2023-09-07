@@ -74,7 +74,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
         WS("/service/ws", wsProbe.flow) ~> controller ~> check {
           val openMessage: ServiceApiCommand.Open = apiProbe.expectMessageType[ServiceApiCommand.Open]
           wsProbe.sendCompletion()
-          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
+          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.id))
         }
       }
     }
@@ -85,17 +85,17 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
         WS("/service/ws", wsProbe.flow) ~> controller ~> check {
           val openMessage = apiProbe.expectMessageType[ServiceApiCommand.Open]
           wsProbe.sendMessage(s"{\"type\":\"login\",\"username\":\"$username\",\"password\":\"$password\"}")
-          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Login(username, password), openMessage.actorRef))
+          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Login(username, password), openMessage.id))
           wsProbe.sendMessage(s"{\"type\":\"register\",\"username\":\"$username\",\"password\":\"$password\"}")
-          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Register(username, password), openMessage.actorRef))
+          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Register(username, password), openMessage.id))
           wsProbe.sendMessage("{\"type\":\"logout\"}")
-          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Logout, openMessage.actorRef))
+          apiProbe.expectMessage(ServiceApiCommand.RequestCommand(Request.Logout, openMessage.id))
           wsProbe.sendMessage(s"{\"type\":\"execute\",\"id\":\"${executableId.toString}\",\"args\":\"out;err\"}")
           apiProbe.expectMessage(
-            ServiceApiCommand.RequestCommand(Request.Execute(executableId, executionArgs), openMessage.actorRef)
+            ServiceApiCommand.RequestCommand(Request.Execute(executableId, executionArgs), openMessage.id)
           )
           wsProbe.sendCompletion()
-          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
+          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.id))
         }
       }
     }
@@ -150,7 +150,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
             }
           }
           wsProbe.sendCompletion()
-          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
+          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.id))
         }
       }
     }
@@ -165,12 +165,12 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           val error = "The user must be logged in to perform this operation."
           openMessage.actorRef ! Response.SendId(generatedId)
           wsProbe.expectMessage(s"{\"type\":\"sendId\",\"id\":\"${generatedId.toString}\"}")
-          openMessage.actorRef ! Response.LoginOutput(Success(Seq(DeployedExecutable(name, generatedId))))
+          openMessage.actorRef ! Response.UserStateOutput(Success(Seq(DeployedExecutable(name, generatedId))))
           wsProbe.expectMessage(
-            s"{\"type\":\"loginOutput\",\"exec\":[{\"id\":\"${generatedId.toString}\",\"name\":\"$name\"}]}"
+            s"{\"type\":\"userStateOutput\",\"exec\":[{\"id\":\"${generatedId.toString}\",\"name\":\"$name\"}]}"
           )
-          openMessage.actorRef ! Response.LoginOutput(Failure(Exception(error)))
-          wsProbe.expectMessage(s"{\"type\":\"loginOutput\",\"error\":\"$error\"}")
+          openMessage.actorRef ! Response.UserStateOutput(Failure(Exception(error)))
+          wsProbe.expectMessage(s"{\"type\":\"userStateOutput\",\"error\":\"$error\"}")
           openMessage.actorRef ! Response.ExecuteOutput(generatedId, Success(ExecutionOutput(0, "out\n", "err\n")))
           wsProbe.expectMessage(
             s"{\"type\":\"executeOutput\",\"id\":\"${generatedId.toString}\",\"output\":{\"exitCode\":0," +
@@ -183,7 +183,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
           openMessage.actorRef ! Response.DeployOutput(Failure(Exception(error)))
           wsProbe.expectMessage(s"{\"type\":\"deployOutput\",\"error\":\"$error\"}")
           wsProbe.sendCompletion()
-          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.actorRef, openMessage.id))
+          apiProbe.expectMessage(ServiceApiCommand.Close(openMessage.id))
         }
       }
     }

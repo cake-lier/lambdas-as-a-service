@@ -145,7 +145,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -157,9 +157,9 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
-        master ! ServiceApiCommand.RequestCommand(Request.Register(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.RequestCommand(Request.Register(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -171,10 +171,10 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
-        master ! ServiceApiCommand.RequestCommand(Request.Register(username, "password2"), responseActorProbe.ref)
-        val response = responseActorProbe.expectMessageType[Response.LoginOutput]
+        master ! ServiceApiCommand.RequestCommand(Request.Register(username, "password2"), websocketId)
+        val response = responseActorProbe.expectMessageType[Response.UserStateOutput]
         response.deployedExecutables.failure
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -186,11 +186,11 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
-        master ! ServiceApiCommand.RequestCommand(Request.Logout, responseActorProbe.ref)
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.RequestCommand(Request.Logout, websocketId)
         responseActorProbe.expectNoMessage()
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -210,9 +210,9 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val result: Response.DeployOutput = responseActorProbe.expectMessageType[Response.DeployOutput]
         result.id.failure.exception.getMessage shouldBe "You need to be logged in to perform this operation."
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -229,8 +229,8 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           Paths.get("master", "src", "test", "resources", "exec.jar"),
           Paths.get(executableId.toString)
         )
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
@@ -263,9 +263,9 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         )
         val result: Response.DeployOutput = responseActorProbe.expectMessageType[Response.DeployOutput]
         result.id.failure.exception.getMessage shouldBe "The executable cannot be allocated."
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -282,8 +282,8 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           Paths.get("master", "src", "test", "resources", "exec.jar"),
           Paths.get(executableId.toString)
         )
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val workerId = UUID.randomUUID()
         val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
@@ -328,9 +328,9 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         )
         val result: Response.DeployOutput = responseActorProbe.expectMessageType[Response.DeployOutput]
         result.id.failure.exception.getMessage shouldBe "The executable cannot be allocated."
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -347,8 +347,8 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           Paths.get("master", "src", "test", "resources", "exec.jar"),
           Paths.get(executableId.toString)
         )
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val firstWorkerId = UUID.randomUUID()
         val secondWorkerId = UUID.randomUUID()
@@ -409,11 +409,11 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           timeout
         )
         val result: Response.DeployOutput = responseActorProbe.expectMessageType[Response.DeployOutput]
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
         responseActorProbe.expectMessage(
-          Response.LoginOutput(Success(Seq(DeployedExecutable(executableName, result.id.success.value))))
+          Response.UserStateOutput(Success(Seq(DeployedExecutable(executableName, result.id.success.value))))
         )
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -430,8 +430,8 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           Paths.get("master", "src", "test", "resources", "exec.jar"),
           Paths.get(executableId.toString)
         )
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        val previousExecutableId = responseActorProbe.expectMessageType[Response.LoginOutput].deployedExecutables.success.value
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        val previousExecutableId = responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value
         master ! ServiceApiCommand.Deploy(executableId, ExecutableType.Java, executableName, websocketId)
         val firstWorkerId = UUID.randomUUID()
         val secondWorkerId = UUID.randomUUID()
@@ -501,12 +501,12 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           timeout
         )
         val result = responseActorProbe.expectMessageType[Response.DeployOutput]
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        val loginOutput = responseActorProbe.expectMessageType[Response.LoginOutput]
-        loginOutput.deployedExecutables.success.value shouldBe (
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        val UserStateOutput = responseActorProbe.expectMessageType[Response.UserStateOutput]
+        UserStateOutput.deployedExecutables.success.value shouldBe (
           previousExecutableId :+ DeployedExecutable(executableName, result.id.success.value)
         )
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -519,10 +519,10 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
         val executableId = UUID.randomUUID()
-        master ! ServiceApiCommand.RequestCommand(Request.Execute(executableId, Seq("out", "err")), responseActorProbe.ref)
+        master ! ServiceApiCommand.RequestCommand(Request.Execute(executableId, Seq("out", "err")), websocketId)
         val result = responseActorProbe.expectMessageType[Response.ExecuteOutput]
         result.output.failure.exception.getMessage shouldBe "You need to be logged in to perform this operation."
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -534,17 +534,17 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        val deployedExecutables = responseActorProbe.expectMessageType[Response.LoginOutput].deployedExecutables.success.value
-        master ! ServiceApiCommand.RequestCommand(Request.Register("luigi", "password"), responseActorProbe.ref)
-        responseActorProbe.expectMessage(Response.LoginOutput(Success(Seq.empty)))
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        val deployedExecutables = responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value
+        master ! ServiceApiCommand.RequestCommand(Request.Register("luigi", "password"), websocketId)
+        responseActorProbe.expectMessage(Response.UserStateOutput(Success(Seq.empty)))
         master ! ServiceApiCommand.RequestCommand(
           Request.Execute(deployedExecutables.head.id, Seq("out", "err")),
-          responseActorProbe.ref
+          websocketId
         )
         val result = responseActorProbe.expectMessageType[Response.ExecuteOutput]
         result.output.failure.exception.getMessage shouldBe "The executable id provided was not found."
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }
@@ -556,11 +556,11 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
         val websocketId = UUID.randomUUID()
         master ! ServiceApiCommand.Open(responseActorProbe.ref, websocketId)
         responseActorProbe.expectMessage(Response.SendId(websocketId))
-        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), responseActorProbe.ref)
-        val executableId = responseActorProbe.expectMessageType[Response.LoginOutput].deployedExecutables.success.value.head.id
+        master ! ServiceApiCommand.RequestCommand(Request.Login(username, password), websocketId)
+        val executableId = responseActorProbe.expectMessageType[Response.UserStateOutput].deployedExecutables.success.value.head.id
         val executableArgs = Seq("out", "err")
         val executionOutput = ExecutionOutput(0, "out\n", "err\n")
-        master ! ServiceApiCommand.RequestCommand(Request.Execute(executableId, executableArgs), responseActorProbe.ref)
+        master ! ServiceApiCommand.RequestCommand(Request.Execute(executableId, executableArgs), websocketId)
         val tupleSpace = tupleSpaceFactory.getOrElse(fail())()
         Await.result(
           for {
@@ -589,7 +589,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
           timeout
         )
         val result = responseActorProbe.expectMessage(Response.ExecuteOutput(executableId, Success(executionOutput)))
-        master ! ServiceApiCommand.Close(responseActorProbe.ref, websocketId)
+        master ! ServiceApiCommand.Close(websocketId)
         responseActorProbe.expectNoMessage()
         testKit.stop(master)
       }

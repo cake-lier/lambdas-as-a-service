@@ -32,8 +32,6 @@ class App extends Component {
     login(username, password) {
         if (!this.state.userState) {
             this.state.socket.send(JSON.stringify({ type: "login", username, password }));
-            sessionStorage.setItem("username", username);
-            sessionStorage.setItem("password", password);
         }
     }
 
@@ -41,8 +39,7 @@ class App extends Component {
         if (this.state.userState) {
             this.state.socket.send(JSON.stringify({ type: "logout" }));
             this.setState({ userState: null });
-            sessionStorage.removeItem("username");
-            sessionStorage.removeItem("password");
+            sessionStorage.setItem("wasLoggedIn", "false");
         }
     }
 
@@ -63,7 +60,7 @@ class App extends Component {
         if (this.state.userState) {
             this.setState({ lastDeployment: name });
             axios.postForm(
-                "http://localhost:8081/service/deploy",
+                "http://localhost/service/deploy",
                 {
                     name,
                     file,
@@ -74,26 +71,28 @@ class App extends Component {
     }
 
     componentDidMount() {
-        const socket = new WebSocket("ws://localhost:8081/service/ws");
+        const socket = new WebSocket("ws://localhost/service/ws");
         socket.onmessage = e => {
             const message = JSON.parse(e.data);
             switch (message.type) {
                 case "sendId":
-                    const username = sessionStorage.getItem("username");
-                    const password = sessionStorage.getItem("password");
-                    if (username && password) {
-                        this.state.socket.send(JSON.stringify({ type: "login", username, password }));
+                    if (sessionStorage.getItem("wasLoggedIn") === "true") {
+                        this.state.socket.send(JSON.stringify({ type: "userState", id: sessionStorage.getItem("socketId") }));
                         this.setState({ socketId: message.id });
+                        sessionStorage.setItem("socketId", message.id);
                     } else {
                         this.setState({ socketId: message.id, ready: true });
+                        sessionStorage.setItem("socketId", message.id);
                     }
                     break;
-                case "loginOutput":
+                case "userStateOutput":
                     if (message.error) {
-                        this.setState({ lastErrorMessage: message.error });
+                        this.setState({ lastErrorMessage: message.error, ready: true });
+                        sessionStorage.setItem("wasLoggedIn", "false");
                     }
                     if (message.exec) {
                         this.setState({ userState: { executables: message.exec }, ready: true });
+                        sessionStorage.setItem("wasLoggedIn", "true");
                     }
                     break;
                 case "deployOutput":
@@ -108,7 +107,6 @@ class App extends Component {
                                 { id: message.id, name: this.state.lastDeployment }
                             ]
                         };
-                        sessionStorage.setItem("userState", JSON.stringify(userState));
                         this.setState({
                             userState,
                             lastDeployment: null

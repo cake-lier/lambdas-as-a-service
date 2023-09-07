@@ -68,86 +68,111 @@ object ServiceApi {
     ctx: ActorContext[ServiceApiCommand],
     storage: ServiceStorage,
     jsonTupleSpace: JsonTupleSpace,
-    users: Map[ActorRef[Response], String],
+    users: Map[UUID, String],
     sessions: Map[UUID, ActorRef[Response]]
   ): Behavior[ServiceApiCommand] = {
     given ExecutionContext = ctx.system.dispatchers.lookup(DispatcherSelector.blocking())
     Behaviors
       .receiveMessage[ServiceApiCommand] {
-        case ServiceApiCommand.RequestCommand(request, replyTo) =>
-          request match {
-            case Request.Login(username, password) =>
-              (for {
-                s <- storage.login(username, password)
-                e <-
-                  if (s)
-                    storage.findByUsername(username)
-                  else
-                    Future.failed[Seq[DeployedExecutable]](Exception("Username or password are incorrect."))
-              } yield e).onComplete(t => ctx.self ! ServiceApiCommand.StorageLoginResponseCommand(username, t, replyTo))
-              Behaviors.same
-            case Request.Logout => main(ctx, storage, jsonTupleSpace, users - replyTo, sessions)
-            case Request.Register(username, password) =>
-              storage
-                .register(username, password)
-                .onComplete(t => ctx.self ! ServiceApiCommand.StorageRegisterResponseCommand(username, t, replyTo))
-              Behaviors.same
-            case Request.Execute(id, args) =>
-              val executionId = UUID.randomUUID()
-              (for {
-                u <- users
-                  .get(replyTo)
-                  .fold(Future.failed[String](Exception("You need to be logged in to perform this operation.")))(
-                    Future.successful
-                  )
-                s <- storage.isExecutableOfUser(u, id)
-                _ <-
-                  if (s)
-                    jsonTupleSpace.out(
-                      Performative.Request.name #:
-                      "execute" #:
-                      executionId.toString #:
-                      id.toString #:
-                      String.join(";", args: _*) #:
-                      JsonNil
+        case ServiceApiCommand.RequestCommand(request, id) =>
+          sessions
+            .get(id)
+            .map(replyTo =>
+              request match {
+                case Request.Login(username, password) =>
+                  (for {
+                    s <- storage.login(username, password)
+                    e <-
+                      if (s)
+                        storage.findByUsername(username)
+                      else
+                        Future.failed[Seq[DeployedExecutable]](Exception("Username or password are incorrect."))
+                  } yield e).onComplete(t => ctx.self ! ServiceApiCommand.UserStateResponseCommand(username, id, t, replyTo))
+                  Behaviors.same
+                case Request.Logout =>
+                  Behaviors.withTimers[ServiceApiCommand](s => {
+                    s.cancel(id)
+                    main(ctx, storage, jsonTupleSpace, users - id, sessions)
+                  })
+                case Request.Register(username, password) =>
+                  storage
+                    .register(username, password)
+                    .onComplete(t => ctx.self ! ServiceApiCommand.UserStateResponseCommand(username, id, t.map(_ => Seq.empty), replyTo))
+                  Behaviors.same
+                case Request.UserState(oldId) =>
+                  users
+                    .get(oldId)
+                    .fold {
+                      replyTo ! Response.UserStateOutput(Failure(Exception("The session has expired, please log in again.")))
+                      Behaviors.same
+                    } { user =>
+                      storage.findByUsername(user).onComplete(r => replyTo ! Response.UserStateOutput(r))
+                      main(ctx, storage, jsonTupleSpace, users - oldId + (id -> user), sessions)
+                    }
+                case Request.Execute(executableId, args) =>
+                  val executionId = UUID.randomUUID()
+                  (for {
+                    u <-
+                      users
+                        .get(id)
+                        .fold(Future.failed[String](Exception("You need to be logged in to perform this operation.")))(
+                          Future.successful
+                        )
+                    s <- storage.isExecutableOfUser(u, executableId)
+                    _ <-
+                      if (s)
+                        jsonTupleSpace.out(
+                          Performative.Request.name #:
+                            "execute" #:
+                            executionId.toString #:
+                            executableId.toString #:
+                            String.join(";", args: _*) #:
+                            JsonNil
+                        )
+                      else
+                        Future.failed[Unit](Exception("The executable id provided was not found."))
+                    t <- jsonTupleSpace.in(
+                      complete(
+                        Performative.InformResult.name,
+                        "execute",
+                        executionId.toString,
+                        int gte 0,
+                        string,
+                        string
+                      )
                     )
-                  else
-                    Future.failed[Unit](Exception("The executable id provided was not found."))
-                t <- jsonTupleSpace.in(
-                  complete(
-                    Performative.InformResult.name,
-                    "execute",
-                    executionId.toString,
-                    int gte 0,
-                    string,
-                    string
-                  )
-                )
-                o = t match {
-                  case _ #: _ #: _ #: (e: Int) #: (out: String) #: (err: String) #: JsonNil =>
-                    Success(ExecutionOutput(e, out, err))
-                  case _ => Failure[ExecutionOutput](Exception("Internal error."))
-                }
-              } yield o).onComplete(t => replyTo ! Response.ExecuteOutput(id, t.flatten))
-              Behaviors.same
-          }
+                    o = t match {
+                      case _ #: _ #: _ #: (e: Int) #: (out: String) #: (err: String) #: JsonNil =>
+                        Success(ExecutionOutput(e, out, err))
+                      case _ => Failure[ExecutionOutput](Exception("Internal error."))
+                    }
+                  } yield o).onComplete(t => replyTo ! Response.ExecuteOutput(executableId, t.flatten))
+                  Behaviors.same
+              }
+            )
+            .getOrElse(Behaviors.same)
         case ServiceApiCommand.Open(actorRef, id) =>
           actorRef ! Response.SendId(id)
           main(ctx, storage, jsonTupleSpace, users, sessions + (id -> actorRef))
-        case ServiceApiCommand.StorageLoginResponseCommand(username, result, replyTo) =>
-          replyTo ! Response.LoginOutput(result)
-          main(ctx, storage, jsonTupleSpace, users + (replyTo -> username), sessions)
-        case ServiceApiCommand.StorageRegisterResponseCommand(username, result, replyTo) =>
-          replyTo ! Response.LoginOutput(result.map(_ => Seq.empty))
-          main(ctx, storage, jsonTupleSpace, users + (replyTo -> username), sessions)
-        case ServiceApiCommand.Deploy(id, tpe, fileName, websocketId) =>
+        case ServiceApiCommand.UserStateResponseCommand(username, id, result, replyTo) =>
+          replyTo ! Response.UserStateOutput(result)
+          if (result.isSuccess) {
+            Behaviors.withTimers(s => {
+              s.cancel(id)
+              s.startSingleTimer(id, ServiceApiCommand.RequestCommand(Request.Logout, id), 1.day)
+              main(ctx, storage, jsonTupleSpace, users + (id -> username), sessions)
+            })
+          } else {
+            Behaviors.same
+          }
+        case ServiceApiCommand.Deploy(executableId, tpe, fileName, id) =>
           sessions
-            .get(websocketId)
+            .get(id)
             .foreach(replyTo =>
               users
-                .get(replyTo)
+                .get(id)
                 .fold(
-                  deleteExecutableAndComplete(id, "You need to be logged in to perform this operation.", replyTo)
+                  deleteExecutableAndComplete(executableId, "You need to be logged in to perform this operation.", replyTo)
                 )(username => {
                   val cfpId = UUID.randomUUID()
                   jsonTupleSpace
@@ -158,8 +183,8 @@ object ServiceApi {
                       JsonNil
                     )
                     .onComplete {
-                      case Success(_) => ctx.self ! ServiceApiCommand.StartTimer(cfpId, tpe, id, username, fileName, replyTo)
-                      case Failure(_) => deleteExecutableAndComplete(id, "The executable cannot be allocated.", replyTo)
+                      case Success(_) => ctx.self ! ServiceApiCommand.StartTimer(cfpId, tpe, executableId, username, fileName, replyTo)
+                      case Failure(_) => deleteExecutableAndComplete(executableId, "The executable cannot be allocated.", replyTo)
                     }
                 })
             )
@@ -253,7 +278,7 @@ object ServiceApi {
             }
           )
           Behaviors.same
-        case ServiceApiCommand.Close(actorRef, id) => main(ctx, storage, jsonTupleSpace, users - actorRef, sessions - id)
+        case ServiceApiCommand.Close(id) => main(ctx, storage, jsonTupleSpace, users, sessions - id)
       }
       .receiveSignal {
         case (_, PostStop) =>

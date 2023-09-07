@@ -35,12 +35,10 @@ import laas.master.ws.presentation.{Request, Response}
 
 enum ServiceApiCommand {
 
-  case RequestCommand(request: Request, replyTo: ActorRef[Response]) extends ServiceApiCommand
+  case RequestCommand(request: Request, id: UUID) extends ServiceApiCommand
 
-  case StorageLoginResponseCommand(username: String, result: Try[Seq[DeployedExecutable]], replyTo: ActorRef[Response])
+  case UserStateResponseCommand(username: String, id: UUID, result: Try[Seq[DeployedExecutable]], replyTo: ActorRef[Response])
     extends ServiceApiCommand
-
-  case StorageRegisterResponseCommand(username: String, result: Try[Unit], replyTo: ActorRef[Response]) extends ServiceApiCommand
 
   case Deploy(id: ExecutableId, tpe: ExecutableType, fileName: String, websocketId: UUID) extends ServiceApiCommand
 
@@ -74,5 +72,5 @@ enum ServiceApiCommand {
 
   case Open(actorRef: ActorRef[Response], id: UUID) extends ServiceApiCommand
 
-  case Close(actorRef: ActorRef[Response], id: UUID) extends ServiceApiCommand
+  case Close(id: UUID) extends ServiceApiCommand
 }

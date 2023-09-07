@@ -73,8 +73,18 @@ object Presentation {
       a <- c.downField("args").as[String].map(_.split(';').toSeq)
     } yield Request.Execute(i, a)
 
+  private given Decoder[Request.UserState] = c =>
+    for {
+      _ <- c
+        .downField("type")
+        .as[String]
+        .filterOrElse(_ === "userState", DecodingFailure("The type field was not valid", c.history))
+      i <- c.downField("id").as[UUID]
+    } yield Request.UserState(i)
+
   given Decoder[Request] = r =>
     r.as[Request.Login]
+      .orElse[DecodingFailure, Request](r.as[Request.UserState])
       .orElse[DecodingFailure, Request](r.as[Request.Logout.type])
       .orElse[DecodingFailure, Request](r.as[Request.Register])
       .orElse[DecodingFailure, Request](r.as[Request.Execute])
@@ -85,9 +95,9 @@ object Presentation {
       "name" -> e.name.asJson
     )
 
-  private given Encoder[Response.LoginOutput] = r =>
+  private given Encoder[Response.UserStateOutput] = r =>
     Json.obj(
-      "type" -> "loginOutput".asJson,
+      "type" -> "userStateOutput".asJson,
       r.deployedExecutables match {
         case Failure(e) => "error" -> e.getMessage.asJson
         case Success(s) => "exec" -> s.asJson
@@ -125,7 +135,7 @@ object Presentation {
     )
 
   given Encoder[Response] = {
-    case r: Response.LoginOutput => r.asJson
+    case r: Response.UserStateOutput => r.asJson
     case r: Response.DeployOutput => r.asJson
     case r: Response.ExecuteOutput => r.asJson
     case r: Response.SendId => r.asJson

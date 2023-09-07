@@ -74,12 +74,7 @@ object ServiceController {
           concat(
             path("ws") {
               handleWebSocketMessages {
-                val (actorRef: ActorRef[Response], source: Source[Response, NotUsed]) =
-                  ActorSource
-                    .actorRef[Response](PartialFunction.empty, PartialFunction.empty, 1, OverflowStrategy.dropHead)
-                    .preMaterialize()
                 val id = UUID.randomUUID()
-                api ! ServiceApiCommand.Open(actorRef, id)
                 Flow[Message]
                   .mapAsync(1) {
                     case m: TextMessage.Strict => Future.successful(m)
@@ -90,7 +85,7 @@ object ServiceController {
                     (for {
                       j <- parse(t.text).toOption
                       m <- j.as[Request].toOption
-                    } yield ServiceApiCommand.RequestCommand(m, actorRef))
+                    } yield ServiceApiCommand.RequestCommand(m, id))
                       .map(Source.single[ServiceApiCommand])
                       .getOrElse(Source.empty[ServiceApiCommand])
                   )
@@ -98,10 +93,12 @@ object ServiceController {
                     Flow.fromSinkAndSourceCoupled(
                       ActorSink.actorRef[ServiceApiCommand](
                         api,
-                        ServiceApiCommand.Close(actorRef, id),
-                        _ => ServiceApiCommand.Close(actorRef, id)
+                        ServiceApiCommand.Close(id),
+                        _ => ServiceApiCommand.Close(id)
                       ),
-                      source
+                      ActorSource
+                        .actorRef[Response](PartialFunction.empty, PartialFunction.empty, 100, OverflowStrategy.dropHead)
+                        .mapMaterializedValue(a => api ! ServiceApiCommand.Open(a, id))
                     )
                   )
                   .map(r => TextMessage(r.asJson.noSpaces))

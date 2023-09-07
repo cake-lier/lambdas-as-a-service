@@ -34,7 +34,7 @@ enum Response {
 
   case SendId(id: UUID) extends Response
 
-  case LoginOutput(deployedExecutables: Try[Seq[DeployedExecutable]]) extends Response
+  case UserStateOutput(deployedExecutables: Try[Seq[DeployedExecutable]]) extends Response
 
   case ExecuteOutput(id: ExecutableId, output: Try[ExecutionOutput]) extends Response
 

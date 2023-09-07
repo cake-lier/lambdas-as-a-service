@@ -25,11 +25,15 @@ package laas.master.ws.presentation
 import laas.master.model.Executable.{ExecutableId, ExecutableType}
 import laas.master.model.Execution.ExecutionArguments
 
+import java.util.UUID
+
 enum Request {
 
   case Login(username: String, password: String) extends Request
 
   case Logout extends Request
+
+  case UserState(id: UUID) extends Request
 
   case Register(username: String, password: String) extends Request
 
