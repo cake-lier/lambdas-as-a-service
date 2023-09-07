@@ -64,8 +64,7 @@ import laas.tuplespace.JsonTuple.JsonNil
   Array(
     "org.wartremover.warts.Var",
     "org.wartremover.warts.Nothing",
-    "scalafix:DisableSyntax.var",
-    "org.wartremover.warts.ThreadSleep"
+    "scalafix:DisableSyntax.var"
   )
 )
 class JsonTupleSpaceTest extends AnyFunSpec with BeforeAndAfterAll with Eventually {
