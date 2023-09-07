@@ -4,12 +4,12 @@ import { Password } from "primereact/password";
 import { useCallback, useState } from "react";
 
 export default function LoginForm({ setUser, isLogin }) {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const doLogin = useCallback(e => {
         e.preventDefault();
-        setUser(email, password);
-    }, [email, password, setUser]);
+        setUser(username, password);
+    }, [username, password, setUser]);
     return (
         <div className="grid">
             <div className="col-12 flex justify-content-center">
@@ -23,13 +23,13 @@ export default function LoginForm({ setUser, isLogin }) {
                     <span className="p-float-label p-input-icon-right w-full">
                         <i className="pi pi-envelope" />
                         <InputText
-                            id="email"
-                            name="email"
+                            id="username"
+                            name="username"
                             className="w-full"
-                            value={ email }
-                            onChange={ e => { if (e.target.value.length <= 40) { setEmail(e.target.value) } } }
+                            value={ username }
+                            onChange={ e => { if (e.target.value.length <= 40) { setUsername(e.target.value) } } }
                         />
-                        <label htmlFor="email">E-mail</label>
+                        <label htmlFor="username">Username</label>
                     </span>
                     <span className="p-float-label mt-4 w-full">
                         <Password
