@@ -8,7 +8,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 
 Global / excludeLintKeys := Set(idePackagePrefix)
 
-ThisBuild / scalaVersion := "3.3.0"
+ThisBuild / scalaVersion := "3.3.1"
 
 ThisBuild / scalacOptions ++= Seq(
   "-deprecation",
