@@ -81,12 +81,12 @@ plugins:
         - sonar-project.properties
   - - '@semantic-release/github'
     - assets:
-        - path: server/target/scala-3.3.0/main.jar
+        - path: server/target/scala-3.3.1/main.jar
           name: ts-server.jar
           label: TS Server JAR file
-        - path: worker/target/scala-3.3.0/main.jar
+        - path: worker/target/scala-3.3.1/main.jar
           name: worker.jar
           label: Worker JAR file
-        - path: master/target/scala-3.3.0/main.jar
+        - path: master/target/scala-3.3.1/main.jar
           name: master.jar
           label: Master JAR file

@@ -87,4 +87,4 @@ jobs:
       - name: Publish scaladoc on GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: target/scala-3.3.0/unidoc
+          folder: target/scala-3.3.1/unidoc

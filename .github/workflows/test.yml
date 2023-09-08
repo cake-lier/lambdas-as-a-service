@@ -52,7 +52,7 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: core/target/scala-3.3.0/scoverage-report/scoverage.xml,client/target/scala-3.3.0/scoverage-report/scoverage.xml,server/target/scala-3.3.0/scoverage-report/scoverage.xml,worker/target/scala-3.3.0/scoverage-report/scoverage.xml,master/target/scala-3.3.0/scoverage-report/scoverage.xml
+          files: core/target/scala-3.3.1/scoverage-report/scoverage.xml,client/target/scala-3.3.1/scoverage-report/scoverage.xml,server/target/scala-3.3.1/scoverage-report/scoverage.xml,worker/target/scala-3.3.1/scoverage-report/scoverage.xml,master/target/scala-3.3.1/scoverage-report/scoverage.xml
           fail_ci_if_error: true
           flags: unittests
           name: codecov-umbrella
@@ -60,7 +60,7 @@ jobs:
       - name: SonarCloud scan fixed
         uses: pervasive-cats/sonarcloud-scoverage-fix@v1.0.1
         with:
-          scoverageReport: 'core/target/scala-3.3.0/scoverage-report/scoverage.xml client/target/scala-3.3.0/scoverage-report/scoverage.xml server/target/scala-3.3.0/scoverage-report/scoverage.xml'
+          scoverageReport: 'core/target/scala-3.3.1/scoverage-report/scoverage.xml client/target/scala-3.3.1/scoverage-report/scoverage.xml server/target/scala-3.3.1/scoverage-report/scoverage.xml'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
