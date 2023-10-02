@@ -54,7 +54,7 @@ object DSL {
   private type ConstantElement = Int | Long | Float | Double | Boolean | String | JsonTuple
 
   /* Converts a constant element into a DSL template or, if the element is already a template, it does nothing. */
-  @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
+  @SuppressWarnings(Array("org.wartremover.warts.Recursion", "org.wartremover.warts.Null"))
   private def convertToTemplate(v: Template | ConstantElement): Template = v match {
     case e: ConstantElement =>
       e match {
@@ -96,6 +96,10 @@ object DSL {
           }
       }
     case t: Template => t
+    case null => new Template {
+
+      override def toJsonTemplate: JsonTemplate = JsonNullTemplate
+    }
   }
 
   /** Entrypoint method for this DSL, allows for creating a new [[JsonTupleTemplate]] without allowing for additional items.
