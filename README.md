@@ -27,11 +27,12 @@ to ask the components dislocated in the other machines where to allocate a given
 After the negotiation, the "secondary"
 component that has accepted the allocation job it will be responsible also for the execution of said executable,
 which will be still requested by the user through the "main" component.
-Some kind of role-based user authentication is used
+Some kind of user-based authentication is used
 in order to allow different users to use the service independently of one another.
 The name of the project, "Lambdas as a Service" recalls exactly that:
 the newer services of serverless computing called "Function as a Service"
 which "AWS Lambda" by Amazon is one of the most prominent examples.
+The architectural inspiration comes also from the "Apache Hadoop" framework and the software which is part of it.
 
 Being a project for the "Distributed Systems" course, it tried to apply most of the things discussed during the course.
 In this project, agents where used for implementing the active part of the system,
