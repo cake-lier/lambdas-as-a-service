@@ -25,6 +25,7 @@ package laas.tuplespace
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
 
+@SuppressWarnings(Array("scalafix:DisableSyntax.null"))
 class DSLTemplateTest extends AnyFunSpec {
 
   describe("The complete keyword") {
@@ -47,14 +48,16 @@ class DSLTemplateTest extends AnyFunSpec {
     describe("when compiling a template via the DSL") {
       it("should create a json tuple template inside a json tuple template without additional items") {
         complete(5 #: null #: "hello" #: JsonNil) shouldBe JsonTupleTemplate(
-          Seq(JsonTupleTemplate(
-            Seq(
-              JsonIntTemplate(Some(5), None, None, None, None, None),
-              JsonNullTemplate,
-              JsonStringTemplate(Some(Set("hello")), None, None, None)
-            ),
-            additionalItems = false
-          )),
+          Seq(
+            JsonTupleTemplate(
+              Seq(
+                JsonIntTemplate(Some(5), None, None, None, None, None),
+                JsonNullTemplate,
+                JsonStringTemplate(Some(Set("hello")), None, None, None)
+              ),
+              additionalItems = false
+            )
+          ),
           additionalItems = false
         )
       }
