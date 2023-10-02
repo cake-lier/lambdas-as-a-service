@@ -20,16 +20,15 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server
+package laas.tuplespace.server.model
+
+import AnyOps.===
+import laas.tuplespace.*
+import laas.tuplespace.server.JsonTupleSpace
 
 import java.util.UUID
-
 import scala.annotation.tailrec
-import scala.concurrent.Future
-import scala.concurrent.Promise
-
-import laas.tuplespace.*
-import AnyOps.===
+import scala.concurrent.{Future, Promise}
 
 /** A coordination medium to be used to exchange pieces of information and coordinate with other entities, implemented to be used
   * with [[JsonTuple]]s and [[JsonTemplate]]s.

@@ -20,14 +20,32 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server.response
+package laas.tuplespace.server.ws.presentation.request
 
-/** The enum representing all the different types of operations that can receive a result using a [[TemplateSeqTupleResponse]]. */
-private[server] enum TemplateSeqTupleResponseType {
+/** The enum representing all the different types of operations that can be carried on using a [[TemplateRequest]]. */
+private[server] enum TemplateRequestType {
 
-  /** The enum instance representing the "inAll" operation. */
-  case InAll extends TemplateSeqTupleResponseType
+  /** The enum instance representing the "in" operation. */
+  case In extends TemplateRequestType
+
+    /** The enum instance representing the "rd" operation. */
+  case Rd extends TemplateRequestType
+
+    /** The enum instance representing the "no" operation. */
+  case No extends TemplateRequestType
+
+    /** The enum instance representing the "inp" operation. */
+  case Inp extends TemplateRequestType
+
+    /** The enum instance representing the "rdp" operation. */
+  case Rdp extends TemplateRequestType
+
+    /** The enum instance representing the "nop" operation. */
+  case Nop extends TemplateRequestType
+
+    /** The enum instance representing the "inAll" operation. */
+  case InAll extends TemplateRequestType
 
     /** The enum instance representing the "rdAll" operation. */
-  case RdAll extends TemplateSeqTupleResponseType
+  case RdAll extends TemplateRequestType
 }

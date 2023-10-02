@@ -24,16 +24,15 @@ package laas.tuplespace.server
 
 import java.nio.file.Paths
 import java.util.concurrent.ForkJoinPool
-
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-
 import akka.actor.ClassicActorSystemProvider
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
+import io.github.cakelier.laas.tuplespace.server.ws.service.{TupleSpaceApi, TupleSpaceController}
 
 /** The main entrypoint for the tuple space server. */
 @main
@@ -41,7 +40,7 @@ def main(): Unit =
   ActorSystem[Unit](
     Behaviors.setup(ctx => {
       val config: Config = ConfigFactory.systemEnvironment()
-      val tupleSpaceActor = ctx.spawn(TupleSpaceActor(ctx.self), name = "tuple-space")
+      val tupleSpaceActor = ctx.spawn(TupleSpaceApi(ctx.self), name = "tuple-space")
       Behaviors.receiveMessage(_ => {
         given ClassicActorSystemProvider = ctx.system
         given ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool.commonPool())
@@ -49,7 +48,7 @@ def main(): Unit =
         val server: Future[Http.ServerBinding] =
           Http()
             .newServerAt("0.0.0.0", config.getInt("TUPLES_SPACE_PORT_NUMBER"))
-            .bind(TupleSpaceRoute(config.getString("TUPLES_SPACE_SERVICE_PATH"), tupleSpaceActor, ctx.system))
+            .bind(TupleSpaceController(config.getString("TUPLES_SPACE_SERVICE_PATH"), tupleSpaceActor, ctx.system))
         ctx.system.whenTerminated.onComplete(_ => server.map(_.unbind()))
         Behaviors.empty
       })

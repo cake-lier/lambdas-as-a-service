@@ -20,38 +20,38 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server
-
-import java.util.UUID
-
-import scala.annotation.tailrec
-import scala.concurrent.ExecutionContext
-
-import akka.actor.typed.ActorRef
-import akka.actor.typed.Behavior
-import akka.actor.typed.scaladsl.ActorContext
-import akka.actor.typed.scaladsl.Behaviors
+package laas.tuplespace.server.ws.service
 
 import AnyOps.*
 import laas.tuplespace.*
+import laas.tuplespace.server.TupleSpaceApiCommand
+import laas.tuplespace.server.model.JsonTupleSpace
 import laas.tuplespace.server.request.*
 import laas.tuplespace.server.response.*
+import laas.tuplespace.server.ws.presentation.response.{Response, TemplateMaybeTupleResponseType, TemplateSeqTupleResponseType, TemplateTupleResponseType}
+
+import akka.actor.typed.{ActorRef, Behavior}
+import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
+
+import java.util.UUID
+import scala.annotation.tailrec
+import scala.concurrent.ExecutionContext
 
 /** The actor representing the handler of the tuple space, managing all operations, alongside the client management and the id
   * assignment.
   */
-private[server] object TupleSpaceActor {
+private[server] object TupleSpaceApi {
 
   /* The main behavior of this actor. */
   @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
   private def main(
-    ctx: ActorContext[TupleSpaceActorCommand],
-    connections: Map[UUID, ActorRef[Response]],
-    jsonTupleSpace: JsonTupleSpace
-  ): Behavior[TupleSpaceActorCommand] = {
+                    ctx: ActorContext[TupleSpaceApiCommand],
+                    connections: Map[UUID, ActorRef[Response]],
+                    jsonTupleSpace: JsonTupleSpace
+  ): Behavior[TupleSpaceApiCommand] = {
     given ExecutionContext = ctx.executionContext
     Behaviors.receiveMessage {
-      case TupleSpaceActorCommand.Out(tuple, id) =>
+      case TupleSpaceApiCommand.Out(tuple, id) =>
         connections
           .get(id)
           .foreach(a => {
@@ -59,7 +59,7 @@ private[server] object TupleSpaceActor {
             a ! TupleResponse(tuple)
           })
         Behaviors.same
-      case TupleSpaceActorCommand.In(template, id) =>
+      case TupleSpaceApiCommand.In(template, id) =>
         connections
           .get(id)
           .foreach(a =>
@@ -68,7 +68,7 @@ private[server] object TupleSpaceActor {
               .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.In, t)))
           )
         Behaviors.same
-      case TupleSpaceActorCommand.Rd(template, id) =>
+      case TupleSpaceApiCommand.Rd(template, id) =>
         connections
           .get(id)
           .foreach(a =>
@@ -77,7 +77,7 @@ private[server] object TupleSpaceActor {
               .onComplete(_.toOption.foreach(t => a ! TemplateTupleResponse(template, TemplateTupleResponseType.Rd, t)))
           )
         Behaviors.same
-      case TupleSpaceActorCommand.No(template, id) =>
+      case TupleSpaceApiCommand.No(template, id) =>
         connections
           .get(id)
           .foreach(a =>
@@ -86,20 +86,20 @@ private[server] object TupleSpaceActor {
               .onComplete(_.toOption.foreach(t => a ! TemplateResponse(template)))
           )
         Behaviors.same
-      case TupleSpaceActorCommand.Inp(template, id) =>
+      case TupleSpaceApiCommand.Inp(template, id) =>
         connections
           .get(id)
           .foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Inp, jsonTupleSpace.inp(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.Rdp(template, id) =>
+      case TupleSpaceApiCommand.Rdp(template, id) =>
         connections
           .get(id)
           .foreach(_ ! TemplateMaybeTupleResponse(template, TemplateMaybeTupleResponseType.Rdp, jsonTupleSpace.rdp(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.Nop(template, id) =>
+      case TupleSpaceApiCommand.Nop(template, id) =>
         connections.get(id).foreach(_ ! TemplateBooleanResponse(template, jsonTupleSpace.nop(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.OutAll(tuples, id) =>
+      case TupleSpaceApiCommand.OutAll(tuples, id) =>
         connections
           .get(id)
           .foreach(a => {
@@ -107,27 +107,27 @@ private[server] object TupleSpaceActor {
             a ! SeqTupleResponse(tuples)
           })
         Behaviors.same
-      case TupleSpaceActorCommand.InAll(template, id) =>
+      case TupleSpaceApiCommand.InAll(template, id) =>
         connections
           .get(id)
           .foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.InAll, jsonTupleSpace.inAll(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.RdAll(template, id) =>
+      case TupleSpaceApiCommand.RdAll(template, id) =>
         connections
           .get(id)
           .foreach(_ ! TemplateSeqTupleResponse(template, TemplateSeqTupleResponseType.RdAll, jsonTupleSpace.rdAll(template)))
         Behaviors.same
-      case TupleSpaceActorCommand.Enter(replyTo, id) =>
+      case TupleSpaceApiCommand.Enter(replyTo, id) =>
         replyTo ! ConnectionSuccessResponse(id)
         main(ctx, connections + (id -> replyTo), jsonTupleSpace)
-      case TupleSpaceActorCommand.MergeIds(oldId, id) =>
+      case TupleSpaceApiCommand.MergeIds(oldId, id) =>
         connections
           .get(id)
           .fold(Behaviors.same)(a => {
             a ! MergeSuccessResponse(oldId)
             main(ctx, connections - id + (oldId -> a), jsonTupleSpace)
           })
-      case TupleSpaceActorCommand.Exit(success, id) =>
+      case TupleSpaceApiCommand.Exit(success, id) =>
         if (success) {
           jsonTupleSpace.remove(id)
         }
@@ -142,7 +142,7 @@ private[server] object TupleSpaceActor {
     * @return
     *   a new tuple space actor
     */
-  def apply(root: ActorRef[Unit]): Behavior[TupleSpaceActorCommand] = Behaviors.setup(ctx => {
+  def apply(root: ActorRef[Unit]): Behavior[TupleSpaceApiCommand] = Behaviors.setup(ctx => {
     root ! ()
     main(ctx, Map.empty, JsonTupleSpace())
   })

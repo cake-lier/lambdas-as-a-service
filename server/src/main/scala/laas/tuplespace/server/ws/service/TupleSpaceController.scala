@@ -20,41 +20,35 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server
+package laas.tuplespace.server.ws.service
 
-import java.util.UUID
-
-import scala.concurrent.ExecutionContextExecutor
-import scala.concurrent.Future
+import laas.tuplespace.*
+import laas.tuplespace.server.TupleSpaceApiCommand
+import laas.tuplespace.server.request.*
+import laas.tuplespace.server.response.*
+import laas.tuplespace.server.ws.presentation.request.RequestDeserializer.given
+import laas.tuplespace.server.ws.presentation.request.{Request, TemplateRequestType}
+import laas.tuplespace.server.ws.presentation.response.Response
+import laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
 
 import akka.NotUsed
 import akka.actor.ActorSystem as ClassicActorSystem
-import akka.actor.typed.ActorRef
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.DispatcherSelector
-import akka.http.scaladsl.model.ws.BinaryMessage
-import akka.http.scaladsl.model.ws.Message
-import akka.http.scaladsl.model.ws.TextMessage
+import akka.actor.typed.{ActorRef, ActorSystem, DispatcherSelector}
+import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import akka.stream.OverflowStrategy
-import akka.stream.scaladsl.Flow
-import akka.stream.scaladsl.Sink
-import akka.stream.scaladsl.Source
-import akka.stream.typed.scaladsl.ActorSink
-import akka.stream.typed.scaladsl.ActorSource
+import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.typed.scaladsl.{ActorSink, ActorSource}
 import io.circe.parser.*
 import io.circe.syntax.*
 
-import laas.tuplespace.*
-import laas.tuplespace.server.response.*
-import laas.tuplespace.server.response.ResponseSerializer.given
-import laas.tuplespace.server.request.*
-import laas.tuplespace.server.request.RequestDeserializer.given
+import java.util.UUID
+import scala.concurrent.{ExecutionContextExecutor, Future}
 
 /** The routes of the webservice which handles the websocket connections to the tuple space server. */
 @SuppressWarnings(Array("org.wartremover.warts.Null", "scalafix:DisableSyntax.null"))
-private[server] object TupleSpaceRoute {
+private[server] object TupleSpaceController {
 
   /** Creates a new [[Route]] object representing the routes of the webservice which is the server of the tuple space. The URL
     * path to the webservice must be given, along with the actor handling the requests and the [[ActorSystem]] on which executing
@@ -69,7 +63,7 @@ private[server] object TupleSpaceRoute {
     * @return
     *   a new [[Route]] instance object
     */
-  def apply(servicePath: String, tupleSpaceActor: ActorRef[TupleSpaceActorCommand], actorSystem: ActorSystem[Nothing]): Route = {
+  def apply(servicePath: String, tupleSpaceActor: ActorRef[TupleSpaceApiCommand], actorSystem: ActorSystem[Nothing]): Route = {
     given ClassicActorSystem = actorSystem.classicSystem
     given ExecutionContextExecutor = actorSystem.dispatchers.lookup(DispatcherSelector.default())
     path(servicePath) {
@@ -86,33 +80,33 @@ private[server] object TupleSpaceRoute {
               j <- parse(t.text).toOption
               m <- j.as[Request].toOption
               r = m match {
-                case r: MergeRequest => TupleSpaceActorCommand.MergeIds(r.oldClientId, id)
-                case r: TupleRequest => TupleSpaceActorCommand.Out(r.content, id)
+                case r: MergeRequest => TupleSpaceApiCommand.MergeIds(r.oldClientId, id)
+                case r: TupleRequest => TupleSpaceApiCommand.Out(r.content, id)
                 case r: TemplateRequest =>
                   r.tpe match {
-                    case TemplateRequestType.In => TupleSpaceActorCommand.In(r.content, id)
-                    case TemplateRequestType.Rd => TupleSpaceActorCommand.Rd(r.content, id)
-                    case TemplateRequestType.No => TupleSpaceActorCommand.No(r.content, id)
-                    case TemplateRequestType.InAll => TupleSpaceActorCommand.InAll(r.content, id)
-                    case TemplateRequestType.RdAll => TupleSpaceActorCommand.RdAll(r.content, id)
-                    case TemplateRequestType.Inp => TupleSpaceActorCommand.Inp(r.content, id)
-                    case TemplateRequestType.Rdp => TupleSpaceActorCommand.Rdp(r.content, id)
-                    case TemplateRequestType.Nop => TupleSpaceActorCommand.Nop(r.content, id)
+                    case TemplateRequestType.In => TupleSpaceApiCommand.In(r.content, id)
+                    case TemplateRequestType.Rd => TupleSpaceApiCommand.Rd(r.content, id)
+                    case TemplateRequestType.No => TupleSpaceApiCommand.No(r.content, id)
+                    case TemplateRequestType.InAll => TupleSpaceApiCommand.InAll(r.content, id)
+                    case TemplateRequestType.RdAll => TupleSpaceApiCommand.RdAll(r.content, id)
+                    case TemplateRequestType.Inp => TupleSpaceApiCommand.Inp(r.content, id)
+                    case TemplateRequestType.Rdp => TupleSpaceApiCommand.Rdp(r.content, id)
+                    case TemplateRequestType.Nop => TupleSpaceApiCommand.Nop(r.content, id)
                   }
-                case r: SeqTupleRequest => TupleSpaceActorCommand.OutAll(r.content, id)
+                case r: SeqTupleRequest => TupleSpaceApiCommand.OutAll(r.content, id)
               }
-            } yield r).map(Source.single[TupleSpaceActorCommand]).getOrElse(Source.empty[TupleSpaceActorCommand])
+            } yield r).map(Source.single[TupleSpaceApiCommand]).getOrElse(Source.empty[TupleSpaceApiCommand])
           )
           .via(
             Flow.fromSinkAndSourceCoupled(
-              ActorSink.actorRef[TupleSpaceActorCommand](
+              ActorSink.actorRef[TupleSpaceApiCommand](
                 tupleSpaceActor,
-                TupleSpaceActorCommand.Exit(success = true, id),
-                _ => TupleSpaceActorCommand.Exit(success = false, id)
+                TupleSpaceApiCommand.Exit(success = true, id),
+                _ => TupleSpaceApiCommand.Exit(success = false, id)
               ),
               ActorSource
                 .actorRef[Response](PartialFunction.empty, PartialFunction.empty, 100, OverflowStrategy.dropHead)
-                .mapMaterializedValue(a => tupleSpaceActor ! TupleSpaceActorCommand.Enter(a, id))
+                .mapMaterializedValue(a => tupleSpaceActor ! TupleSpaceApiCommand.Enter(a, id))
             )
           )
           .map(r => TextMessage(r.asJson.noSpaces))

@@ -20,11 +20,11 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server.response
-
-import java.util.UUID
+package laas.tuplespace.server.ws.presentation.response
 
 import laas.tuplespace.*
+
+import java.util.UUID
 
 /** A response that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] can receive from its server.
   *

@@ -20,17 +20,14 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server.request
-
-import java.util.UUID
-
-import io.circe.Decoder
-import io.circe.DecodingFailure
-import io.circe.Encoder
-import io.circe.Json
-import io.circe.syntax.*
+package laas.tuplespace.server.ws.presentation.request
 
 import laas.tuplespace.*
+
+import io.circe.syntax.*
+import io.circe.{Decoder, DecodingFailure, Encoder, Json}
+
+import java.util.UUID
 
 /** A request that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] can make to its server.
   *

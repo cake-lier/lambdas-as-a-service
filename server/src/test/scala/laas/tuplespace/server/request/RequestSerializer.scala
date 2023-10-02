@@ -25,10 +25,11 @@ package laas.tuplespace.server.request
 import io.circe.Encoder
 import io.circe.Json
 import io.circe.syntax.*
-
 import AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
+
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.{Request, TemplateRequestType}
 
 private[server] object RequestSerializer {
 
