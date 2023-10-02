@@ -143,7 +143,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
     testKit.shutdownTestKit()
   }
 
-  describe("A master agent") {
+  describe("A service agent") {
     describe("when receives a websocket open message") {
       it("should send to the websocket the newly generated id") {
         val master = testKit.spawn(ServiceApi(storage.getOrElse(fail()), tupleSpaceFactory.getOrElse(fail())()))

@@ -67,7 +67,7 @@ class ServiceControllerTest extends AnyFunSpec with ScalatestRouteTest with Befo
   private val executableId = UUID.randomUUID()
   private val executionArgs = Seq("out", "err")
 
-  describe("A controller") {
+  describe("A service controller") {
     describe("when a new websocket is opened and then closed") {
       it("should notify the api") {
         val wsProbe: WSProbe = WSProbe()
