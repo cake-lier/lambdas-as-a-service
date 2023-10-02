@@ -20,9 +20,10 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server
+package laas.tuplespace.server.ws.service
 
 import java.util.UUID
+
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.http.scaladsl.testkit.ScalatestRouteTest
 import akka.http.scaladsl.testkit.WSProbe
@@ -30,17 +31,15 @@ import io.circe.syntax.*
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
+
 import laas.tuplespace.*
-import laas.tuplespace.server.request.*
-import laas.tuplespace.server.request.RequestSerializer.given
-import laas.tuplespace.server.response.*
+import laas.tuplespace.server.ws.presentation.request.RequestSerializer.given
+import laas.tuplespace.server.ws.presentation.request.*
+import laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
+import laas.tuplespace.server.ws.presentation.response.*
+import laas.tuplespace.server.ws.service.{TupleSpaceApiCommand, TupleSpaceController}
 
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.{Request, TemplateRequestType}
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.{Response, TemplateMaybeTupleResponseType, TemplateSeqTupleResponseType, TemplateTupleResponseType}
-import io.github.cakelier.laas.tuplespace.server.ws.service.{TupleSpaceApiCommand, TupleSpaceController}
-
-class TupleSpaceRouteTest extends AnyFunSpec with ScalatestRouteTest with BeforeAndAfterAll {
+class TupleSpaceControllerTest extends AnyFunSpec with ScalatestRouteTest with BeforeAndAfterAll {
 
   private val testKit = ActorTestKit()
   private val tupleSpace = testKit.createTestProbe[TupleSpaceApiCommand]()

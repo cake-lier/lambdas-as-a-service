@@ -20,22 +20,22 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server
+package laas.tuplespace.server.ws.service
 
 import java.util.UUID
+
 import scala.concurrent.duration.DurationInt
+
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
+
 import laas.tuplespace.*
-import laas.tuplespace.server.response.*
-import laas.tuplespace.server.request.*
+import laas.tuplespace.server.ws.presentation.response.*
+import laas.tuplespace.server.ws.service.{TupleSpaceApi, TupleSpaceApiCommand}
 
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.{Response, TemplateMaybeTupleResponseType, TemplateSeqTupleResponseType, TemplateTupleResponseType}
-import io.github.cakelier.laas.tuplespace.server.ws.service.{TupleSpaceApi, TupleSpaceApiCommand}
-
-class TupleSpaceActorTest extends AnyFunSpec with BeforeAndAfterAll {
+class TupleSpaceApiTest extends AnyFunSpec with BeforeAndAfterAll {
 
   private val testKit = ActorTestKit()
 

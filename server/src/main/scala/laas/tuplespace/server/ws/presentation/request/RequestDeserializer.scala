@@ -22,16 +22,17 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.presentation.request
 
+import io.circe.Decoder
+import io.circe.DecodingFailure
+import io.circe.Json
+import io.circe.syntax.*
+
 import AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
-import laas.tuplespace.server.request.*
-
-import io.circe.{Decoder, DecodingFailure, Json}
-import io.circe.syntax.*
 
 /** This object contains all deserializers for the [[Request]] sub-types. */
-private[server] object RequestDeserializer {
+private[ws] object RequestDeserializer {
 
   /* The Decoder given instance for the TupleRequest trait. */
   private given Decoder[TupleRequest] = c =>

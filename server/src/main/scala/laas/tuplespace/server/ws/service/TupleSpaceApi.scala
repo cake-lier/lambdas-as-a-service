@@ -22,20 +22,21 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.service
 
-import AnyOps.*
-import laas.tuplespace.*
-import laas.tuplespace.server.TupleSpaceApiCommand
-import laas.tuplespace.server.model.JsonTupleSpace
-import laas.tuplespace.server.request.*
-import laas.tuplespace.server.response.*
-import laas.tuplespace.server.ws.presentation.response.{Response, TemplateMaybeTupleResponseType, TemplateSeqTupleResponseType, TemplateTupleResponseType}
-
-import akka.actor.typed.{ActorRef, Behavior}
-import akka.actor.typed.scaladsl.{ActorContext, Behaviors}
-
 import java.util.UUID
+
 import scala.annotation.tailrec
 import scala.concurrent.ExecutionContext
+
+import akka.actor.typed.ActorRef
+import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.ActorContext
+import akka.actor.typed.scaladsl.Behaviors
+
+import AnyOps.*
+import laas.tuplespace.*
+import laas.tuplespace.server.model.JsonTupleSpace
+import laas.tuplespace.server.ws.presentation.request.*
+import laas.tuplespace.server.ws.presentation.response.*
 
 /** The actor representing the handler of the tuple space, managing all operations, alongside the client management and the id
   * assignment.
@@ -45,9 +46,9 @@ private[server] object TupleSpaceApi {
   /* The main behavior of this actor. */
   @SuppressWarnings(Array("org.wartremover.warts.Recursion"))
   private def main(
-                    ctx: ActorContext[TupleSpaceApiCommand],
-                    connections: Map[UUID, ActorRef[Response]],
-                    jsonTupleSpace: JsonTupleSpace
+    ctx: ActorContext[TupleSpaceApiCommand],
+    connections: Map[UUID, ActorRef[Response]],
+    jsonTupleSpace: JsonTupleSpace
   ): Behavior[TupleSpaceApiCommand] = {
     given ExecutionContext = ctx.executionContext
     Behaviors.receiveMessage {

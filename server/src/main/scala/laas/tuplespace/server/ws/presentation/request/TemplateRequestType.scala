@@ -23,7 +23,7 @@ package io.github.cakelier
 package laas.tuplespace.server.ws.presentation.request
 
 /** The enum representing all the different types of operations that can be carried on using a [[TemplateRequest]]. */
-private[server] enum TemplateRequestType {
+private[ws] enum TemplateRequestType {
 
   /** The enum instance representing the "in" operation. */
   case In extends TemplateRequestType

@@ -22,29 +22,37 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.service
 
-import laas.tuplespace.*
-import laas.tuplespace.server.TupleSpaceApiCommand
-import laas.tuplespace.server.request.*
-import laas.tuplespace.server.response.*
-import laas.tuplespace.server.ws.presentation.request.RequestDeserializer.given
-import laas.tuplespace.server.ws.presentation.request.{Request, TemplateRequestType}
-import laas.tuplespace.server.ws.presentation.response.Response
-import laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
+import java.util.UUID
+
+import scala.concurrent.ExecutionContextExecutor
+import scala.concurrent.Future
+
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.Request.SeqTupleRequest
 
 import akka.NotUsed
 import akka.actor.ActorSystem as ClassicActorSystem
-import akka.actor.typed.{ActorRef, ActorSystem, DispatcherSelector}
-import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
+import akka.actor.typed.ActorRef
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.DispatcherSelector
+import akka.http.scaladsl.model.ws.BinaryMessage
+import akka.http.scaladsl.model.ws.Message
+import akka.http.scaladsl.model.ws.TextMessage
 import akka.http.scaladsl.server.Directives.*
 import akka.http.scaladsl.server.Route
 import akka.stream.OverflowStrategy
-import akka.stream.scaladsl.{Flow, Sink, Source}
-import akka.stream.typed.scaladsl.{ActorSink, ActorSource}
+import akka.stream.scaladsl.Flow
+import akka.stream.scaladsl.Sink
+import akka.stream.scaladsl.Source
+import akka.stream.typed.scaladsl.ActorSink
+import akka.stream.typed.scaladsl.ActorSource
 import io.circe.parser.*
 import io.circe.syntax.*
 
-import java.util.UUID
-import scala.concurrent.{ExecutionContextExecutor, Future}
+import laas.tuplespace.*
+import laas.tuplespace.server.ws.presentation.request.RequestDeserializer.given
+import laas.tuplespace.server.ws.presentation.request.*
+import laas.tuplespace.server.ws.presentation.response.*
+import laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
 
 /** The routes of the webservice which handles the websocket connections to the tuple space server. */
 @SuppressWarnings(Array("org.wartremover.warts.Null", "scalafix:DisableSyntax.null"))

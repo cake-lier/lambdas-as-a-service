@@ -20,16 +20,18 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server.request
+package laas.tuplespace.server.ws.presentation.request
+
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.Request
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.TemplateRequestType
 
 import io.circe.Encoder
 import io.circe.Json
 import io.circe.syntax.*
+
 import AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
-
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.{Request, TemplateRequestType}
 
 private[server] object RequestSerializer {
 

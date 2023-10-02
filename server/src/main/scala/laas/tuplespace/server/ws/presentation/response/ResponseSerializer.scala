@@ -22,14 +22,15 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.presentation.response
 
+import io.circe.Encoder
+import io.circe.Json
+import io.circe.syntax.*
+
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
 
-import io.circe.{Encoder, Json}
-import io.circe.syntax.*
-
 /** This object contains all serializers for the [[Response]] sub-types. */
-private[server] object ResponseSerializer {
+private[ws] object ResponseSerializer {
 
   /* The Encoder given instance for the TupleResponse trait. */
   private given Encoder[TupleResponse] = r =>

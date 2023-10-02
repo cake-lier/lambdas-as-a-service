@@ -20,16 +20,20 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server.response
+package laas.tuplespace.server.ws.presentation.response
+
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.Response
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.TemplateMaybeTupleResponseType
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.TemplateSeqTupleResponseType
+import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.TemplateTupleResponseType
 
 import io.circe.Decoder
 import io.circe.DecodingFailure
 import io.circe.syntax.*
+
 import AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
-
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.response.{Response, TemplateMaybeTupleResponseType, TemplateSeqTupleResponseType, TemplateTupleResponseType}
 
 private[server] object ResponseDeserializer {
 

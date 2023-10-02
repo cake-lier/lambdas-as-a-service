@@ -23,7 +23,7 @@ package io.github.cakelier
 package laas.tuplespace.server.ws.presentation.response
 
 /** The enum representing all the different types of operations that can receive a result using a [[TemplateTupleResponse]]. */
-private[server] enum TemplateTupleResponseType {
+private[ws] enum TemplateTupleResponseType {
 
   /** The enum instance representing the "in" operation. */
   case In extends TemplateTupleResponseType

@@ -22,12 +22,9 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.presentation.request
 
-import laas.tuplespace.*
-
-import io.circe.syntax.*
-import io.circe.{Decoder, DecodingFailure, Encoder, Json}
-
 import java.util.UUID
+
+import laas.tuplespace.*
 
 /** A request that a [[io.github.cakelier.laas.tuplespace.client.JsonTupleSpace]] can make to its server.
   *
@@ -38,10 +35,10 @@ import java.util.UUID
   * instead used for carrying metadata from the client to the server, for example for managing the [[UUID]] that the server has
   * given to the client.
   */
-sealed private[server] trait Request
+sealed private[ws] trait Request
 
 /** Companion object to the [[Request]] trait, containing its implementations. */
-private[server] object Request {
+private[ws] object Request {
 
   /** A [[Request]] which content is a single [[JsonTuple]].
     *

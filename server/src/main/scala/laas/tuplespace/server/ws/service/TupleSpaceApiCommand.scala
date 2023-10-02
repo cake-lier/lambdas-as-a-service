@@ -22,20 +22,19 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.service
 
-import laas.tuplespace.*
-import laas.tuplespace.server.TupleSpaceApi
-import laas.tuplespace.server.ws.presentation.response.Response
+import java.util.UUID
 
 import akka.actor.typed.ActorRef
 
-import java.util.UUID
+import laas.tuplespace.*
+import laas.tuplespace.server.ws.presentation.response.Response
 
 /** The enum representing all possible messages that can be sent to a [[TupleSpaceApi]].
   *
   * These messages can be either messages for requesting specific operations to be performed on the tuple space that the
   * [[TupleSpaceApi]] is managing or messages for handling the entrance and the exiting of a client.
   */
-private[server] enum TupleSpaceApiCommand {
+private[service] enum TupleSpaceApiCommand {
 
   /** The message signalling that the client with the given id wants to perform the "out" operation with the given [[JsonTuple]]
     * on the tuple space that the [[TupleSpaceApi]] is managing.

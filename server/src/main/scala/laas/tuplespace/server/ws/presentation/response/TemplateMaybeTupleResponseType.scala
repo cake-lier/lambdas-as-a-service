@@ -24,7 +24,7 @@ package laas.tuplespace.server.ws.presentation.response
 
 /** The enum representing all the different types of operations that can receive a result using a [[TemplateMaybeTupleResponse]].
   */
-private[server] enum TemplateMaybeTupleResponseType {
+private[ws] enum TemplateMaybeTupleResponseType {
 
   /** The enum instance representing the "inp" operation. */
   case Inp extends TemplateMaybeTupleResponseType
