@@ -134,18 +134,16 @@ object ServiceApi {
                       else
                         Future.failed[Unit](Exception("The executable id provided was not found."))
                     t <- jsonTupleSpace.in(
-                      complete(
-                        Performative.InformResult.name,
+                      partial(
+                        string in (Performative.InformResult.name, Performative.Failure.name),
                         "execute",
-                        executionId.toString,
-                        int gte 0,
-                        string,
-                        string
+                        executionId.toString
                       )
                     )
                     o = t match {
-                      case _ #: _ #: _ #: (e: Int) #: (out: String) #: (err: String) #: JsonNil =>
+                      case Performative.InformResult.name #: _ #: _ #: (e: Int) #: (out: String) #: (err: String) #: JsonNil =>
                         Success(ExecutionOutput(e, out, err))
+                      case Performative.Failure.name #: _ #: _ #: (m: String) #: JsonNil => Failure[ExecutionOutput](Exception(m))
                       case _ => Failure[ExecutionOutput](Exception("Internal error."))
                     }
                   } yield o).onComplete(t => replyTo ! Response.ExecuteOutput(executableId, t.flatten))
