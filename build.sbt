@@ -91,7 +91,7 @@ lazy val tsServer =
         akkaTestkit
       ),
       assembly / assemblyJarName := "main.jar",
-      assembly / mainClass := Some("io.github.cakelier.laas.tuplespace.server.main"),
+      assembly / mainClass := Some("io.github.cakelier.laas.tuplespace.server.ws.main"),
       assembly / assemblyMergeStrategy := {
         case PathList("module-info.class") => MergeStrategy.discard
         case v => MergeStrategy.defaultMergeStrategy(v)
