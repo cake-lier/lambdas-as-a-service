@@ -14,7 +14,7 @@ object Dependencies {
 
   lazy val postgresql = "org.postgresql" % "postgresql" % "42.6.0"
 
-  lazy val quill = "io.getquill" %% "quill-jdbc" % "4.6.0.1"
+  lazy val quill = "io.getquill" %% "quill-jdbc" % "4.8.0"
 
   lazy val akka = "com.typesafe.akka" %% "akka-actor-typed" % "2.8.4"
 
