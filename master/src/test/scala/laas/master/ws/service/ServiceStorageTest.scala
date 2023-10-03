@@ -64,7 +64,7 @@ class ServiceStorageTest extends AnyFunSpec with BeforeAndAfterAll with TestCont
   private val databasePassword: String = "test"
 
   override val containerDef: PostgreSQLContainer.Def = PostgreSQLContainer.Def(
-    dockerImageName = DockerImageName.parse("postgres:15.4"),
+    dockerImageName = DockerImageName.parse("postgres:16"),
     databaseName = databaseName,
     username = databaseUsername,
     password = databasePassword,

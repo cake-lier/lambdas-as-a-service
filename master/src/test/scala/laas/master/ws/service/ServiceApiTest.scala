@@ -80,7 +80,7 @@ class ServiceApiTest extends AnyFunSpec with BeforeAndAfterAll with TestContaine
   override def startContainers(): Containers = {
     val storageContainer = PostgreSQLContainer
       .Def(
-        dockerImageName = DockerImageName.parse("postgres:15.4"),
+        dockerImageName = DockerImageName.parse("postgres:16"),
         databaseName = databaseName,
         username = databaseUsername,
         password = databasePassword,
