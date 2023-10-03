@@ -20,7 +20,7 @@
  */
 
 package io.github.cakelier
-package laas.tuplespace.server
+package laas.tuplespace.server.ws
 
 import java.nio.file.Paths
 import java.util.concurrent.ForkJoinPool
