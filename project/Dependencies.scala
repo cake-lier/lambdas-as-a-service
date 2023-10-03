@@ -26,7 +26,7 @@ object Dependencies {
 
   lazy val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % "10.5.2" % Test
 
-  lazy val akkaTestkit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.8.4" % Test
+  lazy val akkaTestkit = "com.typesafe.akka" %% "akka-actor-testkit-typed" % "2.8.5" % Test
 
   lazy val testContainers = "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.41.0" % Test
 
