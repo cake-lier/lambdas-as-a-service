@@ -14,7 +14,7 @@ services:
       test: ["CMD", "curl", "http://tuplespace/tuplespace"]
       interval: 10s
       timeout: 60s
-      start_period: 10s
+      start_period: 30s
       start_interval: 3s
   postgres:
     image: "postgres:16.0"
