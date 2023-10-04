@@ -1,3 +1,14 @@
+## [1.0.1](https://github.com/cake-lier/lambdas-as-a-service/compare/v1.0.0...v1.0.1) (2023-10-04)
+
+
+### Bug Fixes
+
+* add missing null value case in DSL, add missing test for tuple in DSL ([b01f917](https://github.com/cake-lier/lambdas-as-a-service/commit/b01f9170b76a00ed0567bacca7051c543a76915e))
+* add missing reception of failures in execution request ([7d95b66](https://github.com/cake-lier/lambdas-as-a-service/commit/7d95b66112dcb27f29bd5888890e077f3267d356))
+* fix package for tuple space service main class ([374f83e](https://github.com/cake-lier/lambdas-as-a-service/commit/374f83ea25d5b6b50e6049fe4583212a17eb4c22))
+* fix package scope for server traits and object, apply same refactoring to tests ([d5a1467](https://github.com/cake-lier/lambdas-as-a-service/commit/d5a1467d5ff2a70093074b9aa9e2364b593dca23))
+* uniform package structure to adhere to web service suggested structure ([336a4ab](https://github.com/cake-lier/lambdas-as-a-service/commit/336a4ab4d6515d6dbecc7159a14cee23896a15ee))
+
 # 1.0.0 (2023-09-08)
 
 
