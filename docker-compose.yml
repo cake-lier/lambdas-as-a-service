@@ -38,7 +38,7 @@ services:
       - WORKER_ID=bdd00fa6-db48-4b08-8b3c-488a1795f1c5
       - WORKER_TS_URI=ws://tuplespace/tuplespace
       - WORKER_HTTP_CLIENT_URI=http://master/service/files
-      - WORKER_ACCEPTED_EXECUTABLES=Java;Python
+      - WORKER_ACCEPTED_EXECUTABLES=Java
       - WORKER_AVAILABLE_SLOTS=100
       - WORKER_BUFFER=100
     volumes:
@@ -53,7 +53,7 @@ services:
       - WORKER_ID=17439dad-d9ed-4ee6-af05-7eca427ae025
       - WORKER_TS_URI=ws://tuplespace/tuplespace
       - WORKER_HTTP_CLIENT_URI=http://master/service/files
-      - WORKER_ACCEPTED_EXECUTABLES=Java;Python
+      - WORKER_ACCEPTED_EXECUTABLES=Java
       - WORKER_AVAILABLE_SLOTS=100
       - WORKER_BUFFER=100
     volumes:
