@@ -20,6 +20,7 @@
  */
 
 package io.github.cakelier
+package laas
 
 import scala.annotation.targetName
 
