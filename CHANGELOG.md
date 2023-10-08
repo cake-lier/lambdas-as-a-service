@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/cake-lier/lambdas-as-a-service/compare/v1.0.1...v1.0.2) (2023-10-08)
+
+
+### Bug Fixes
+
+* conform server to web service style in presentation ([1145d55](https://github.com/cake-lier/lambdas-as-a-service/commit/1145d55ce55fc626c6d2e4c17e47840b9e8d228c))
+* fix AnyOps object import in all files ([9d2a6f9](https://github.com/cake-lier/lambdas-as-a-service/commit/9d2a6f9f396ac3536cc1f625ec86d7e64e4b9b27))
+* move AnyOps to correct package location ([a182c8d](https://github.com/cake-lier/lambdas-as-a-service/commit/a182c8d2e33b25e3af824ac2ca4214bb1a056d59))
+
 ## [1.0.1](https://github.com/cake-lier/lambdas-as-a-service/compare/v1.0.0...v1.0.1) (2023-10-04)
 
 
