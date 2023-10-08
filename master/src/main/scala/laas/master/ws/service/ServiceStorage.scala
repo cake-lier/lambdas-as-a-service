@@ -33,7 +33,7 @@ import org.mindrot.jbcrypt.BCrypt
 
 import laas.master.model.Executable.ExecutableId
 import laas.master.model.User.DeployedExecutable
-import AnyOps.*
+import laas.AnyOps.*
 
 /** The interface to the storage component of the web service.
   *

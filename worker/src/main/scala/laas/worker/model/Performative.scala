@@ -22,7 +22,7 @@
 package io.github.cakelier
 package laas.worker.model
 
-import AnyOps.*
+import laas.AnyOps.*
 
 /** The communicative acts that the agents can perform while communicating between them.
   * @see

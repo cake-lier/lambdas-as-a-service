@@ -26,7 +26,7 @@ import org.scalatest.OptionValues.*
 import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
 
-import AnyOps.*
+import laas.AnyOps.*
 
 @SuppressWarnings(
   Array(

@@ -40,7 +40,7 @@ import akka.actor.typed.PostStop
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 
-import AnyOps.*
+import laas.AnyOps.*
 import laas.master.model.Executable.ExecutableId
 import laas.master.model.Execution.ExecutionOutput
 import laas.master.model.Performative

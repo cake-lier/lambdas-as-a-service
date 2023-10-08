@@ -28,7 +28,7 @@ import scala.annotation.tailrec
 import scala.concurrent.Future
 import scala.concurrent.Promise
 
-import AnyOps.===
+import laas.AnyOps.===
 import laas.tuplespace.*
 
 /** A coordination medium to be used to exchange pieces of information and coordinate with other entities, implemented to be used

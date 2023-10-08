@@ -27,7 +27,7 @@ import io.circe.DecodingFailure
 
 import laas.tuplespace.{JsonTemplate, JsonTuple}
 import laas.tuplespace.JsonSerializable.given
-import AnyOps.*
+import laas.AnyOps.*
 
 object RequestDeserializer {
 

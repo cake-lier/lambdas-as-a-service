@@ -46,7 +46,7 @@ import akka.stream.scaladsl.SourceQueueWithComplete
 import io.circe.parser.*
 import io.circe.syntax.*
 
-import AnyOps.*
+import laas.AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.client.request.*
 import laas.tuplespace.client.request.RequestSerializer.given

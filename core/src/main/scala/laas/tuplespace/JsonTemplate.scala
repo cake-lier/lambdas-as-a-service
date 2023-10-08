@@ -24,7 +24,7 @@ package laas.tuplespace
 
 import java.util.Objects
 
-import AnyOps.*
+import laas.AnyOps.*
 
 /** A template, also known as an anti-tuple, an entity capable of matching against a tuple.
   *

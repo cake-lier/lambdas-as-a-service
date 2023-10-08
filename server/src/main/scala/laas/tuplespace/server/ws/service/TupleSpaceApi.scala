@@ -32,7 +32,7 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 
-import AnyOps.*
+import laas.AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.server.model.JsonTupleSpace
 import laas.tuplespace.server.ws.presentation.request.*

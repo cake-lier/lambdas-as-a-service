@@ -48,7 +48,7 @@ import laas.tuplespace.client.JsonTupleSpace
 import laas.worker.model.CallForProposal.CallForProposalId
 import laas.worker.model.Executable.{ExecutableId, ExecutableType}
 import laas.worker.model.Performative
-import AnyOps.*
+import laas.AnyOps.*
 
 /** The worker agent actor, the one encapsulating the behavior of any secondary component.
   *

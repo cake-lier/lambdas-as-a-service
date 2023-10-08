@@ -31,7 +31,7 @@ import io.circe.Decoder
 import io.circe.DecodingFailure
 import io.circe.syntax.*
 
-import AnyOps.*
+import laas.AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
 

@@ -26,7 +26,7 @@ import io.circe.Encoder
 import io.circe.Json
 import io.circe.syntax.*
 
-import AnyOps.*
+import laas.AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
 

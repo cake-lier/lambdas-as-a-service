@@ -37,7 +37,7 @@ import laas.master.model.Executable.{ExecutableId, ExecutableType}
 import laas.master.model.Execution.ExecutionArguments
 import laas.master.model.User.DeployedExecutable
 import laas.master.ws.presentation.Request.{Execute, Logout, Register}
-import AnyOps.*
+import laas.AnyOps.*
 
 /** This object contains all serializers and deserializers for [[Request]]s and [[Response]]s. */
 private[ws] object Presentation {

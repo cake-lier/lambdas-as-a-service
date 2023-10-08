@@ -52,7 +52,7 @@ import org.scalatest.matchers.should.Matchers.*
 import org.scalatest.time.Seconds
 import org.scalatest.time.Span
 
-import AnyOps.*
+import laas.AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.client.request.*
 import laas.tuplespace.client.request.RequestDeserializer.given

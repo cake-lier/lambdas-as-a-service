@@ -24,7 +24,7 @@ package laas.worker.model
 
 import java.util.UUID
 
-import AnyOps.*
+import laas.AnyOps.*
 
 /** The object containing all domain entities regarding an executable file. */
 private[worker] object Executable {
