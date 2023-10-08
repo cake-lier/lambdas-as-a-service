@@ -39,8 +39,10 @@ import laas.master.model.User.DeployedExecutable
 import laas.master.ws.presentation.Request.{Execute, Logout, Register}
 import AnyOps.*
 
-object Presentation {
+/** This object contains all serializers and deserializers for [[Request]]s and [[Response]]s. */
+private[ws] object Presentation {
 
+  /* The Decoder given instance for the Request.Login type. */
   private given Decoder[Request.Login] = c =>
     for {
       _ <- c.downField("type").as[String].filterOrElse(_ === "login", DecodingFailure("The type field was not valid", c.history))
@@ -48,11 +50,13 @@ object Presentation {
       p <- c.downField("password").as[String]
     } yield Request.Login(u, p)
 
+    /* The Decoder given instance for the Request.Logout type. */
   private given Decoder[Request.Logout.type] = c =>
     for {
       _ <- c.downField("type").as[String].filterOrElse(_ === "logout", DecodingFailure("The type field was not valid", c.history))
     } yield Request.Logout
 
+      /* The Decoder given instance for the Request.Register type. */
   private given Decoder[Request.Register] = c =>
     for {
       _ <- c
@@ -63,6 +67,7 @@ object Presentation {
       p <- c.downField("password").as[String]
     } yield Request.Register(u, p)
 
+    /* The Decoder given instance for the Request.Execute type. */
   private given Decoder[Request.Execute] = c =>
     for {
       _ <- c
@@ -73,6 +78,7 @@ object Presentation {
       a <- c.downField("args").as[String].map(_.split(';').toSeq)
     } yield Request.Execute(i, a)
 
+    /* The Decoder given instance for the Request.UserState type. */
   private given Decoder[Request.UserState] = c =>
     for {
       _ <- c
@@ -82,6 +88,7 @@ object Presentation {
       i <- c.downField("id").as[UUID]
     } yield Request.UserState(i)
 
+    /** The [[Decoder]] given instance for the [[Request]] type. */
   given Decoder[Request] = r =>
     r.as[Request.Login]
       .orElse[DecodingFailure, Request](r.as[Request.UserState])
@@ -89,12 +96,14 @@ object Presentation {
       .orElse[DecodingFailure, Request](r.as[Request.Register])
       .orElse[DecodingFailure, Request](r.as[Request.Execute])
 
+      /* The Encoder given instance for the DeployedExecutable type. */
   private given Encoder[DeployedExecutable] = e =>
     Json.obj(
       "id" -> e.id.asJson,
       "name" -> e.name.asJson
     )
 
+    /* The Encoder given instance for the Response.UserStateOutput type. */
   private given Encoder[Response.UserStateOutput] = r =>
     Json.obj(
       "type" -> "userStateOutput".asJson,
@@ -104,6 +113,7 @@ object Presentation {
       }
     )
 
+    /* The Encoder given instance for the Response.ExecuteOutput type. */
   private given Encoder[Response.ExecuteOutput] = r =>
     Json.obj(
       "type" -> "executeOutput".asJson,
@@ -119,6 +129,7 @@ object Presentation {
       }
     )
 
+    /* The Encoder given instance for the Response.DeployOutput type. */
   private given Encoder[Response.DeployOutput] = r =>
     Json.obj(
       "type" -> "deployOutput".asJson,
@@ -128,12 +139,14 @@ object Presentation {
       }
     )
 
+    /* The Encoder given instance for the Response.SendId type. */
   private given Encoder[Response.SendId] = r =>
     Json.obj(
       "type" -> "sendId".asJson,
       "id" -> r.id.asJson
     )
 
+    /** The [[Encoder]] given instance for the [[Response]] type. */
   given Encoder[Response] = {
     case r: Response.UserStateOutput => r.asJson
     case r: Response.DeployOutput => r.asJson

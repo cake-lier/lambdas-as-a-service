@@ -28,15 +28,14 @@ import java.util.concurrent.ForkJoinPool
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
-import io.github.cakelier.laas.tuplespace.server.ws.service.TupleSpaceApi
-import io.github.cakelier.laas.tuplespace.server.ws.service.TupleSpaceController
-
 import akka.actor.ClassicActorSystemProvider
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.scaladsl.Behaviors
 import akka.http.scaladsl.Http
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
+
+import laas.tuplespace.server.ws.service.{TupleSpaceApi, TupleSpaceController}
 
 /** The main entrypoint for the tuple space server. */
 @main

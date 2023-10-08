@@ -24,7 +24,11 @@ package laas.master.model
 
 import java.util.UUID
 
-object CallForProposal {
+/** The object containing all domain entities regarding a "call for proposal" message, a message for asking other participants to
+  * submit their proposals.
+  */
+private[master] object CallForProposal {
 
+  /** The identifier which uniquely identifies a call for proposal message in the system. */
   type CallForProposalId = UUID
 }

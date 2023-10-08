@@ -37,6 +37,7 @@ import io.getquill.JdbcContextConfig
 import laas.master.ws.service.{ServiceApi, ServiceController, ServiceStorage}
 import laas.tuplespace.client.JsonTupleSpace
 
+/** The main entrypoint for the primary component. */
 @main
 def main(): Unit = {
   given ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool.commonPool())

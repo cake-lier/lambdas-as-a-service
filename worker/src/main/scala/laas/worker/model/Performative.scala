@@ -28,15 +28,10 @@ import AnyOps.*
   * @see
   *   http://www.fipa.org/specs/fipa00037/SC00037J.html
   */
-enum Performative(val name: String) {
+private[worker] enum Performative(val name: String) {
 
   /** The action of accepting a previously submitted proposal to perform an action. */
   case AcceptProposal extends Performative("accept-proposal")
-
-    /** The action of one agent informing another agent that the first agent no longer has the intention that the second agent
-      * performs some action.
-      */
-  case Cancel extends Performative("cancel")
 
     /** The action of calling for proposals to perform a given action. */
   case Cfp extends Performative("cfp")

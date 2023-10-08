@@ -43,6 +43,7 @@ import laas.worker.agents.{RootActorCommand, WorkerAgent}
 import laas.tuplespace.client.*
 import laas.worker.model.Executable.ExecutableType
 
+/** The main entrypoint for the worker component. */
 @main
 def main(): Unit = {
   given ExecutionContext = ExecutionContext.fromExecutor(ForkJoinPool.commonPool())

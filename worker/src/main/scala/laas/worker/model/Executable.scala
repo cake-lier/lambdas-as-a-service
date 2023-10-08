@@ -26,9 +26,10 @@ import java.util.UUID
 
 import AnyOps.*
 
-object Executable {
+/** The object containing all domain entities regarding an executable file. */
+private[worker] object Executable {
 
-  /** The identifier which represents uniquely an executable file into the system. */
+  /** The identifier which represents uniquely an executable file in the system. */
   type ExecutableId = UUID
 
   /** The type of execution that an executable file requires for being executed. */
@@ -41,6 +42,7 @@ object Executable {
     case Python extends ExecutableType("py")
   }
 
+  /** Companion object to the [[ExecutableType]] enum, containing utility methods. */
   object ExecutableType {
 
     /** Returns the correct [[ExecutableType]] given the file extension associated to the type itself.

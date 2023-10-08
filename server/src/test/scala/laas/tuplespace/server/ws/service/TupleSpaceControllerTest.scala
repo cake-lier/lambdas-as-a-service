@@ -33,9 +33,10 @@ import org.scalatest.funspec.AnyFunSpec
 import org.scalatest.matchers.should.Matchers.*
 
 import laas.tuplespace.*
+import laas.tuplespace.server.ws.presentation.Presentation.given
 import laas.tuplespace.server.ws.presentation.request.RequestSerializer.given
 import laas.tuplespace.server.ws.presentation.request.*
-import laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
+import laas.tuplespace.server.ws.presentation.response.ResponseDeserializer.given
 import laas.tuplespace.server.ws.presentation.response.*
 import laas.tuplespace.server.ws.service.{TupleSpaceApiCommand, TupleSpaceController}
 

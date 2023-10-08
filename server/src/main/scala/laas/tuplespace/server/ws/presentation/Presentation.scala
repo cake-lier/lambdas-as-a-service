@@ -22,6 +22,9 @@
 package io.github.cakelier
 package laas.tuplespace.server.ws.presentation
 
+import io.circe.*
+import io.circe.syntax.*
+
 import laas.AnyOps.*
 import laas.tuplespace.*
 import laas.tuplespace.JsonSerializable.given
@@ -29,9 +32,6 @@ import laas.tuplespace.server.ws.presentation.request.*
 import laas.tuplespace.server.ws.presentation.request.Request.*
 import laas.tuplespace.server.ws.presentation.response.*
 import laas.tuplespace.server.ws.presentation.response.Response.*
-
-import io.circe.*
-import io.circe.syntax.*
 
 /** This object contains all serializers and deserializers for [[Request]]s and [[Response]]s. */
 private[ws] object Presentation {
@@ -52,7 +52,7 @@ private[ws] object Presentation {
         )
     } yield TupleRequest(content)
 
-  /* The Decoder given instance for the SeqTupleRequest trait. */
+    /* The Decoder given instance for the SeqTupleRequest trait. */
   private given Decoder[SeqTupleRequest] = c =>
     for {
       content <- c.downField("content").as[Seq[JsonTuple]]
@@ -68,7 +68,7 @@ private[ws] object Presentation {
         )
     } yield SeqTupleRequest(content)
 
-  /* The Decoder given instance for the TemplateRequest trait. */
+    /* The Decoder given instance for the TemplateRequest trait. */
   private given Decoder[TemplateRequest] = c =>
     for {
       content <- c.downField("content").as[JsonTemplate]
@@ -91,7 +91,7 @@ private[ws] object Presentation {
       }
     } yield TemplateRequest(content, tpe)
 
-  /* The Decoder given instance for the MergeRequest trait. */
+    /* The Decoder given instance for the MergeRequest trait. */
   private given Decoder[MergeRequest] = Decoder.forProduct1("oldClientId")(MergeRequest.apply)
 
   /** The [[Decoder]] given instance for the general [[Request]] trait, working for all of its sub-types. */
@@ -101,7 +101,7 @@ private[ws] object Presentation {
       .orElse[DecodingFailure, Request](r.as[MergeRequest])
       .orElse[DecodingFailure, Request](r.as[TemplateRequest])
 
-  /* The Encoder given instance for the TupleResponse trait. */
+      /* The Encoder given instance for the TupleResponse trait. */
   private given Encoder[TupleResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -109,7 +109,7 @@ private[ws] object Presentation {
       "content" -> ().asJson
     )
 
-  /* The Encoder given instance for the SeqTupleResponse trait. */
+    /* The Encoder given instance for the SeqTupleResponse trait. */
   private given Encoder[SeqTupleResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -117,7 +117,7 @@ private[ws] object Presentation {
       "content" -> ().asJson
     )
 
-  /* The Encoder given instance for the TemplateTupleResponse trait. */
+    /* The Encoder given instance for the TemplateTupleResponse trait. */
   private given Encoder[TemplateTupleResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -128,7 +128,7 @@ private[ws] object Presentation {
       "content" -> r.content.asJson
     )
 
-  /* The Encoder given instance for the TemplateMaybeTupleResponse trait. */
+    /* The Encoder given instance for the TemplateMaybeTupleResponse trait. */
   private given Encoder[TemplateMaybeTupleResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -139,7 +139,7 @@ private[ws] object Presentation {
       "content" -> r.content.asJson
     )
 
-  /* The Encoder given instance for the TemplateSeqTupleResponse trait. */
+    /* The Encoder given instance for the TemplateSeqTupleResponse trait. */
   private given Encoder[TemplateSeqTupleResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -150,7 +150,7 @@ private[ws] object Presentation {
       "content" -> r.content.asJson
     )
 
-  /* The Encoder given instance for the TemplateResponse trait. */
+    /* The Encoder given instance for the TemplateResponse trait. */
   private given Encoder[TemplateResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -158,7 +158,7 @@ private[ws] object Presentation {
       "content" -> ().asJson
     )
 
-  /* The Encoder given instance for the TemplateBooleanResponse trait. */
+    /* The Encoder given instance for the TemplateBooleanResponse trait. */
   private given Encoder[TemplateBooleanResponse] = r =>
     Json.obj(
       "request" -> r.request.asJson,
@@ -166,13 +166,13 @@ private[ws] object Presentation {
       "content" -> r.content.asJson
     )
 
-  /* The Encoder given instance for the ConnectionSuccessResponse trait. */
+    /* The Encoder given instance for the ConnectionSuccessResponse trait. */
   private given Encoder[ConnectionSuccessResponse] = r =>
     Json.obj(
       "clientId" -> r.clientId.asJson
     )
 
-  /* The Encoder given instance for the ConnectionSuccessResponse trait. */
+    /* The Encoder given instance for the ConnectionSuccessResponse trait. */
   private given Encoder[MergeSuccessResponse] = r => Json.obj("oldClientId" -> r.oldClientId.asJson)
 
   /** The [[Encoder]] given instance for the general [[Response]] trait, working for all of its sub-types. */

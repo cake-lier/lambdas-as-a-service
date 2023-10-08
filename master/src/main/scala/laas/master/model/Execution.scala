@@ -24,13 +24,14 @@ package laas.master.model
 
 import java.util.UUID
 
-object Execution {
+/** The object containing all domain entities regarding the operation which executes an executable file, an "execution". */
+private[master] object Execution {
 
-  /** The arguments passed as input to the executable file to be executed. */
+  /** The type of the arguments passed as input to the execution process to be executed. */
   type ExecutionArguments = Seq[String]
 
-  /** The output of an execution, it is made by the exit code of the process which executed the executable file, what was printed
-    * on standard output and what was printed on standard error.
+  /** The output of an execution, which consists of the exit code of the process which executed the executable file, what was
+    * printed on standard output and what was printed on standard error.
     */
   trait ExecutionOutput {
 
@@ -47,9 +48,21 @@ object Execution {
   /** Companion object to the [[ExecutionOutput]] trait, containing its factory method. */
   object ExecutionOutput {
 
-    /* Implementation of the Output trait. */
+    /* Implementation of the ExecutionOutput trait. */
     private case class ExecutionOutputImpl(exitCode: Int, standardOutput: String, standardError: String) extends ExecutionOutput
 
+      /** Factory method able to create a new instance of the [[ExecutionOutput]] trait given the exit code, the standard output
+        * and the standard error values which will be contained in the new instance.
+        *
+        * @param exitCode
+        *   the exit code value which will be part of the new [[ExecutionOutput]] instance
+        * @param standardOutput
+        *   the standard output value which will be part of the new [[ExecutionOutput]] instance
+        * @param standardError
+        *   the standard error value which will be part of the new [[ExecutionOutput]] instance
+        * @return
+        *   a new [[ExecutionOutput]] trait instance with the given parameters
+        */
     def apply(exitCode: Int, standardOutput: String, standardError: String): ExecutionOutput =
       ExecutionOutputImpl(exitCode, standardOutput, standardError)
   }

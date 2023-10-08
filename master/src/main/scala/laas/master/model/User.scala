@@ -26,19 +26,39 @@ import java.util.UUID
 
 import laas.master.model.Executable.ExecutableId
 
-object User {
+/** The object containing all domain entities related to the user. */
+private[master] object User {
 
+  /** An executable that has already been deployed.
+    *
+    * This trait represents an executable that has already been deployed. Being so, it has received a unique identifier and the
+    * user that deployed it gave it a name.
+    */
   trait DeployedExecutable {
 
+    /** Returns the name of this executable, the one that the user gave to it while deploying it. */
     val name: String
 
+    /** Returns the unique identifier assigned by the system to this executable. */
     val id: ExecutableId
   }
 
+  /** Companion object to the [[DeployedExecutable]] trait, containing its factory method. */
   object DeployedExecutable {
 
+    /* Implementation of the DeployedExecutable trait. */
     private case class DeployedExecutableImpl(name: String, id: ExecutableId) extends DeployedExecutable
 
+      /** Factory method for creating a new instance of the [[DeployedExecutable]] trait, given the name that the user gave to it
+        * while deploying it and the identifier that the system assigned it.
+        *
+        * @param name
+        *   the name that the user gave to this executable while deploying it
+        * @param id
+        *   the identifier that the system gave to this executable
+        * @return
+        *   a new instance of the [[DeployedExecutable]] trait
+        */
     def apply(name: String, id: ExecutableId): DeployedExecutable = DeployedExecutableImpl(name, id)
   }
 }

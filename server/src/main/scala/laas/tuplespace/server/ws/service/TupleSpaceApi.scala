@@ -38,9 +38,7 @@ import laas.tuplespace.server.model.JsonTupleSpace
 import laas.tuplespace.server.ws.presentation.request.*
 import laas.tuplespace.server.ws.presentation.response.*
 
-/** The actor representing the handler of the tuple space, managing all operations, alongside the client management and the id
-  * assignment.
-  */
+/** The actor representing the API of the tuple space, managing all operations, alongside the client management. */
 private[server] object TupleSpaceApi {
 
   /* The main behavior of this actor. */
@@ -136,12 +134,12 @@ private[server] object TupleSpaceApi {
     }
   }
 
-  /** Creates a new tuple space actor, given the root actor of its actor system to which signal its startup.
+  /** Creates a new tuple space API actor, given the root actor of its actor system to which signal its startup.
     *
     * @param root
     *   the root actor of the actor system of this actor
     * @return
-    *   a new tuple space actor
+    *   a new tuple space API actor
     */
   def apply(root: ActorRef[Unit]): Behavior[TupleSpaceApiCommand] = Behaviors.setup(ctx => {
     root ! ()

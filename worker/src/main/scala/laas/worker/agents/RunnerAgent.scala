@@ -39,8 +39,20 @@ import akka.actor.typed.scaladsl.Behaviors
 import laas.worker.model.Executable.{ExecutableId, ExecutableType}
 import laas.worker.model.Execution.{ExecutionArguments, ExecutionOutput}
 
-object RunnerAgent {
+/** The actor which role is to satisfy all the "execution" operations for a given deployed executable. */
+private[agents] object RunnerAgent {
 
+  /** The method for creating a new runner agent actor given the arguments it needs.
+    *
+    * @param worker
+    *   the worker agent actor which spawned this actor
+    * @param executableId
+    *   the identifier of the executable for which this actor is responsible
+    * @param tpe
+    *   the type of the executable for which this actor is responsible
+    * @return
+    *   a new runner agent actor
+    */
   @SuppressWarnings(Array("org.wartremover.warts.ToString", "org.wartremover.warts.Null", "scalafix:DisableSyntax.null"))
   def apply(worker: ActorRef[WorkerAgentCommand], executableId: ExecutableId, tpe: ExecutableType): Behavior[RunnerAgentCommand] =
     Behaviors.setup { ctx =>
@@ -76,6 +88,9 @@ object RunnerAgent {
       }
     }
 
+    /* Launches the execution of the given command with the given arguments, collecting the standard output and the standard error
+     *  into the given files.
+     */
   private def exec(launchCommand: Seq[String], args: ExecutionArguments, stdout: Path, stderr: Path): ExecutionOutput = {
     val exitCode =
       (launchCommand ++ args)

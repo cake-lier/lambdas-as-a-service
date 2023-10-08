@@ -27,8 +27,6 @@ import java.util.UUID
 import scala.concurrent.ExecutionContextExecutor
 import scala.concurrent.Future
 
-import io.github.cakelier.laas.tuplespace.server.ws.presentation.request.Request.SeqTupleRequest
-
 import akka.NotUsed
 import akka.actor.ActorSystem as ClassicActorSystem
 import akka.actor.typed.ActorRef
@@ -49,12 +47,11 @@ import io.circe.parser.*
 import io.circe.syntax.*
 
 import laas.tuplespace.*
-import laas.tuplespace.server.ws.presentation.request.RequestDeserializer.given
+import laas.tuplespace.server.ws.presentation.Presentation.given
 import laas.tuplespace.server.ws.presentation.request.*
 import laas.tuplespace.server.ws.presentation.response.*
-import laas.tuplespace.server.ws.presentation.response.ResponseSerializer.given
 
-/** The routes of the webservice which handles the websocket connections to the tuple space server. */
+/** The routes of the webservice which handle the websocket connections to the tuple space server. */
 @SuppressWarnings(Array("org.wartremover.warts.Null", "scalafix:DisableSyntax.null"))
 private[server] object TupleSpaceController {
 
@@ -65,7 +62,7 @@ private[server] object TupleSpaceController {
     * @param servicePath
     *   the URL path on which the tuple space webservice is located
     * @param tupleSpaceActor
-    *   the tuple space actor which will handle all the requests
+    *   the tuple space actor API which will handle all the requests
     * @param actorSystem
     *   the [[ActorSystem]] on which all operations for message handling will be executed
     * @return

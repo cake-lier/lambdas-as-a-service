@@ -26,7 +26,18 @@ import java.util.UUID
 
 import laas.worker.model.Execution.{ExecutionArguments, ExecutionId}
 
-enum RunnerAgentCommand {
+/** The enum representing all possible messages that can be sent to a [[RunnerAgent]].
+  *
+  * The only message that can be sent is to execute a new executable.
+  */
+private[agents] enum RunnerAgentCommand {
 
+  /** The message signalling that a new execution operation with the given id was requested and the arguments to be passed to the
+    * process launching it are the ones given.
+    *
+    * @constructor
+    *   creates a new message given the id of the new execution operation to perform and the arguments to the process that should
+    *   launch it
+    */
   case Execute(id: ExecutionId, args: ExecutionArguments) extends RunnerAgentCommand
 }

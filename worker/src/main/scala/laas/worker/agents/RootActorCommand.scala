@@ -22,7 +22,17 @@
 package io.github.cakelier
 package laas.worker.agents
 
-enum RootActorCommand {
+/** The enum representing all commands that can be sent to the root actor of an [[akka.actor.typed.ActorSystem]].
+  *
+  * The only message that can be sent is the one signalling that the worker agent that was booted up completed its startup.
+  */
+private[worker] enum RootActorCommand {
 
+  /** The message signalling to the root actor that the worker agent actor spawned has completed its startup process, either with
+    * success or failure, depending on the given boolean value.
+    *
+    * @constructor
+    *   creates a new message given whether the spawned worker agent completed its startup with success or not
+    */
   case WorkerUp(success: Boolean) extends RootActorCommand
 }

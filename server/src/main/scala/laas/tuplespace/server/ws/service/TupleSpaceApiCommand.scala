@@ -29,108 +29,104 @@ import akka.actor.typed.ActorRef
 import laas.tuplespace.*
 import laas.tuplespace.server.ws.presentation.response.Response
 
-/** The enum representing all possible messages that can be sent to a [[TupleSpaceApi]].
+/** The enum representing all possible messages that can be sent to a [[TupleSpaceApi]] actor.
   *
   * These messages can be either messages for requesting specific operations to be performed on the tuple space that the
-  * [[TupleSpaceApi]] is managing or messages for handling the entrance and the exiting of a client.
+  * [[TupleSpaceApi]] actor is managing or messages for handling the entrance and the exiting of a client.
   */
 private[service] enum TupleSpaceApiCommand {
 
   /** The message signalling that the client with the given id wants to perform the "out" operation with the given [[JsonTuple]]
-    * on the tuple space that the [[TupleSpaceApi]] is managing.
+    * on the tuple space that the [[TupleSpaceApi]] actor is managing.
     *
     * @constructor
-    *   creates a new message given the [[JsonTuple]] to be used in the "out" operation and the actor to which signal the
-    *   completion of the operation
+    *   creates a new message given the [[JsonTuple]] to be used in the "out" operation and the id of the client requesting it
     */
   case Out(tuple: JsonTuple, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "in" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "in" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "in" operation and the id of the client requesting it
       */
   case In(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "rd" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "rd" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "rd" operation and the id of the client requesting it
       */
   case Rd(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "no" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "no" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "no" operation and the id of the client requesting it
       */
   case No(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "outAll" operation with the given [[Seq]] of
-      * [[JsonTuple]]s on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTuple]]s on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[Seq]] of [[JsonTuple]]s to be used in the "outAll" operation and the actor to which
-      *   signal the completion of the operation
+      *   creates a new message given the [[Seq]] of [[JsonTuple]]s to be used in the "outAll" operation and the id of the client
+      *   requesting it
       */
   case OutAll(tuples: Seq[JsonTuple], id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "inAll" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "inAll" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "inAll" operation and the id of the client requesting
+      *   it
       */
   case InAll(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "rdAll" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "rdAll" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "rdAll" operation and the id of the client requesting
+      *   it
       */
   case RdAll(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "inp" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "inp" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "inp" operation and the id of the client requesting
+      *   it
       */
   case Inp(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "rdp" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "rdp" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "rdp" operation and the id of the client requesting
+      *   it
       */
   case Rdp(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
     /** The message signalling that the client with the given id wants to perform the "nop" operation with the given
-      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] is managing.
+      * [[JsonTemplate]] on the tuple space that the [[TupleSpaceApi]] actor is managing.
       *
       * @constructor
-      *   creates a new message given the [[JsonTemplate]] to be used in the "nop" operation and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the [[JsonTemplate]] to be used in the "nop" operation and the id of the client requesting
+      *   it
       */
   case Nop(template: JsonTemplate, id: UUID) extends TupleSpaceApiCommand
 
-    /** The message signalling that a new client has joined the tuple space and all responses to its requests must be routed to
-      * the given actor.
+    /** The message signalling that a new client with the given id has joined the tuple space and all responses to its requests
+      * must be routed to the given actor.
       *
       * @constructor
-      *   creates a new message given the actor to which route all responses for the new client
+      *   creates a new message given the actor to which route all responses for the new client and its id
       */
   case Enter(actorRef: ActorRef[Response], id: UUID) extends TupleSpaceApiCommand
 
@@ -138,8 +134,8 @@ private[service] enum TupleSpaceApiCommand {
       * disconnection, in order to recover all the pending requests still not satisfied.
       *
       * @constructor
-      *   creates a new message given the old id that the client wants to be associated with and the actor to which signal the
-      *   completion of the operation
+      *   creates a new message given the old id that the client wants to be associated with and the id of the client requesting
+      *   it
       */
   case MergeIds(oldId: UUID, id: UUID) extends TupleSpaceApiCommand
 
@@ -147,7 +143,7 @@ private[service] enum TupleSpaceApiCommand {
       * followed with an error, then it is considered an exiting with success.
       *
       * @constructor
-      *   creates a new message given the exit status and the actor which represents the exited client
+      *   creates a new message given the exit status and the id associated to the exited client
       */
   case Exit(success: Boolean, id: UUID) extends TupleSpaceApiCommand
 }

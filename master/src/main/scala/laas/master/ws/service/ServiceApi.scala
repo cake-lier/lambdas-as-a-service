@@ -49,8 +49,10 @@ import laas.master.ws.presentation.{Request, Response}
 import laas.tuplespace.*
 import laas.tuplespace.client.JsonTupleSpace
 
-object ServiceApi {
+/** The actor representing the API of the service, managing all requests coming from the web app. */
+private[ws] object ServiceApi {
 
+  /* Deletes the executable received from the web app and then it sends to it a message signalling the failure of the deployment. */
   @SuppressWarnings(Array("org.wartremover.warts.ToString"))
   private def deleteExecutableAndComplete(
     executableId: ExecutableId,
@@ -63,6 +65,7 @@ object ServiceApi {
     Future(Files.delete(Paths.get(executableId.toString)))
       .onComplete(_ => replyTo ! Response.DeployOutput(Failure(Exception(message))))
 
+      /* The main behavior of this actor. */
   @SuppressWarnings(Array("org.wartremover.warts.Recursion", "org.wartremover.warts.ToString"))
   private def main(
     ctx: ActorContext[ServiceApiCommand],
@@ -288,6 +291,16 @@ object ServiceApi {
       }
   }
 
+  /** Factory method for creating a new instance of the [[ServiceApi]] agent actor. It needs the [[ServiceStorage]] to be used as
+    * an interface to the effective storage and the [[JsonTupleSpace]] client to communicate to the tuple space.
+    *
+    * @param storage
+    *   the [[ServiceStorage]] instance to be used as an interface to the effective storage
+    * @param jsonTupleSpace
+    *   the [[JsonTupleSpace]] instance to be used as an interface to the tuple space
+    * @return
+    *   a new instance of the [[ServiceApi]] agent actor
+    */
   def apply(storage: ServiceStorage, jsonTupleSpace: JsonTupleSpace): Behavior[ServiceApiCommand] =
     Behaviors.setup(ctx => {
       println("Master up")

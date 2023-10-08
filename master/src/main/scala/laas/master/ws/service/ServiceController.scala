@@ -60,10 +60,21 @@ import laas.master.model.Executable.ExecutableType
 import laas.master.ws.presentation.{Request, Response}
 import laas.master.ws.presentation.Presentation.given
 
-object ServiceController {
+/** The routes of the webservice which handles the websocket connections to the service. */
+private[ws] object ServiceController {
 
   private given Timeout = 30.seconds
 
+    /** Creates a new [[Route]] object representing the routes of the webservice which is the main component of the whole service.
+      * The handling of the [[Request]]s is made by the [[ServiceApi]] agent, which must be given.
+      *
+      * @param api
+      *   the [[ServiceApi]] agent which will be responsible for handling the requests
+      * @param actorSystem
+      *   the [[ActorSystem]] on which all operations for message handling will be executed
+      * @return
+      *   a new [[Route]] instance object
+      */
   @SuppressWarnings(Array("org.wartremover.warts.Null", "scalafix:DisableSyntax.null"))
   def apply(api: ActorRef[ServiceApiCommand])(using actorSystem: ActorSystem[Nothing]): Route = {
     given ClassicActorSystem = actorSystem.classicSystem
