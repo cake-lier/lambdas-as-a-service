@@ -35,7 +35,7 @@ ThisBuild / libraryDependencies ++= Seq(
 
 ThisBuild / wartremoverErrors ++= Warts.allBut(Wart.ImplicitParameter)
 
-ThisBuild / version := "1.0.2"
+ThisBuild / version := "1.0.3"
 
 ThisBuild / coverageMinimumStmtTotal := 80
 ThisBuild / coverageMinimumBranchTotal := 80

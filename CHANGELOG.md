@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/cake-lier/lambdas-as-a-service/compare/v1.0.2...v1.0.3) (2023-10-08)
+
+
+### Bug Fixes
+
+* revert primereact update ([1340e72](https://github.com/cake-lier/lambdas-as-a-service/commit/1340e72e9fccb994e6086957608b142ed4f50802))
+
 ## [1.0.2](https://github.com/cake-lier/lambdas-as-a-service/compare/v1.0.1...v1.0.2) (2023-10-08)
 
 
