@@ -34,7 +34,7 @@ object Dependencies {
 
   lazy val commonsIO = "commons-io" % "commons-io" % "2.14.0" % Test
 
-  lazy val logback = "ch.qos.logback" % "logback-classic" % "1.4.11"
+  lazy val logback = "ch.qos.logback" % "logback-classic" % "1.4.14"
 
   lazy val jbcrypt = "org.mindrot" % "jbcrypt" % "0.4"
 }
